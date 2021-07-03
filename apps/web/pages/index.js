@@ -27,7 +27,7 @@ export default function Home() {
           </div>
         </section>}
         <section key="max" className="bg-[#03C35B] min-h-[400px] lg:min-h-[600px] flex flex-col lg:flex-row px-4 py-8 lg:px-20 items-center text-center lg:text-left">
-          <img src="/max.png" className="max-h-[500px] lg:max-w-[40%]" />
+          <img src="/max2.png" className="max-h-[500px] lg:max-w-[40%]" />
           <div className="lg:flex-grow">
             <h1 className="text-4xl lg:text-6xl font-bold">CuppaZee Max</h1>
             <h2 className="text-3xl lg:text-4xl">Feature Packed.</h2>
