@@ -27,11 +27,11 @@ export default function Home() {
           </div>
         </section>}
         <section key="max" className="bg-[#03C35B] min-h-[600px] flex flex-col lg:flex-row-reverse px-4 py-8 lg:px-20 items-center text-center lg:text-right">
-          <img src="/max.png" className="h-[80%] max-h-[500px] lg:max-w-[40%]" />
+          <img src="/max.png" className="max-h-[500px] lg:max-w-[40%]" />
           <div className="flex-grow">
             <h1 className="text-4xl lg:text-6xl font-bold">CuppaZee Max</h1>
             <h2 className="text-3xl lg:text-4xl">Feature Packed.</h2>
-            <h3 className="text-3xl"><a href="https://max.cuppazee.app">https://max.cuppazee.app</a></h3>
+            <h3 className="text-1xl"><a href="https://max.cuppazee.app">https://max.cuppazee.app</a></h3>
           </div>
           <div className="flex flex-col md:flex-row lg:flex-col align-center">
             <a href="https://apps.apple.com/us/app/cuppazee-max/id1514563308"><img src="/appstore.svg" className="h-12 md:h-16 m-2" /></a>
@@ -40,11 +40,11 @@ export default function Home() {
           </div>
         </section>
         <section key="express" className="bg-[#43BCCA] min-h-[600px] flex flex-col lg:flex-row px-4 py-8 lg:px-20 items-center text-center lg:text-left">
-          <img src="/express.png" className="h-[80%] max-h-[500px]" />
+          <img src="/express.png" className="max-h-[500px]" />
           <div className="flex-grow">
             <h1 className="text-4xl lg:text-6xl font-bold">CuppaZee Express</h1>
             <h2 className="text-3xl lg:text-4xl">Simple. Fast. Effective.</h2>
-            <h3 className="text-3xl">Beta Testing: <a href="https://facebook.com/groups/cuppazee">https://facebook.com/groups/cuppazee</a></h3>
+            <h3 className="text-1xl">Beta Testing: <a href="https://facebook.com/groups/cuppazee">https://facebook.com/groups/cuppazee</a></h3>
             {/* <h3 className="text-3xl"><a href="https://express.cuppazee.app">https://express.cuppazee.app</a></h3> */}
           </div>
           {/* <div className="flex flex-col md:flex-row lg:flex-col align-center">
@@ -58,7 +58,7 @@ export default function Home() {
           <div className="flex-grow">
             <h1 className="text-4xl lg:text-6xl font-bold">CuppaZee Painter</h1>
             <h2 className="text-3xl lg:text-4xl">Design. Publish. Deploy.</h2>
-            <h3 className="text-3xl">Coming Soon</h3>
+            <h3 className="text-1xl">Coming Soon</h3>
             {/* <h3 className="text-3xl"><a href="https://max.cuppazee.app">https://max.cuppazee.app</a></h3> */}
           </div>
           {/* <div>
