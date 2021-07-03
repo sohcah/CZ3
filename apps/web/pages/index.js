@@ -1,6 +1,11 @@
 import Head from 'next/head'
+import { useEffect, useState } from 'react';
 
 export default function Home() {
+  const [l, setL] = useState(false);
+  useEffect(() => {
+    setL(typeof window !== "undefined" && localStorage.CUPPAZEE_TEAKENS && localStorage.migrated !== "2")
+  }, [])
   return (
     <div>
       <Head>
@@ -9,7 +14,19 @@ export default function Home() {
       </Head>
 
       <main className="flex flex-col items-stretch w-full">
-        <section className="bg-[#03C35B] min-h-[600px] flex flex-col lg:flex-row-reverse px-4 py-8 lg:px-20 items-center text-center lg:text-right">
+        {l && <section key="migrate" className="bg-black text-white lg:min-h-[200px] flex flex-col lg:flex-row px-4 py-8 lg:px-20 items-center text-center lg:text-left">
+          <div className="flex-grow">
+            <h1 className="text-3xl font-bold">Migrate CuppaZee Max Data</h1>
+            <h2 className="text-l">It looks like you haven't migrated your data from cuppazee.app to max.cuppazee.app.</h2>
+            <button onClick={() => {
+              const migrationData = Object.assign({}, localStorage);
+              delete migrationData["@czexpress/dbcache"]
+              localStorage.migrated = "2"
+              location.href = "https://max.cuppazee.app/migration.html?t=" + Date.now() + "#" + encodeURIComponent(JSON.stringify(migrationData))
+            }} className="bg-[#03C35B] text-black p-2 rounded-md">Migrate your Data</button>
+          </div>
+        </section>}
+        <section key="max" className="bg-[#03C35B] min-h-[600px] flex flex-col lg:flex-row-reverse px-4 py-8 lg:px-20 items-center text-center lg:text-right">
           <img src="/max.png" className="h-[80%] max-h-[500px] lg:max-w-[40%]" />
           <div className="flex-grow">
             <h1 className="text-4xl lg:text-6xl font-bold">CuppaZee Max</h1>
@@ -22,7 +39,7 @@ export default function Home() {
             <a href="https://max.cuppazee.app/"><img src="/pwa.png" className="h-12 md:h-16 m-2" /></a>
           </div>
         </section>
-        <section className="bg-[#43BCCA] min-h-[600px] flex flex-col lg:flex-row px-4 py-8 lg:px-20 items-center text-center lg:text-left">
+        <section key="express" className="bg-[#43BCCA] min-h-[600px] flex flex-col lg:flex-row px-4 py-8 lg:px-20 items-center text-center lg:text-left">
           <img src="/express.png" className="h-[80%] max-h-[500px]" />
           <div className="flex-grow">
             <h1 className="text-4xl lg:text-6xl font-bold">CuppaZee Express</h1>
@@ -36,7 +53,7 @@ export default function Home() {
             <a href="https://express.cuppazee.app/"><img src="/pwa.png" className="h-12 md:h-16 m-2" /></a>
           </div> */}
         </section>
-        <section className="bg-[#af4eff] lg:min-h-[300px] flex flex-col lg:flex-row px-4 py-8 lg:px-20 items-center text-center lg:text-left">
+        <section key="painter" className="bg-[#af4eff] lg:min-h-[300px] flex flex-col lg:flex-row px-4 py-8 lg:px-20 items-center text-center lg:text-left">
           {/* <img src="/max.png" className="h-[80%] max-h-[500px] lg:max-w-[40%]" /> */}
           <div className="flex-grow">
             <h1 className="text-4xl lg:text-6xl font-bold">CuppaZee Painter</h1>
