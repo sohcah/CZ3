@@ -6,8 +6,8 @@ export default function Home() {
   const { id } = router.query
   return (
     <ContinueWith
-      express={"https://express.cuppazee.app/clan/" + id}
-      max={"https://max.cuppazee.app/clan/" + id}
+      express={"https://express.cuppazee.app/player/" + id}
+      max={"https://max.cuppazee.app/user/" + id}
     />
   );
 }
