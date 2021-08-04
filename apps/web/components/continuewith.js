@@ -12,7 +12,7 @@ export default function ContinueWith(paths) {
       <main className="flex flex-grow flex-col items-stretch w-full">
         {paths.max && <MigrateMaxData />}
         {paths.max && (
-          <a className="flex flex-grow" href={paths.express}>
+          <a className="flex flex-grow" href={paths.max}>
             <section
               key="max"
               className="bg-[#03C35B] min-h-[300px] flex flex-col flex-grow lg:flex-row px-4 py-8 lg:px-20 items-center justify-center lg:justify-start text-center lg:text-left">
