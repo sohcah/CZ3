@@ -150,10 +150,13 @@ export async function loginWithAuthorizationCode(
 }
 
 export interface AuthenticationResult {
-
+  access_token: string;
+  token_type: "Bearer";
+  expires: number;
+  expires_in: number;
 }
 
-export async function authenticateWithCuppaZeeToken(cuppazeeToken: string, application: APIApplication = config.applications.scan) {
+export async function authenticateWithCuppaZeeToken(cuppazeeToken: string, application: APIApplication = config.applications.v3) {
   const jwtParse = Jwt.verify(cuppazeeToken, config.jwtSecret);
   if (!jwtParse) {
     throw APIError.InvalidRequest();
@@ -170,8 +173,8 @@ export async function authenticateWithCuppaZeeToken(cuppazeeToken: string, appli
 
 export async function authenticateWithUserID(
   user_id: string | number,
-  application: APIApplication = config.applications.scan
-) {
+  application: APIApplication = config.applications.v3
+): Promise<AuthenticationResult> {
   const authDocument = await mongo()
     .collection("auth")
     .findOne({ application: application.name, user_id: Number(user_id) });
@@ -214,4 +217,8 @@ export async function authenticateWithUserID(
 
   const { refresh_token: _, ...token } = responseData.data.token;
   return token;
+}
+
+export function authenticateAnonymous(application: APIApplication = config.applications.v3) {
+  return authenticateWithUserID(125914, application);
 }

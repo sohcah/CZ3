@@ -44,7 +44,6 @@ fastify.decorateReply("error", function <T>(this: FastifyReply, error: APIError)
 });
 
 fastify.addHook("preSerialization", async (request, reply, payload: any) => {
-  console.log(payload);
   if (payload?.__raw) {
     return payload.__raw;
   }

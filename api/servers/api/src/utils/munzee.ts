@@ -2,6 +2,7 @@ import fetch, { Response } from "node-fetch";
 import { APIError } from "../api";
 import { FetchRequest, FetchResponse, Endpoints } from "@cuppazee/api";
 import { URLSearchParams } from "url";
+import { AuthenticationResult } from "./auth";
 
 declare module "node-fetch" {
   interface Response {
@@ -25,7 +26,7 @@ export interface MunzeeFetchParams<Path extends keyof Endpoints> {
   endpoint: FetchRequest<Path>["endpoint"]; //EndpointSlashes<NonNullable<>>
   params: FetchRequest<Path>["params"];
   method?: "GET" | "POST";
-  token: string;
+  token: string | AuthenticationResult;
 }
 
 export async function munzeeFetch<Path extends keyof Endpoints>({ endpoint, params, method, token }: MunzeeFetchParams<Path>): Promise<Omit<Response, "getMunzeeData"> & { getMunzeeData: () => Promise<FetchResponse<Path>> }> {
@@ -33,12 +34,19 @@ export async function munzeeFetch<Path extends keyof Endpoints>({ endpoint, para
     "https://api.munzee.com/" +
       endpoint?.replace(/{([A-Za-z0-9_]+)}/g, (_, a) => {
         return params?.[a as keyof FetchRequest<Path>["params"]] || "";
-      }) + (method === "GET" ? `?access_token=${encodeURIComponent(token)}${Object.entries(params ?? {}).map(i => `&${i[0]}=${encodeURIComponent(i[1].toString())}`).join('')}` : ""),
+      }) +
+      (method === "GET"
+        ? `?access_token=${encodeURIComponent(
+            typeof token === "string" ? token : token.access_token
+          )}${Object.entries(params ?? {})
+            .map(i => `&${i[0]}=${encodeURIComponent(i[1].toString())}`)
+            .join("")}`
+        : ""),
     {
       method: method ?? "POST",
       body: new URLSearchParams({
         data: JSON.stringify(params),
-        access_token: token,
+        access_token: typeof token === "string" ? token : token.access_token,
       }),
       headers: {
         "User-Agent": "@cuppazee/api-server (+https://github.com/CuppaZee/CuppaZee)",
