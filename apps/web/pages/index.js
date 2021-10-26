@@ -58,12 +58,28 @@ export default function Home() {
           </div>
         </section>
         <section
-          key="painter"
+          key="create"
           className="bg-[#af4eff] lg:min-h-[300px] flex flex-col lg:flex-row px-4 py-8 lg:px-20 items-center text-center lg:text-left">
           {/* <img src="/max.png" className="h-[80%] max-h-[500px] lg:max-w-[40%]" /> */}
           <div className="flex-grow">
             <h1 className="text-4xl lg:text-6xl font-bold">CuppaZee Create</h1>
             <h2 className="text-3xl lg:text-4xl">Design. Publish. Deploy.</h2>
+            <h3 className="text-1xl">Coming Soon</h3>
+            {/* <h3 className="text-3xl"><a href="https://max.cuppazee.app">https://max.cuppazee.app</a></h3> */}
+          </div>
+          {/* <div>
+            <a href=""><img src="/appstore.svg" className="h-16 my-2" /></a>
+            <a href="https://play.google.com/store/apps/details?id=uk.cuppazee.paper"><img src="/googleplay.svg" className="h-16 my-2" /></a>
+            <a href="https://max.cuppazee.app/"><img src="/pwa.png" className="h-16 my-2" /></a>
+          </div> */}
+        </section>
+        <section
+          key="browse"
+          className="bg-[#ffd95c] lg:min-h-[300px] flex flex-col lg:flex-row-reverse px-4 py-8 lg:px-20 items-center text-center lg:text-right">
+          {/* <img src="/max.png" className="h-[80%] max-h-[500px] lg:max-w-[40%]" /> */}
+          <div className="flex-grow">
+            <h1 className="text-4xl lg:text-6xl font-bold">CuppaZee Browse</h1>
+            <h2 className="text-3xl lg:text-4xl">The Munzee Website. Refined.</h2>
             <h3 className="text-1xl">Coming Soon</h3>
             {/* <h3 className="text-3xl"><a href="https://max.cuppazee.app">https://max.cuppazee.app</a></h3> */}
           </div>
