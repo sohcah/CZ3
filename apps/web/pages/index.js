@@ -18,8 +18,8 @@ export default function Home() {
           <div className="lg:flex-grow">
             <h1 className="text-4xl lg:text-6xl font-bold">CuppaZee Express</h1>
             <h2 className="text-3xl lg:text-4xl">Simple. Fast. Effective.</h2>
-            <h3 className="text-1xl lg:text-3xl">
-              <a href="https://express.cuppazee.app">https://express.cuppazee.app</a>
+            <h3 className="text-3xl lg:text-2xl lg:font-semibold xl:text-4xl whitespace-nowrap">
+              <a href="https://express.cuppazee.app">→ https://express.cuppazee.app</a>
             </h3>
           </div>
           <div className="flex flex-row flex-wrap justify-center w-100 lg:w-auto lg:flex-col align-center">
@@ -41,8 +41,8 @@ export default function Home() {
           <div className="lg:flex-grow">
             <h1 className="text-4xl lg:text-6xl font-bold">CuppaZee Max</h1>
             <h2 className="text-3xl lg:text-4xl">Feature Packed.</h2>
-            <h3 className="text-1xl lg:text-3xl">
-              <a href="https://max.cuppazee.app">https://max.cuppazee.app</a>
+            <h3 className="text-3xl lg:text-2xl lg:font-semibold xl:text-4xl whitespace-nowrap">
+              <a href="https://max.cuppazee.app">→ https://max.cuppazee.app</a>
             </h3>
           </div>
           <div className="flex flex-row flex-wrap justify-center w-100 lg:w-auto lg:flex-col align-center">
