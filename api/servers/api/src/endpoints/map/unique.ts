@@ -132,6 +132,12 @@ const uniques: {
         la: 36.1593253606424,
         lo: -115.09178638458201,
       },
+      {
+        i: "https://munzee.global.ssl.fastly.net/images/pins/10millionthmunzee.png",
+        u: "/m/Martijnhuik/328",
+        la: 50.7179801,
+        lo: 4.5836843,
+      },
     ];
   }
 };

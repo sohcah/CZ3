@@ -81,14 +81,14 @@ export class APIResponse<T> {
   statusCode!: number;
   data!: T;
   error!: APIError | null;
-  executed_in!: number;
+  executedIn!: number;
 
   static Success<T>(data: T, request: FastifyRequest) {
     const response = new APIResponse<T>();
     response.statusCode = 200;
     response.data = data;
     response.error = null;
-    response.executed_in = process.hrtime(request.cuppazeeProperties.startTime)[1];
+    response.executedIn = process.hrtime(request.cuppazeeProperties.startTime)[1];
     return response;
   }
 
@@ -104,7 +104,7 @@ export class APIResponse<T> {
     }[error.type];
     response.data = null;
     response.error = error;
-    response.executed_in = process.hrtime(request.cuppazeeProperties.startTime)[1];
+    response.executedIn = process.hrtime(request.cuppazeeProperties.startTime)[1];
     return response;
   }
 }

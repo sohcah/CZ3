@@ -143,6 +143,7 @@ export async function loginWithAuthorizationCode(
 
   const token = Jwt.sign({
     user_id,
+    username,
     created_at: Date.now(),
   }, config.jwtSecret);
 
@@ -156,7 +157,9 @@ export interface AuthenticationResult {
   expires_in: number;
 }
 
-export async function authenticateWithCuppaZeeToken(cuppazeeToken: string, application: APIApplication = config.applications.v3) {
+export function verifyJwtToken(
+  cuppazeeToken: string
+) {
   const jwtParse = Jwt.verify(cuppazeeToken, config.jwtSecret);
   if (!jwtParse) {
     throw APIError.InvalidRequest();
@@ -167,6 +170,12 @@ export async function authenticateWithCuppaZeeToken(cuppazeeToken: string, appli
   } catch {
     throw APIError.InvalidRequest();
   }
+
+  return jwtData;
+}
+
+export async function authenticateWithCuppaZeeToken(cuppazeeToken: string, application: APIApplication = config.applications.v3) {
+  const jwtData = verifyJwtToken(cuppazeeToken);
   
   return await authenticateWithUserID(jwtData.user_id, application);
 }
