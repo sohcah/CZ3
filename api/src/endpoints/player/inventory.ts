@@ -1,17 +1,9 @@
 import { FastifyInstance } from "fastify";
-import { APIError } from "../../api";
 import { munzeeFetch } from "../../utils/munzee";
 
-export default function UserInventory(fastify: FastifyInstance) {
-  fastify.get<{
-    Querystring: {
-      access_token?: string;
-    };
-  }>("/user/inventory", async (request, reply) => {
-    if (!request.query.access_token) {
-      throw APIError.InvalidRequest();
-    }
-    const access_token = request.query.access_token;
+export default function PlayerInventory(fastify: FastifyInstance) {
+  fastify.get("/player/:user/inventory", async (request, reply) => {
+    const access_token = await request.authenticateHeaders();
 
     const [undeployed, credits, history, boosters] = await Promise.all([
       (async () =>

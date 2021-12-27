@@ -2,6 +2,7 @@ import { FastifyRequest } from "fastify";
 
 export interface CuppaZeeProperties {
   startTime: [number, number];
+  isDeprecated?: boolean;
 }
 
 export enum APIErrorType {
@@ -11,6 +12,7 @@ export enum APIErrorType {
   NotFound = "NOTFOUND",
   Unavailable = "UNAVAILABLE",
   InvalidRequest = "INVALIDREQUEST",
+  Forbidden = "FORBIDDEN",
 }
 
 export interface APIAuthenticationDetails {
@@ -73,6 +75,14 @@ export class APIError {
     apiError.type = APIErrorType.InvalidRequest;
     return apiError;
   }
+
+  // create static method for Forbidden 
+  static Forbidden(message?: string) {
+    const apiError = new APIError();
+    apiError.message = message ?? "Forbidden";
+    apiError.type = APIErrorType.Forbidden;
+    return apiError;
+  }
 }
 
 export class APIResponse<T> {
@@ -82,6 +92,9 @@ export class APIResponse<T> {
   data!: T;
   error!: APIError | null;
   executedIn!: number;
+  meta: {
+    isDeprecated?: boolean;
+  } = {};
 
   static Success<T>(data: T, request: FastifyRequest) {
     const response = new APIResponse<T>();
@@ -89,6 +102,9 @@ export class APIResponse<T> {
     response.data = data;
     response.error = null;
     response.executedIn = process.hrtime(request.cuppazeeProperties.startTime)[1];
+    if (request.cuppazeeProperties.isDeprecated) {
+      response.meta.isDeprecated = true;
+    }
     return response;
   }
 
@@ -101,6 +117,7 @@ export class APIResponse<T> {
       [APIErrorType.NotFound]: 404,
       [APIErrorType.Unavailable]: 503,
       [APIErrorType.InvalidRequest]: 400,
+      [APIErrorType.Forbidden]: 403,
     }[error.type];
     response.data = null;
     response.error = error;

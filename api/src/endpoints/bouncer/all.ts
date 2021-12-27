@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify";
 import { getBouncers } from "../../utils/bouncers";
 
-export default function BouncerExpiring(fastify: FastifyInstance) {
+export default function BouncerAll(fastify: FastifyInstance) {
   fastify.get<{
     Querystring: {
       force?: string;

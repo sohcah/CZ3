@@ -1,6 +1,4 @@
 import { FastifyInstance } from "fastify";
-import { APIError } from "../../api";
-import { authenticateAnonymous } from "../../utils/auth";
 import { MunzeeSpecialBouncer } from "@cuppazee/api/munzee/specials";
 import { getBouncers } from "../../utils/bouncers";
 import { munzeeFetch } from "../../utils/munzee";
@@ -9,21 +7,10 @@ import geoTz from "geo-tz";
 
 const geocoder = createRevGeocoder();
 
-export default function UserBouncers(fastify: FastifyInstance) {
-  fastify.get<{
-    Querystring: {
-      user_id?: string;
-      access_token?: string;
-    };
-  }>("/user/bouncers", async (request, reply) => {
-    if (!request.query.user_id) {
-      throw APIError.InvalidRequest();
-    }
-    const user_id = Number(request.query.user_id);
-    if (Number.isNaN(user_id)) {
-      throw APIError.InvalidRequest();
-    }
-    const authenticationResult = request.query.access_token ?? (await authenticateAnonymous());
+export default function PlayerBouncers(fastify: FastifyInstance) {
+  fastify.get("/player/:user/bouncers", async (request, reply) => {
+    const user_id = await request.getUserID();
+    const authenticationResult = await request.authenticateHeaders({ anonymous: true });
 
     const deploys = await (
       await munzeeFetch({
@@ -65,10 +52,10 @@ export default function UserBouncers(fastify: FastifyInstance) {
               latitude: Number(munzee.bouncer.latitude),
               longitude: Number(munzee.bouncer.longitude),
             });
-            munzee.timezone = geoTz(
+            munzee.timezone = geoTz.find(
               Number(munzee.bouncer.latitude),
               Number(munzee.bouncer.longitude)
-            );
+            ).join(", ");
           }
           return munzee;
         }) || []

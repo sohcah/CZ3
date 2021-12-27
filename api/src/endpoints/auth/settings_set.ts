@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify";
 import { APIError } from "../../api";
-import { verifyJwtToken } from "../../utils/auth";
-import mongo from "../../utils/mongo";
+// import { verifyJwtToken } from "../../utils/auth";
+// import mongo from "../../utils/mongo";
 
 export interface UserSettingsUser {
   user_id: number;
@@ -37,10 +37,10 @@ export default function AuthSettingsSet(fastify: FastifyInstance) {
     if (!request.query.token || !body.settings) {
       throw APIError.InvalidRequest();
     }
-    const { user_id } = await verifyJwtToken(request.query.token);
-    await mongo()
-      .collection<Partial<UserSettings> & { _id: unknown; user_id: unknown }>("user_settings")
-      .updateOne({ user_id: Number(user_id) }, { $set: { ...JSON.parse(body.settings), user_id: Number(user_id) } });
+    // const { user_id } = await verifyJwtToken(request.query.token);
+    // await mongo()
+    //   .collection<Partial<UserSettings> & { _id: unknown; user_id: unknown }>("user_settings")
+    //   .updateOne({ user_id: Number(user_id) }, { $set: { ...JSON.parse(body.settings), user_id: Number(user_id) } });
     return true;
   });
 }

@@ -1,21 +1,30 @@
-import Fastify, { FastifyReply } from "fastify";
+import Fastify, { FastifyReply, FastifyRequest } from "fastify";
 import FastifyCors from "fastify-cors";
 import { APIError, APIResponse, CuppaZeeProperties } from "./api";
 import endpoints from "./endpoints/_index";
+import { authenticateHeaders, AuthenticateHeadersOptions, AuthHeaders } from "./utils/auth";
 const fastify = Fastify({
   logger: {
     level: process.env.NODE_ENV === "development" ? "debug" : "warn",
-  }
+  },
 });
 fastify.register(FastifyCors, {
   origin: true,
 });
 
 import "./utils/munzee";
+import { munzeeFetch } from "./utils/munzee";
 
 declare module "fastify" {
   interface FastifyRequest {
+    _cuppazeeIsDeprecated: boolean;
     cuppazeeProperties: CuppaZeeProperties;
+    authenticateHeaders(
+      options?: AuthenticateHeadersOptions
+    ): ReturnType<typeof authenticateHeaders>;
+    getUsername(): Promise<string>;
+    getUserID(): Promise<number>;
+    deprecated(): void;
   }
   interface FastifyReply {
     success<T>(data: T): void;
@@ -23,9 +32,70 @@ declare module "fastify" {
   }
 }
 
-fastify.decorateRequest("cuppazeeProperties", undefined)
+fastify.decorateRequest("cuppazeeProperties", undefined);
+fastify.decorateRequest("_cuppazeeIsDeprecated", false);
 
-fastify.addHook("onRequest", async (request) => {
+fastify.decorateRequest(
+  "authenticateHeaders",
+  function (this: FastifyRequest, options?: AuthenticateHeadersOptions) {
+    const headers = this.headers as AuthHeaders;
+    return authenticateHeaders(headers, options);
+  }
+);
+
+fastify.decorateRequest(
+  "deprecated",
+  function (this: FastifyRequest) {
+    this._cuppazeeIsDeprecated = true;
+  }
+);
+
+const userIDCache = new Map<string, number>();
+const usernameCache = new Map<number, string>();
+
+fastify.decorateRequest("getUsername", async function (this: FastifyRequest): Promise<string> {
+  const { user } = this.params as { user: string };
+  if (!user) throw APIError.InvalidRequest("No user found");
+  if (user.startsWith("@")) {
+    if(usernameCache.has(Number(user.slice(1)))) return usernameCache.get(Number(user.slice(1)))!;
+    const token = await this.authenticateHeaders({ anonymous: true });
+    const data = await munzeeFetch({
+      endpoint: "user",
+      params: { user_id: Number(user.slice(1)) },
+      token,
+    });
+    const username = (await data.getMunzeeData()).data?.username;
+    if (!username) throw APIError.InvalidRequest("No user found");
+    usernameCache.set(Number(user.slice(1)), username);
+    return username;
+  }
+  return user;
+});
+
+fastify.decorateRequest("getUserID", async function (this: FastifyRequest): Promise<number> {
+  const { user } = this.params as { user: string };
+  if (!user) throw APIError.InvalidRequest("No user found");
+  if (!user.startsWith("@")) {
+    if (userIDCache.has(user)) return userIDCache.get(user)!;
+    const token = await this.authenticateHeaders({ anonymous: true });
+    const data = await munzeeFetch({
+      endpoint: "user",
+      params: { username: user },
+      token,
+    });
+    const user_id = (await data.getMunzeeData()).data?.user_id;
+    if (!user_id) throw APIError.InvalidRequest("No user found");
+    userIDCache.set(user, user_id);
+    return user_id;
+  }
+  const user_id = Number(user.slice(1));
+  if (Number.isNaN(user_id)) {
+    throw APIError.InvalidRequest();
+  }
+  return user_id;
+});
+
+fastify.addHook("onRequest", async request => {
   request.cuppazeeProperties = { startTime: process.hrtime() };
 });
 
@@ -35,7 +105,7 @@ fastify.decorateReply("success", function <T>(this: FastifyReply, data: T) {
 });
 
 fastify.decorateReply("successRaw", function <T>(this: FastifyReply, data: T) {
-  this.send({__raw: data});
+  this.send({ __raw: data });
 });
 
 fastify.decorateReply("error", function <T>(this: FastifyReply, error: APIError) {
@@ -63,7 +133,7 @@ fastify.setErrorHandler(async function (error, request, reply) {
   if (error instanceof Promise) {
     try {
       error = await error;
-    } catch { }
+    } catch {}
   }
 
   if (error instanceof APIError) {

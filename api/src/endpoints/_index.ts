@@ -1,6 +1,7 @@
 import auth from "./auth/_index";
-import user from "./user/_index";
+import player from "./player/_index";
 import bouncer from "./bouncer/_index";
 import map from "./map/_index";
+import database from "./database/_index";
 
-export default [...auth, ...user, ...bouncer, ...map];
+export default [...auth, ...player, ...bouncer, ...map, ...database];

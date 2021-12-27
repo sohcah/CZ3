@@ -1,8 +1,8 @@
 import { MunzeeSpecial } from "@cuppazee/api/munzee/specials";
 
 import pr from "power-radix";
-import { MunzeeBouncer } from "../../../../packages/api/munzee/bouncers";
-import { Response } from "../../../../packages/api/common";
+import { MunzeeBouncer } from "@cuppazee/api/munzee/bouncers";
+import { Response } from "@cuppazee/api/common";
 import { authenticateAnonymous } from "./auth";
 import config from "./config";
 import { munzeeFetch } from "./munzee";

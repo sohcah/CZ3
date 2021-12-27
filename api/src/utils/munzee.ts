@@ -2,7 +2,7 @@ import fetch, { Response } from "node-fetch";
 import { APIError } from "../api";
 import { FetchRequest, FetchResponse, Endpoints } from "@cuppazee/api";
 import { URLSearchParams } from "url";
-import { AuthenticationResult } from "./auth";
+import { MinimumAuthenticationResult } from "./auth";
 
 declare module "node-fetch" {
   interface Response {
@@ -26,7 +26,7 @@ export interface MunzeeFetchParams<Path extends keyof Endpoints> {
   endpoint: FetchRequest<Path>["endpoint"]; //EndpointSlashes<NonNullable<>>
   params: FetchRequest<Path>["params"];
   method?: "GET" | "POST";
-  token: string | AuthenticationResult;
+  token: string | MinimumAuthenticationResult;
 }
 
 export async function munzeeFetch<Path extends keyof Endpoints>({ endpoint, params, method, token }: MunzeeFetchParams<Path>): Promise<Omit<Response, "getMunzeeData"> & { getMunzeeData: () => Promise<FetchResponse<Path>> }> {

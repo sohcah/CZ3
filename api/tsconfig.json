@@ -9,7 +9,10 @@
     "lib": ["es2020"],
     "target": "es2020",
     "esModuleInterop": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "importHelpers": true,
+    "removeComments": true
   },
   "compileOnSave": true,
   "include": [
