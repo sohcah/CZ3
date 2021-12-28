@@ -80,6 +80,7 @@ model shadow_clan {
   clan_id           Int
   game_id           Int
   group_id          Int?
+  name              String?
   shadow_clan_group shadow_clan_group? @relation(fields: [group_id], references: [group_id], onDelete: NoAction, onUpdate: NoAction, map: "shadow_clan_shadow_clan_group_group_id_fk")
   shadow_player     shadow_player[]
 

@@ -8,6 +8,20 @@ export default function ShadowAdminList(fastify: FastifyInstance) {
       game_id: string;
     };
   }>("/shadow/admin/:group/:game_id/list", async (request, reply) => {
+    const group = await prisma.shadow_clan_group.findUnique({
+      where: {
+        group_text_id: request.params.group,
+      },
+    });
+    
+    const clans = await prisma.shadow_clan.findMany({
+      where: {
+        shadow_clan_group: {
+          group_text_id: request.params.group,
+        }
+      }
+    });
+
     const players = await prisma.shadow_player.findMany({
       where: {
         OR: [
@@ -33,9 +47,11 @@ export default function ShadowAdminList(fastify: FastifyInstance) {
             username: true,
           },
         },
-        shadow_player_properties: true,
+        shadow_player_properties: {
+          distinct: "user_id",
+        }
       }
     });
-    return { players };
+    return { players, clans, group };
   });
 }

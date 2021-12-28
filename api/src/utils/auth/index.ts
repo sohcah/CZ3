@@ -27,6 +27,7 @@ export interface DeviceDetails {
   max_alt?: boolean;
   /** @deprecated used for backwards compatibility with CuppaZee Express */
   ionic?: boolean;
+  disableTeakens?: boolean;
 }
 
 export async function loginWithAuthorizationCode(
@@ -35,8 +36,9 @@ export async function loginWithAuthorizationCode(
   device: DeviceDetails,
   reply: FastifyReply,
   human: boolean = true,
-  useTeakens: boolean = false
+  possiblyUseTeakens: boolean = false
 ) {
+  const useTeakens = !device.disableTeakens && possiblyUseTeakens;
   const teaken = useTeakens ? randomBytes(20).toString("hex") : "";
   if (useTeakens && !device.app) device.app = "max";
   if (!["express", "max", "nomad"].includes(device.app) || !apiApplication) {

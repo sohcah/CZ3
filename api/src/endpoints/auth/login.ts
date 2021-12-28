@@ -25,6 +25,7 @@ export default function AuthLogin(fastify: FastifyInstance) {
             redirect: "https://example.org/",
             platform: "web",
             app: "max",
+            disableTeakens: true,
           })
         )}`
       );
