@@ -494,3 +494,10 @@ export async function authenticateHeaders(
   }
   throw APIError.Authentication("No authentication token provided.");
 }
+
+export async function authenticatedUser(token: string | MinimumAuthenticationResult) {
+  const response = await munzeeFetch<any>({ endpoint: "ping", params: {}, token })
+  const data = await response.getMunzeeData();
+  if(data.authenticated_entity_type !== "user") throw APIError.Authentication("Not a user.");
+  return Number(data.authenticated_entity);
+};

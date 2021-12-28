@@ -2,7 +2,7 @@ import Fastify, { FastifyReply, FastifyRequest } from "fastify";
 import FastifyCors from "fastify-cors";
 import { APIError, APIResponse, CuppaZeeProperties } from "./api";
 import endpoints from "./endpoints/_index";
-import { authenticateHeaders, AuthenticateHeadersOptions, AuthHeaders } from "./utils/auth";
+import { authenticatedUser, authenticateHeaders, AuthenticateHeadersOptions, AuthHeaders } from "./utils/auth";
 const fastify = Fastify({
   logger: {
     level: process.env.NODE_ENV === "development" ? "debug" : "warn",
@@ -22,6 +22,7 @@ declare module "fastify" {
     authenticateHeaders(
       options?: AuthenticateHeadersOptions
     ): ReturnType<typeof authenticateHeaders>;
+    authenticatedUser(): Promise<number>;
     getUsername(): Promise<string>;
     getUserID(): Promise<number>;
     deprecated(): void;
@@ -42,6 +43,14 @@ fastify.decorateRequest(
     return authenticateHeaders(headers, options);
   }
 );
+
+fastify.decorateRequest(
+  "authenticatedUser",
+  async function (this: FastifyRequest) {
+    const token = await this.authenticateHeaders();
+    return await authenticatedUser(token);
+  }
+)
 
 fastify.decorateRequest(
   "deprecated",
