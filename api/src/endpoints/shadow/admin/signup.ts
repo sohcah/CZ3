@@ -10,6 +10,7 @@ export default function ShadowAdminList(fastify: FastifyInstance) {
     };
     Body: {
       username: string;
+      properties: any;
     };
   }>("/shadow/admin/:group/:game_id/signup", async (request, reply) => {
     const player = await prisma.player.findFirst({
@@ -50,6 +51,24 @@ export default function ShadowAdminList(fastify: FastifyInstance) {
         group_id,
         clan_id: null,
       },
+    });
+    await prisma.shadow_player_properties.upsert({
+      where: {
+        user_id_group_id_game_id: {
+          user_id: player.user_id,
+          group_id: group_id,
+          game_id: Number(request.params.game_id),
+        },
+      },
+      create: {
+        user_id: player.user_id,
+        game_id: Number(request.params.game_id),
+        group_id,
+        properties: request.body.properties
+      },
+      update: {
+        properties: request.body.properties
+      }
     });
     return true;
   });

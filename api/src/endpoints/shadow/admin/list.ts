@@ -32,7 +32,8 @@ export default function ShadowAdminList(fastify: FastifyInstance) {
           select: {
             username: true,
           },
-        }
+        },
+        shadow_player_properties: true,
       }
     });
     return { players };

@@ -9,15 +9,16 @@ datasource db {
 }
 
 model player {
-  user_id                 Int                       @id(map: "player_pk") @unique(map: "player_user_id_uindex")
-  username                String                    @unique(map: "player_username_uindex")
-  user_number             Int                       @unique(map: "player_user_number_uindex")
-  player_app              player_app[]
-  player_auth             player_auth[]
-  player_teaken           player_teaken[]
-  shadow_clan_group_admin shadow_clan_group_admin[]
-  shadow_player           shadow_player[]
-  shadow_player_task      shadow_player_task[]
+  user_id                  Int                        @id(map: "player_pk") @unique(map: "player_user_id_uindex")
+  username                 String                     @unique(map: "player_username_uindex")
+  user_number              Int                        @unique(map: "player_user_number_uindex")
+  player_app               player_app[]
+  player_auth              player_auth[]
+  player_teaken            player_teaken[]
+  shadow_clan_group_admin  shadow_clan_group_admin[]
+  shadow_player            shadow_player[]
+  shadow_player_properties shadow_player_properties[]
+  shadow_player_task       shadow_player_task[]
 }
 
 model player_auth {
@@ -51,14 +52,15 @@ model player_app {
 }
 
 model shadow_player {
-  user_id            Int
-  game_id            Int
-  clan_id            Int?
-  group_id           Int?
-  shadow_clan        shadow_clan?         @relation(fields: [clan_id, game_id], references: [clan_id, game_id], onDelete: NoAction, onUpdate: NoAction, map: "shadow_player_shadow_clan_clan_id_game_id_fk")
-  shadow_clan_group  shadow_clan_group?   @relation(fields: [group_id], references: [group_id], onDelete: NoAction, onUpdate: NoAction, map: "shadow_player_shadow_clan_group_group_id_fk")
-  player             player               @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "shadow_player_player_user_id_fk")
-  shadow_player_task shadow_player_task[]
+  user_id                  Int
+  game_id                  Int
+  clan_id                  Int?
+  group_id                 Int?
+  shadow_clan              shadow_clan?               @relation(fields: [clan_id, game_id], references: [clan_id, game_id], onDelete: NoAction, onUpdate: NoAction, map: "shadow_player_shadow_clan_clan_id_game_id_fk")
+  shadow_clan_group        shadow_clan_group?         @relation(fields: [group_id], references: [group_id], onDelete: NoAction, onUpdate: NoAction, map: "shadow_player_shadow_clan_group_group_id_fk")
+  player                   player                     @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "shadow_player_player_user_id_fk")
+  shadow_player_properties shadow_player_properties[]
+  shadow_player_task       shadow_player_task[]
 
   @@id([user_id, game_id], map: "shadow_player_pk")
 }
@@ -85,12 +87,13 @@ model shadow_clan {
 }
 
 model shadow_clan_group {
-  group_id                Int                       @unique(map: "shadow_clan_group_group_id_uindex") @default(autoincrement())
-  name                    String
-  group_text_id           String                    @unique(map: "shadow_clan_group_group_text_id_uindex")
-  shadow_clan             shadow_clan[]
-  shadow_clan_group_admin shadow_clan_group_admin[]
-  shadow_player           shadow_player[]
+  group_id                 Int                        @unique(map: "shadow_clan_group_group_id_uindex") @default(autoincrement())
+  name                     String
+  group_text_id            String                     @unique(map: "shadow_clan_group_group_text_id_uindex")
+  shadow_clan              shadow_clan[]
+  shadow_clan_group_admin  shadow_clan_group_admin[]
+  shadow_player            shadow_player[]
+  shadow_player_properties shadow_player_properties[]
 }
 
 model shadow_clan_group_admin {
@@ -100,4 +103,17 @@ model shadow_clan_group_admin {
   player            player            @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "shadow_clan_group_admin_player_user_id_fk")
 
   @@unique([group_id, user_id], map: "shadow_clan_group_admin_group_id_user_id_uindex")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model shadow_player_properties {
+  user_id           Int
+  group_id          Int
+  properties        Json?             @db.Json
+  game_id           Int
+  shadow_clan_group shadow_clan_group @relation(fields: [group_id], references: [group_id], onDelete: NoAction, onUpdate: NoAction, map: "shadow_player_properties_shadow_clan_group_group_id_fk")
+  player            player            @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "shadow_player_properties_player_user_id_fk")
+  shadow_player     shadow_player     @relation(fields: [user_id, game_id], references: [user_id, game_id], onDelete: NoAction, onUpdate: NoAction, map: "shadow_player_properties_shadow_player_user_id_game_id_fk")
+
+  @@unique([user_id, group_id, game_id], map: "shadow_player_properties_user_id_group_id_game_id_uindex")
 }
