@@ -2,13 +2,13 @@ FROM node:16 AS build
 
 WORKDIR /usr/src/CuppaZeeAPI
 
-COPY server/package*.json ./
-
-COPY schema.prisma ./
+COPY package*.json ./
 
 RUN npm install
 
-COPY server/. .
+COPY src/ src/
+COPY tsconfig.json ./
+COPY prisma/ prisma/
 
 RUN ./node_modules/prisma/build/index.js generate
 
@@ -24,7 +24,7 @@ COPY --from=build /usr/src/CuppaZeeAPI/package.json ./
 RUN yarn install --prod
 
 COPY --from=build /usr/src/CuppaZeeAPI/lib/ lib/
-COPY --from=build /usr/src/CuppaZeeAPI/schema.prisma ./
+COPY --from=build /usr/src/CuppaZeeAPI/prisma/schema.prisma prisma/schema.prisma
 
 RUN ./node_modules/prisma/build/index.js generate
 

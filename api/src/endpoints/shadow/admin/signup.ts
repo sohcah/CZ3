@@ -12,10 +12,13 @@ export default function ShadowAdminList(fastify: FastifyInstance) {
       username: string;
     };
   }>("/shadow/admin/:group/:game_id/signup", async (request, reply) => {
-    const player = await prisma.player.findUnique({
+    const player = await prisma.player.findFirst({
       where: {
-        username: request.body.username,
-      }
+        username: {
+          equals: request.body.username,
+          mode: "insensitive"
+        },
+      },
     });
     if (!player) {
       throw APIError.InvalidRequest("Could not find a user with this username. Please check the input and try again.");

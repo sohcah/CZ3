@@ -16,7 +16,7 @@
     "lint": "tslint --project tsconfig.json",
     "prebuild": "node prebuild",
     "build": "tsc",
-    "docker-build": "tsc && docker build . -t czapi",
+    "docker-build": "docker build . -t czapi",
     "dev": "cross-env NODE_ENV=development ts-node-dev --respawn src/server.ts -- --enable-source-maps",
     "dev-db": "cross-env NODE_ENV=development ts-node-dev --respawn src/database/index.ts -- --enable-source-maps"
   },

@@ -124,3 +124,5 @@ cache/
 config.json
 
 diff/
+
+yarn.lock
