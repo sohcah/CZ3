@@ -18,7 +18,7 @@ import { CheckboxWithLabel } from "formik-mui";
 import { useParams } from "react-router-dom";
 
 function Signup() {
-  const { group } = useParams<{ group: string }>();
+  const { group, game_id } = useParams<{ group: string; game_id: string }>();
   const [status, setStatus] = useState("input");
   const [failureMessage, setFailureMessage] = useState("");
   const formik = useFormik({
@@ -37,13 +37,16 @@ function Signup() {
       setFailureMessage("");
       console.log(data);
       try {
-        const response = await fetch(`https://api.cuppazee.app/shadow/admin/${group}/106/signup`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        });
+        const response = await fetch(
+          `https://api.cuppazee.app/shadow/admin/${group}/${game_id}/signup`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          }
+        );
         const json = await response.json();
         if (json.statusCode === 200) {
           setStatus("success");
@@ -126,7 +129,6 @@ function Signup() {
             variant="outlined"
           />
           <Paper
-            elevation={3}
             variant="outlined"
             style={{
               paddingTop: 4,
@@ -149,6 +151,7 @@ function Signup() {
                     [5, "#55f40b"],
                   ].map(level => (
                     <Field
+                      key={level[0]}
                       component={CheckboxWithLabel}
                       type="checkbox"
                       sx={{
@@ -167,7 +170,6 @@ function Signup() {
             </FormikProvider>
           </Paper>
           <Paper
-            elevation={3}
             variant="outlined"
             style={{
               paddingTop: 4,
@@ -193,7 +195,6 @@ function Signup() {
             </FormikProvider>
           </Paper>
           <Paper
-            elevation={3}
             variant="outlined"
             style={{
               paddingTop: 4,

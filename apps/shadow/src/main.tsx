@@ -2,6 +2,7 @@ import { Box, createTheme, CssBaseline, Paper, ThemeProvider, useMediaQuery } fr
 import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Editor from "./Editor";
 import "./index.css";
 import Signup from "./Signup";
 
@@ -25,7 +26,8 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route index element={<h1>404</h1>} />
-            <Route path=":group/signup" element={<Signup />} />
+            <Route path=":group/:game_id/signup" element={<Signup />} />
+            <Route path=":group/:game_id/editor" element={<Editor />} />
           </Routes>
         </BrowserRouter>
       </Paper>
