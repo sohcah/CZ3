@@ -22,15 +22,21 @@ export default function ShadowAdminMove(fastify: FastifyInstance) {
             user_id: authenticatedUser,
           },
         },
-        shadow_clan: {
-          some: {
-            clan_id: Number(request.body.clan_id),
-          }
-        }
+        ...(request.body.clan_id
+          ? {
+              shadow_clan: {
+                some: {
+                  clan_id: Number(request.body.clan_id),
+                },
+              },
+            }
+          : {}),
       },
     });
     if (!group) {
-      throw APIError.Forbidden("You are not an admin of this group, or this clan is not in this group.");
+      throw APIError.Forbidden(
+        "You are not an admin of this group, or this clan is not in this group."
+      );
     }
     await prisma.shadow_player.update({
       where: {
@@ -39,10 +45,14 @@ export default function ShadowAdminMove(fastify: FastifyInstance) {
           user_id: Number(request.body.user_id),
         },
       },
-      data: {
-        group_id: null,
-        clan_id: Number(request.body.clan_id),
-      },
+      data: request.body.clan_id
+        ? {
+            group_id: group.group_id,
+            clan_id: Number(request.body.clan_id),
+          }
+        : {
+            group_id: group.group_id,
+          },
     });
     return true;
   });
