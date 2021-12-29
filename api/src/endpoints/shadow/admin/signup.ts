@@ -16,7 +16,7 @@ export default function ShadowAdminList(fastify: FastifyInstance) {
     const player = await prisma.player.findFirst({
       where: {
         username: {
-          equals: request.body.username,
+          equals: request.body.username.replace(/\s/g, ""),
           mode: "insensitive"
         },
       },
