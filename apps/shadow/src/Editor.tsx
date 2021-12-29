@@ -1,4 +1,4 @@
-import { Box, Chip, Paper, Typography } from "@mui/material";
+import { Box, Button, Chip, Paper, Typography } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
@@ -64,9 +64,16 @@ export interface Properties {
 export interface Meta {}
 
 function Editor() {
-  const { group, game_id } = useParams<{ group: string, game_id: string }>();
+  const { group, game_id } = useParams<{ group: string; game_id: string }>();
   const [data, setData] = useState<ShadowListData | null>(null);
   const [currentDroppableId, setCurrentDroppableId] = useState<string | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    try {
+      setIsLoggedIn(localStorage.getItem("CuppaZeeToken") !== null);
+    } catch {}
+  }, []);
 
   const loadData = async () => {
     const response = await fetch(`https://api.cuppazee.app/shadow/admin/${group}/${game_id}/list`);
@@ -75,8 +82,10 @@ function Editor() {
   };
 
   useEffect(() => {
-    loadData();
-  }, []);
+    if (isLoggedIn) {
+      loadData();
+    }
+  }, [isLoggedIn]);
 
   const clans = useMemo(() => {
     if (!data) return [];
@@ -87,6 +96,21 @@ function Editor() {
         name: i.name.replace(/^\<\d+\>/, ""),
       }));
   }, [data]);
+
+  if (!isLoggedIn) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          minHeight: "100vh",
+          alignItems: "center",
+          justifyContent: "center",
+        }}>
+        <Button disabled>Login</Button>
+      </div>
+    );
+  }
 
   if (data === null) {
     return (
