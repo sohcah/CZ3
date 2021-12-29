@@ -66,6 +66,7 @@ export interface Meta {}
 function Editor() {
   const { group, game_id } = useParams<{ group: string, game_id: string }>();
   const [data, setData] = useState<ShadowListData | null>(null);
+  const [currentDroppableId, setCurrentDroppableId] = useState<string | null>(null);
 
   const loadData = async () => {
     const response = await fetch(`https://api.cuppazee.app/shadow/admin/${group}/${game_id}/list`);
@@ -114,7 +115,13 @@ function Editor() {
         alignItems: "stretch",
       }}>
       <DragDropContext
+        onDragUpdate={d => {
+          if (d.destination?.droppableId !== currentDroppableId) {
+            setCurrentDroppableId(d.destination?.droppableId ?? null);
+          }
+        }}
         onDragEnd={async d => {
+          setCurrentDroppableId(null);
           if (d.destination?.droppableId !== d.source?.droppableId) {
             const player = data.data.players.find(i => i.user_id.toString() === d.draggableId)!;
             const originalPlayer = { ...player };
@@ -158,10 +165,12 @@ function Editor() {
         ).map(c => (
           <Paper
             key={c[0]}
+            elevation={currentDroppableId === c[0] ? 4 : 1}
             style={{
               margin: 4,
               minWidth: 130,
               flexGrow: 1,
+              flexBasis: 0,
               display: "flex",
               flexDirection: "column",
             }}>
@@ -203,7 +212,7 @@ function Editor() {
                                   <Chip
                                     key={l}
                                     size="small"
-                                    style={{ margin: 2 }}
+                                    style={{ margin: 2, maxWidth: "100%", overflow: "hidden" }}
                                     label={`Level ${l}`}
                                   />
                                 ))}
@@ -212,7 +221,7 @@ function Editor() {
                                     key="admin"
                                     size="small"
                                     color="secondary"
-                                    style={{ margin: 2 }}
+                                    style={{ margin: 2, maxWidth: "100%", overflow: "hidden" }}
                                     label={`Admin?`}
                                   />
                                 ) : null}
@@ -221,7 +230,7 @@ function Editor() {
                                     key="qrew"
                                     size="small"
                                     color="primary"
-                                    style={{ margin: 2 }}
+                                    style={{ margin: 2, maxWidth: "100%", overflow: "hidden" }}
                                     label={`QRew`}
                                   />
                                 ) : null}
@@ -230,7 +239,7 @@ function Editor() {
                                     key="qrates"
                                     size="small"
                                     color="info"
-                                    style={{ margin: 2 }}
+                                    style={{ margin: 2, maxWidth: "100%", overflow: "hidden" }}
                                     label={`QRates: ${i.shadow_player_properties[0]?.properties.qrates}`}
                                   />
                                 ) : null}
@@ -239,7 +248,7 @@ function Editor() {
                                     key="resellers"
                                     size="small"
                                     color="info"
-                                    style={{ margin: 2 }}
+                                    style={{ margin: 2, maxWidth: "100%", overflow: "hidden" }}
                                     label={`RUMs: ${i.shadow_player_properties[0]?.properties.resellers}`}
                                   />
                                 ) : null}
