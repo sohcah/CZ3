@@ -55,6 +55,7 @@ export interface ShadowPlayerProperty {
 export interface Properties {
   targetLevels: string[];
   qrates: string;
+  resellers: string;
   admin: boolean;
   qrew: boolean;
   notes: string;
@@ -67,7 +68,7 @@ function Editor() {
   const [data, setData] = useState<ShadowListData | null>(null);
 
   const loadData = async () => {
-    const response = await fetch(`http://0.0.0.0/shadow/admin/${group}/${game_id}/list`);
+    const response = await fetch(`https://api.cuppazee.app/shadow/admin/${group}/${game_id}/list`);
     const json = await response.json();
     setData(json);
   };
@@ -126,18 +127,21 @@ function Editor() {
               player.group_id = data.data.group.group_id;
             }
             setData({ ...data });
-            const response = await fetch(`http://0.0.0.0/shadow/admin/${group}/106/move`, {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                "x-cuppazee-token": localStorage.CuppaZeeToken,
-              },
-              body: JSON.stringify({
-                user_id: player.user_id,
-                clan_id:
-                  d.destination?.droppableId === "-" ? null : Number(d.destination?.droppableId),
-              }),
-            });
+            const response = await fetch(
+              `https://api.cuppazee.app/shadow/admin/${group}/106/move`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  "x-cuppazee-token": localStorage.CuppaZeeToken,
+                },
+                body: JSON.stringify({
+                  user_id: player.user_id,
+                  clan_id:
+                    d.destination?.droppableId === "-" ? null : Number(d.destination?.droppableId),
+                }),
+              }
+            );
             if (response.status !== 200) {
               player.clan_id = originalPlayer.clan_id;
               player.group_id = originalPlayer.group_id;
@@ -228,6 +232,15 @@ function Editor() {
                                     color="info"
                                     style={{ margin: 2 }}
                                     label={`QRates: ${i.shadow_player_properties[0]?.properties.qrates}`}
+                                  />
+                                ) : null}
+                                {i.shadow_player_properties[0]?.properties.resellers ? (
+                                  <Chip
+                                    key="resellers"
+                                    size="small"
+                                    color="info"
+                                    style={{ margin: 2 }}
+                                    label={`RUMs: ${i.shadow_player_properties[0]?.properties.resellers}`}
                                   />
                                 ) : null}
                               </div>
