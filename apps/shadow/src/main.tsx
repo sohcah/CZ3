@@ -6,6 +6,18 @@ import Editor from "./Editor";
 import "./index.css";
 import Signup from "./Signup";
 
+function checkParamsForCode() {
+  const searchParams = new URLSearchParams(window.location.search);
+  const code = searchParams.get("code");
+  if (code) {
+    localStorage.CuppaZeeToken = code;
+    searchParams.delete("code");
+    location.replace("?" + searchParams.toString())
+  }
+}
+
+checkParamsForCode();
+
 function App() {
 
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");

@@ -107,7 +107,18 @@ function Editor() {
           alignItems: "center",
           justifyContent: "center",
         }}>
-        <Button disabled>Login</Button>
+        <Button onClick={() => {
+          location.href =
+            "https://api.cuppazee.app/auth/login/main?state=" +
+            encodeURIComponent(
+              JSON.stringify({
+                redirect: location.href,
+                platform: "web",
+                app: "shadow",
+                disableTeakens: true,
+              })
+            );
+        }}>Login</Button>
       </div>
     );
   }
