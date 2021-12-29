@@ -1,5 +1,7 @@
 import Fastify, { FastifyReply, FastifyRequest } from "fastify";
 import FastifyCors from "fastify-cors";
+import FastifyFormBody from "fastify-formbody";
+import fastifyMultipart from "fastify-multipart";
 import { APIError, APIResponse, CuppaZeeProperties } from "./api";
 import endpoints from "./endpoints/_index";
 import { authenticatedUser, authenticateHeaders, AuthenticateHeadersOptions, AuthHeaders } from "./utils/auth";
@@ -10,6 +12,10 @@ const fastify = Fastify({
 });
 fastify.register(FastifyCors, {
   origin: true,
+});
+fastify.register(FastifyFormBody);
+fastify.register(fastifyMultipart, {
+  addToBody: true,
 });
 
 import "./utils/munzee";
