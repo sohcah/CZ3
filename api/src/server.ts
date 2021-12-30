@@ -1,7 +1,7 @@
 import Fastify, { FastifyReply, FastifyRequest } from "fastify";
 import FastifyCors from "fastify-cors";
 import FastifyFormBody from "fastify-formbody";
-import fastifyMultipart from "fastify-multipart";
+import fastifyMultipart, { MultipartValue } from "fastify-multipart";
 import { APIError, APIResponse, CuppaZeeProperties } from "./api";
 import endpoints from "./endpoints/_index";
 import { authenticatedUser, authenticateHeaders, AuthenticateHeadersOptions, AuthHeaders } from "./utils/auth";
@@ -15,7 +15,7 @@ fastify.register(FastifyCors, {
 });
 fastify.register(FastifyFormBody);
 fastify.register(fastifyMultipart, {
-  addToBody: true,
+  attachFieldsToBody: true,
 });
 
 import "./utils/munzee";
@@ -112,6 +112,18 @@ fastify.decorateRequest("getUserID", async function (this: FastifyRequest): Prom
 
 fastify.addHook("onRequest", async request => {
   request.cuppazeeProperties = { startTime: process.hrtime() };
+});
+
+fastify.addHook("preValidation", (request, reply, done) => {
+  if (request.body && typeof request.body === "object") {
+    request.body = Object.fromEntries(Object.entries(request.body).map(([key, value]) => {
+      if (value && typeof value === "object" && "value" in value) {
+        return [key, (value as MultipartValue<unknown>).value];
+      }
+      return [key, value];
+    }));
+  }
+  done();
 });
 
 fastify.decorateReply("success", function <T>(this: FastifyReply, data: T) {

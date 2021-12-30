@@ -41,7 +41,7 @@ export async function loginWithAuthorizationCode(
   const useTeakens = !device.disableTeakens && possiblyUseTeakens;
   const teaken = useTeakens ? randomBytes(20).toString("hex") : "";
   if (useTeakens && !device.app) device.app = "max";
-  if (!["express", "max", "nomad"].includes(device.app) || !apiApplication) {
+  if (!["express", "max", "nomad", "shadow"].includes(device.app) || !apiApplication) {
     throw APIError.InvalidRequest();
   }
 
@@ -177,7 +177,7 @@ export async function loginWithAuthorizationCode(
         user_id_app: {
           app: device.app,
           user_id: user_id!,
-        }
+        },
       },
       update: {},
       create: {
@@ -250,9 +250,7 @@ export async function loginWithAuthorizationCode(
     description: `
 CuppaZee User #${userNumber} of ${userCount}
 Platform: ${platform} ${platformName}
-API: ${apiApplication.title}${
-      isNewToApi ? " 🆕" : ""
-    } [User #${apiUserNumber} of ${apiUserCount}]
+API: ${apiApplication.title}${isNewToApi ? " 🆕" : ""} [User #${apiUserNumber} of ${apiUserCount}]
 App: ${device.app[0].toUpperCase()}${device.app.slice(1)}${
       isNewToApp ? " 🆕" : ""
     } [User #${appUserNumber} of ${appUserCount}]
@@ -371,7 +369,11 @@ function call() {
     config.jwtSecret
   );
 
-  return reply.redirect(`${device.redirect}?code=${encodeURIComponent(token)}`);
+  return reply.redirect(
+    `${device.redirect}${device.redirect.includes("?") ? "&" : "?"}code=${encodeURIComponent(
+      token
+    )}`
+  );
 }
 
 export interface MinimumAuthenticationResult {
@@ -399,7 +401,7 @@ export function verifyJwtToken(cuppazeeToken: string) {
 
 export async function authenticateWithCuppaZeeToken(
   cuppazeeToken: string,
-  application: APIApplication = config.applications.internal
+  application?: APIApplication
 ) {
   const jwtData = verifyJwtToken(cuppazeeToken);
 
@@ -408,20 +410,20 @@ export async function authenticateWithCuppaZeeToken(
 
 export async function authenticateWithUserID(
   user_id: string | number,
-  apiApplication: APIApplication = config.applications.internal
+  apiApplication?: APIApplication
 ): Promise<AuthenticationResult> {
-  const authDocument = await prisma.player_auth.findUnique({
+  const authDocument = await prisma.player_auth.findFirst({
     where: {
-      user_id_api: {
-        api: apiApplication.id,
-        user_id: Number(user_id),
-      },
+      api: apiApplication?.id,
+      user_id: Number(user_id),
     },
   });
 
   if (!authDocument) {
     throw APIError.Authentication("Couldn't find authentication for this user.");
   }
+
+  const apiApp = apiApplication ?? config.applications[authDocument.api];
 
   if (authDocument.access_token_expires.valueOf() > Date.now() + 1800000) {
     return {
@@ -433,11 +435,11 @@ export async function authenticateWithUserID(
   const response = await fetch("https://api.munzee.com/oauth/login", {
     method: "POST",
     body: new URLSearchParams({
-      client_id: apiApplication.client_id,
-      client_secret: apiApplication.client_secret,
+      client_id: apiApp.client_id,
+      client_secret: apiApp.client_secret,
       grant_type: "refresh_token",
       refresh_token: authDocument.refresh_token,
-      redirect_uri: apiApplication.redirect_uri,
+      redirect_uri: apiApp.redirect_uri,
     }),
     headers: {
       "User-Agent": "@cuppazee/api-server (+https://github.com/CuppaZee/CuppaZee)",
@@ -451,9 +453,9 @@ export async function authenticateWithUserID(
   }
 
   await prisma.player_auth.update({
-    where: { user_id_api: { api: apiApplication.id, user_id: Number(user_id) } },
+    where: { user_id_api: { api: apiApp.id, user_id: Number(user_id) } },
     data: {
-      api: apiApplication.id,
+      api: apiApp.id,
       access_token: responseData.data.token.access_token,
       access_token_expires: new Date(responseData.data.token.expires * 1000),
       refresh_token: authDocument.refresh_token,
@@ -467,7 +469,7 @@ export async function authenticateWithUserID(
   };
 }
 
-export function authenticateAnonymous(application: APIApplication = config.applications.internal) {
+export function authenticateAnonymous(application?: APIApplication) {
   return authenticateWithUserID(125914, application);
 }
 
@@ -498,8 +500,8 @@ export async function authenticateHeaders(
 }
 
 export async function authenticatedUser(token: string | MinimumAuthenticationResult) {
-  const response = await munzeeFetch<any>({ endpoint: "user", params: {}, token })
+  const response = await munzeeFetch<any>({ endpoint: "user", params: {}, token });
   const data = await response.getMunzeeData();
-  if(data.authenticated_entity_type !== "user") throw APIError.Authentication("Not a user.");
+  if (data.authenticated_entity_type !== "user") throw APIError.Authentication("Not a user.");
   return Number(data.authenticated_entity);
-};
+}

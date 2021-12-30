@@ -27,7 +27,7 @@ export default function clan_v2_requirements(fastify: FastifyInstance) {
               };
             }
             return i;
-          })
+          });
         }
         if (levelData?.group) {
           levelData.group = levelData.group.map((i: any) => {
@@ -42,7 +42,7 @@ export default function clan_v2_requirements(fastify: FastifyInstance) {
         }
       }
     }
-    
-    return {__raw: result};
+
+    return { __raw: result };
   });
 }
