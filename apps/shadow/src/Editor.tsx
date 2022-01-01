@@ -243,7 +243,7 @@ function Editor() {
                         }
                       })
                       .map((i, n) => (
-                        <Draggable key={i.user_id} index={n} draggableId={`${i.user_id}`}>
+                        <Draggable isDragDisabled={!isLoggedIn} key={i.user_id} index={n} draggableId={`${i.user_id}`}>
                           {(provided, snapshot) => (
                             <div
                               ref={provided.innerRef}
