@@ -13,11 +13,11 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
-import { Field, FormikContext, FormikProvider, useFormik } from "formik";
+import { Field, FormikProvider, useFormik } from "formik";
 import { CheckboxWithLabel } from "formik-mui";
 import { useParams } from "react-router-dom";
 
-function Signup() {
+function SignUp() {
   const { group, game_id } = useParams<{ group: string; game_id: string }>();
   const [status, setStatus] = useState("input");
   const [failureMessage, setFailureMessage] = useState("");
@@ -258,4 +258,4 @@ function Signup() {
   );
 }
 
-export default Signup;
+export default SignUp;

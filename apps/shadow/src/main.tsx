@@ -40,6 +40,7 @@ function App() {
             <Route index element={<h1>404</h1>} />
             <Route path=":group/:game_id/signup" element={<Signup />} />
             <Route path=":group/:game_id/editor" element={<Editor />} />
+            <Route path=":group/:game_id/roster" element={<Editor />} />
           </Routes>
         </BrowserRouter>
       </Paper>
