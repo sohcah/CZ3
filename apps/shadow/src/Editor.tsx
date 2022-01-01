@@ -61,7 +61,7 @@ function Editor() {
   }, []);
 
   const loadData = async () => {
-    const response = await fetch(`http://0.0.0.0/shadow/admin/${group}/${game_id}/roster`, {
+    const response = await fetch(`https://api.cuppazee.app/shadow/admin/${group}/${game_id}/roster`, {
       headers: {
         "x-cuppazee-token": localStorage.CuppaZeeToken,
       },
