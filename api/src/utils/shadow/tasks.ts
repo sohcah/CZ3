@@ -42,14 +42,18 @@ export const defaultSum: TaskSumFunction = days => {
   }, 0);
 };
 
+const calculatePoints = (data: ActivityItem[]): number => {
+  return data.reduce<number>((a, b) => {
+    if ("points_for_creator" in b) {
+      return a + Number(b.points_for_creator);
+    }
+    return a + Number(b.points);
+  }, 0);
+}
+
 const points: BasicTaskCalculateFunctionGenerator = func => {
   return items =>
-    func(items).reduce<number>((a, b) => {
-      if ("points_for_creator" in b) {
-        return a + Number(b.points_for_creator);
-      }
-      return a + Number(b.points);
-    }, 0);
+    calculatePoints(func(items));
 };
 
 const count: BasicTaskCalculateFunctionGenerator = func => {
@@ -229,6 +233,31 @@ export const taskCalculations: { [task_id: number]: TaskCalculator } = {
   },
   37: {
     task_id: 37,
-    calculate: ({ captures, deploys, captures_on }) => null,
+    calculate: () => null,
+    sum: () => null,
+  },
+  2038: {
+    task_id: 2038,
+    calculate: ({ captures, deploys, captures_on }) => {
+      return calculatePoints([...captures, ...deploys, ...captures_on]) >= 2000 ? 1 : 0;
+    }
+  },
+  3038: {
+    task_id: 3038,
+    calculate: ({ captures, deploys, captures_on }) => {
+      return calculatePoints([...captures, ...deploys, ...captures_on]) >= 3000 ? 1 : 0;
+    }
+  },
+  4038: {
+    task_id: 4038,
+    calculate: ({ captures, deploys, captures_on }) => {
+      return calculatePoints([...captures, ...deploys, ...captures_on]) >= 4000 ? 1 : 0;
+    }
+  },
+  5038: {
+    task_id: 5038,
+    calculate: ({ captures, deploys, captures_on }) => {
+      return calculatePoints([...captures, ...deploys, ...captures_on]) >= 5000 ? 1 : 0;
+    }
   },
 };

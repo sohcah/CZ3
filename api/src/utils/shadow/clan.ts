@@ -25,20 +25,22 @@ export async function getShadowClanStats(options: getShadowClanStatsOptions) {
   const stats = await Promise.all(
     players.map(async player => {
       try {
-        return await getShadowPlayerStats({
+        return {
           user_id: player.user_id,
-          game_id: options.gameId,
-        });
+          username: player.player.username,
+          stats: await getShadowPlayerStats({
+            user_id: player.user_id,
+            game_id: options.gameId,
+          })
+        };
       } catch {
-        return null;
+        return {
+          user_id: player.user_id,
+          username: player.player.username,
+          stats: null,
+        };
       }
     })
   );
-  return {
-    stats,
-    players: players.map(player => ({
-      user_id: player.user_id,
-      username: player.player.username,
-    })),
-  };
+  return stats;
 }
