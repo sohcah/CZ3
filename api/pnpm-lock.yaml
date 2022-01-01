@@ -3,6 +3,7 @@ lockfileVersion: 5.3
 specifiers:
   '@cuppazee/api': ^0.0.14
   '@cuppazee/db': ^0.0.8
+  '@cuppazee/utils': ^0.1.2
   '@prisma/client': ^3.4.2
   '@types/cors': ^2.8.10
   '@types/glob': ^7.2.0
@@ -14,6 +15,7 @@ specifiers:
   '@webkitty/geo-rev': ^1.1.1
   cors: ^2.8.5
   cross-env: ^7.0.3
+  dayjs: ^1.10.7
   fastify: ^3.14.2
   fastify-cors: ^6.0.1
   fastify-formbody: ^5.2.0
@@ -36,10 +38,12 @@ specifiers:
 
 dependencies:
   '@cuppazee/db': 0.0.8
+  '@cuppazee/utils': 0.1.2_dayjs@1.10.7
   '@prisma/client': 3.4.2_prisma@3.4.2
   '@webkitty/geo-rev': 1.1.1
   cors: 2.8.5
   cross-env: 7.0.3
+  dayjs: 1.10.7
   fastify: 3.22.1
   fastify-cors: 6.0.2
   fastify-formbody: 5.2.0
@@ -74,13 +78,25 @@ packages:
 
   /@cuppazee/api/0.0.14:
     resolution: {integrity: sha512-H4s5gwcQvxfV37pcgZAzfjmwcpdKx6C1OOBgUs0OwBd5UNOkXkzECF+OCkpdcccuXDCqagf71YR2eDAB3n2ymw==}
-    dev: true
 
   /@cuppazee/db/0.0.8:
     resolution: {integrity: sha512-5owgF1KjL+4MAGi0aLb5836U+anJG0+Aov/bmPng/DAvuYiVDDBPaYXZAshqG8c+ERjKm7iqFv5Zl9js7AHSYw==}
     dependencies:
       '@msgpack/msgpack': 2.7.1
       lzwcompress: 1.1.0
+    dev: false
+
+  /@cuppazee/utils/0.1.2_dayjs@1.10.7:
+    resolution: {integrity: sha512-ElTnO9PbOssRY/FKQJprJ3whVgZcHNkcPSwbBgh7dloLxLWzx5JqxWh8YDlPStsiQ9FOy7NylVdFbs5uyuIA/A==}
+    peerDependencies:
+      dayjs: ^1.10
+    dependencies:
+      '@cuppazee/api': 0.0.14
+      '@cuppazee/db': 0.0.8
+      dayjs: 1.10.7
+      eslint-config-prettier: 8.3.0
+    transitivePeerDependencies:
+      - eslint
     dev: false
 
   /@fastify/ajv-compiler/1.1.0:
@@ -424,6 +440,10 @@ packages:
       uniq: 1.0.1
     dev: false
 
+  /dayjs/1.10.7:
+    resolution: {integrity: sha512-P6twpd70BcPK34K26uJ1KT3wlhpuOAPoMwJzpsIWUxHZ7wpmbdZL/hQqBDfz7hGurYSa5PhzdhDHtt319hL3ig==}
+    dev: false
+
   /debug/2.6.9:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}
     dependencies:
@@ -513,6 +533,13 @@ packages:
 
   /escape-html/1.0.3:
     resolution: {integrity: sha1-Aljq5NPQwJdN4cFpGI7wBR0dGYg=}
+    dev: false
+
+  /eslint-config-prettier/8.3.0:
+    resolution: {integrity: sha512-BgZuLUSeKzvlL/VUjx/Yb787VQ26RU3gGjA3iiFvdsp/2bMfVIWUVP7tjxtjS0e+HP409cPlPvNkQloz8C91ew==}
+    hasBin: true
+    peerDependencies:
+      eslint: '>=7.0.0'
     dev: false
 
   /etag/1.8.1:

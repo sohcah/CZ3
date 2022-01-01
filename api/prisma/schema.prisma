@@ -66,12 +66,13 @@ model shadow_player {
 }
 
 model shadow_player_task {
-  user_id       Int
-  game_id       Int
-  task_id       Int
-  value         Int?
-  player        player        @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "shadow_player_task_player_user_id_fk")
-  shadow_player shadow_player @relation(fields: [user_id, game_id], references: [user_id, game_id], onDelete: NoAction, onUpdate: NoAction, map: "shadow_player_task_shadow_player_user_id_game_id_fk")
+  user_id                Int
+  game_id                Int
+  task_id                Int
+  value                  Int?
+  player                 player                   @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "shadow_player_task_player_user_id_fk")
+  shadow_player          shadow_player            @relation(fields: [user_id, game_id], references: [user_id, game_id], onDelete: NoAction, onUpdate: NoAction, map: "shadow_player_task_shadow_player_user_id_game_id_fk")
+  shadow_player_task_day shadow_player_task_day[]
 
   @@unique([user_id, game_id, task_id], map: "shadow_player_task_user_id_game_id_task_id_uindex")
 }
@@ -117,4 +118,16 @@ model shadow_player_properties {
   shadow_player     shadow_player     @relation(fields: [user_id, game_id], references: [user_id, game_id], onDelete: NoAction, onUpdate: NoAction, map: "shadow_player_properties_shadow_player_user_id_game_id_fk")
 
   @@unique([user_id, group_id, game_id], map: "shadow_player_properties_user_id_group_id_game_id_uindex")
+}
+
+model shadow_player_task_day {
+  user_id            Int
+  game_id            Int
+  task_id            Int
+  date               DateTime           @db.Date
+  value              Int?
+  finalised          Boolean
+  shadow_player_task shadow_player_task @relation(fields: [user_id, game_id, task_id], references: [user_id, game_id, task_id], onDelete: NoAction, onUpdate: NoAction, map: "shadow_player_task_day_shadow_player_task_user_id_game_id_task_")
+
+  @@unique([user_id, game_id, task_id, date], map: "shadow_player_task_day_user_id_game_id_task_id_date_uindex")
 }
