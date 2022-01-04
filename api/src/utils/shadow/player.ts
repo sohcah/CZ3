@@ -2,6 +2,7 @@ import { authenticateWithUserID, AuthenticationResult } from "../auth";
 import { munzeeFetch } from "../munzee";
 import { getShadowPlayerTask } from "./task";
 import { ActivityData, addActivityItemExtras } from "./tasks";
+import { prisma } from "../prisma";
 
 export interface ShadowPlayerReference {
   user_id: number;
@@ -17,6 +18,25 @@ export async function getShadowPlayerStats(player: ShadowPlayerReference) {
   const tasksOutput: { [task_id: number]: number | null } = {};
 
   const token = await authenticateWithUserID(player.user_id);
+
+  const shadowPlayer = await prisma.shadow_player.findUnique({
+    where: {
+      user_id_game_id: {
+        user_id: player.user_id,
+        game_id: player.game_id,
+      }
+    },
+  });
+
+  if (!shadowPlayer) {
+    await prisma.shadow_player.create({
+      data: {
+        user_id: player.user_id,
+        game_id: player.game_id,
+      }
+    });
+  }
+
   const activityLoader = new ShadowPlayerActivityLoader(token);
   await Promise.all(tasksByGameId[player.game_id].map(async task_id => {
     tasksOutput[task_id] = await getShadowPlayerTask({ ...player, task_id }, activityLoader)
