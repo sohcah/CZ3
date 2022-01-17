@@ -23,6 +23,7 @@ dayjs.extend(dayjsMHQPlugin);
 
 import "./utils/munzee";
 import { munzeeFetch } from "./utils/munzee";
+import "./extra";
 
 declare module "fastify" {
   interface FastifyRequest {
