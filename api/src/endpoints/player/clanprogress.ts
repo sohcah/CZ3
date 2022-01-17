@@ -10,6 +10,6 @@ export default function PlayerClanProgress(fastify: FastifyInstance) {
       user_id,
       game_id: Number(request.params.game_id),
     })
-    return { stas: shadowPlayerStats };
+    return { stats: shadowPlayerStats };
   });
 }

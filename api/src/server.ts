@@ -17,6 +17,9 @@ fastify.register(FastifyFormBody);
 fastify.register(fastifyMultipart, {
   attachFieldsToBody: true,
 });
+import dayjs from "dayjs";
+import { dayjsMHQPlugin } from "@cuppazee/utils";
+dayjs.extend(dayjsMHQPlugin);
 
 import "./utils/munzee";
 import { munzeeFetch } from "./utils/munzee";

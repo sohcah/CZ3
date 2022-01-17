@@ -15,7 +15,7 @@ function getDatesForGameID(gameId: GameID, excludeFutureDates: boolean = true): 
   for (let i = 3; i <= 31; i++) {
     const date = dayjs(0).year(gameId.year).month(gameId.month).date(i);
     if (date.month() !== gameId.month) break;
-    if (excludeFutureDates && date.valueOf() > dayjs().valueOf()) break;
+    if (excludeFutureDates && date.valueOf() > dayjs.mhqNow().valueOf()) break;
     dates.push(date);
   }
 
@@ -78,8 +78,7 @@ export async function getShadowPlayerTask(ref: ShadowPlayerTaskReference, activi
         date: date.toDate(),
         value,
         finalised:
-          dayjs().format("YYYYMMDD") !== date.format("YYYYMMDD") &&
-          dayjs().format("YYYYMMDD") !== date.add(-1, "day").format("YYYYMMDD"),
+          dayjs.mhqNow().valueOf() >= date.add(1, "day").valueOf(),
       };
 
       return [newData, existingData ? 1 : 2];
