@@ -3,10 +3,16 @@ import { munzeeFetch } from "../munzee";
 import { getShadowPlayerTask } from "./task";
 import { ActivityData, addActivityItemExtras } from "./tasks";
 import { prisma } from "../prisma";
+import { shadow_player, shadow_player_task, shadow_player_task_day } from "@prisma/client";
 
 export interface ShadowPlayerReference {
   user_id: number;
   game_id: number;
+  shadowPlayer?: shadow_player & {
+    shadow_player_task: (shadow_player_task & {
+      shadow_player_task_day: shadow_player_task_day[];
+    })[];
+  };
 }
 
 const tasksByGameId: { [game_id: number]: number[] } = {
@@ -19,12 +25,19 @@ export async function getShadowPlayerStats(player: ShadowPlayerReference) {
 
   const token = await authenticateWithUserID(player.user_id);
 
-  const shadowPlayer = await prisma.shadow_player.findUnique({
+  const shadowPlayer = player.shadowPlayer ?? await prisma.shadow_player.findUnique({
     where: {
       user_id_game_id: {
         user_id: player.user_id,
         game_id: player.game_id,
-      }
+      },
+    },
+    include: {
+      shadow_player_task: {
+        include: {
+          shadow_player_task_day: true,
+        },
+      },
     },
   });
 
@@ -33,27 +46,38 @@ export async function getShadowPlayerStats(player: ShadowPlayerReference) {
       data: {
         user_id: player.user_id,
         game_id: player.game_id,
-      }
+      },
     });
   }
 
   const activityLoader = new ShadowPlayerActivityLoader(token);
-  await Promise.all(tasksByGameId[player.game_id].map(async task_id => {
-    tasksOutput[task_id] = await getShadowPlayerTask({ ...player, task_id }, activityLoader)
-  }));
+  activityLoader.user_id = shadowPlayer?.user_id;
+  await Promise.all(
+    tasksByGameId[player.game_id].map(async task_id => {
+      tasksOutput[task_id] = await getShadowPlayerTask(
+        {
+          ...player,
+          task: shadowPlayer?.shadow_player_task.find(i => i.task_id === task_id),
+          task_id,
+        },
+        activityLoader
+      );
+    })
+  );
   return tasksOutput;
 }
 
 export class ShadowPlayerActivityLoader {
   cache = new Map<string, Promise<ActivityData>>();
   token: AuthenticationResult;
+  user_id?: number;
 
   constructor(token: AuthenticationResult) {
     this.token = token;
   }
 
   private async internalGet(day: string): Promise<ActivityData> {
-    console.log("Getting activity for " + day);
+    console.log(`Getting activity for ${day} for ${this.user_id}`);
     const activityResponse = await munzeeFetch({
       endpoint: "statzee/player/day",
       params: {

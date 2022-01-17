@@ -44,7 +44,7 @@ export async function munzeeFetch<Path extends keyof Endpoints>({ endpoint, para
         : ""),
     {
       method: method ?? "POST",
-      body: new URLSearchParams({
+      body: method === "GET" ? undefined : new URLSearchParams({
         data: JSON.stringify(params),
         access_token: typeof token === "string" ? token : token.access_token,
       }),

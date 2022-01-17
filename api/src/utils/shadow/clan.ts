@@ -14,14 +14,43 @@ export async function getShadowClanStats(options: getShadowClanStatsOptions) {
     },
     select: {
       user_id: true,
+      game_id: true,
+      clan_id: true,
+      group_id: true,
       player: {
         select: {
           username: true,
         },
       },
+      shadow_player_task: {
+        include: {
+          shadow_player_task_day: true,
+        }
+      }
     },
   });
 
+  // const stats = [];
+  // for (const player of players) {
+  //   try {
+  //     stats.push({
+  //       user_id: player.user_id,
+  //       username: player.player.username,
+  //       stats: await getShadowPlayerStats({
+  //         user_id: player.user_id,
+  //         game_id: options.gameId,
+  //         shadowPlayer: player,
+  //       }),
+  //     });
+  //   } catch {
+  //     stats.push({
+  //       user_id: player.user_id,
+  //       username: player.player.username,
+  //       stats: null,
+  //     });
+  //   }
+  // }
+  
   const stats = await Promise.all(
     players.map(async player => {
       try {
@@ -31,7 +60,7 @@ export async function getShadowClanStats(options: getShadowClanStatsOptions) {
           stats: await getShadowPlayerStats({
             user_id: player.user_id,
             game_id: options.gameId,
-          })
+          }),
         };
       } catch {
         return {
@@ -42,5 +71,6 @@ export async function getShadowClanStats(options: getShadowClanStatsOptions) {
       }
     })
   );
+  
   return stats;
 }

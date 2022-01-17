@@ -2,18 +2,19 @@ import { prisma } from "../prisma";
 import { ShadowPlayerActivityLoader, ShadowPlayerReference } from "./player";
 import dayjs, { Dayjs } from "dayjs";
 import { GameID } from "@cuppazee/utils";
-import { shadow_player_task_day } from "@prisma/client";
+import { shadow_player_task, shadow_player_task_day } from "@prisma/client";
 import { defaultSum, taskCalculations } from "./tasks";
 
 export interface ShadowPlayerTaskReference extends ShadowPlayerReference {
   task_id: number;
+  task?: shadow_player_task & {shadow_player_task_day: shadow_player_task_day[]};
 }
 
 function getDatesForGameID(gameId: GameID, excludeFutureDates: boolean = true): Dayjs[] {
   const dates = [];
 
   for (let i = 3; i <= 31; i++) {
-    const date = dayjs(0).year(gameId.year).month(gameId.month).date(i);
+    const date = dayjs.mhqParse(0).year(gameId.year).month(gameId.month).date(i);
     if (date.month() !== gameId.month) break;
     if (excludeFutureDates && date.valueOf() > dayjs.mhqNow().valueOf()) break;
     dates.push(date);
@@ -23,18 +24,7 @@ function getDatesForGameID(gameId: GameID, excludeFutureDates: boolean = true): 
 }
 
 export async function getShadowPlayerTask(ref: ShadowPlayerTaskReference, activityLoader: ShadowPlayerActivityLoader) {
-  const task = await prisma.shadow_player_task.findUnique({
-    where: {
-      user_id_game_id_task_id: {
-        user_id: ref.user_id,
-        game_id: ref.game_id,
-        task_id: ref.task_id,
-      },
-    },
-    include: {
-      shadow_player_task_day: true,
-    },
-  });
+  const task = ref.task;
 
   if (!task) {
     await prisma.shadow_player_task.create({
@@ -61,6 +51,7 @@ export async function getShadowPlayerTask(ref: ShadowPlayerTaskReference, activi
       }
 
       let value = null;
+      let calculatedValue = false;
       try {
         const taskCalculator = taskCalculations[ref.task_id];
 
@@ -69,6 +60,7 @@ export async function getShadowPlayerTask(ref: ShadowPlayerTaskReference, activi
         const activityData = await activityLoader.get(date.format("YYYY-MM-DD"));
 
         value = taskCalculator.calculate(activityData);
+        calculatedValue = true;
       } catch {}
 
       const newData = {
@@ -78,7 +70,8 @@ export async function getShadowPlayerTask(ref: ShadowPlayerTaskReference, activi
         date: date.toDate(),
         value,
         finalised:
-          dayjs.mhqNow().valueOf() >= date.add(1, "day").valueOf(),
+          dayjs.mhqNow().add(-1, "hour").startOf("day").valueOf() >= date.add(1, "day").valueOf() &&
+          calculatedValue,
       };
 
       return [newData, existingData ? 1 : 2];
