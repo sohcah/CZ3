@@ -4,5 +4,6 @@ import PlayerAvatar from "./avatar";
 import PlayerActivity from "./activity";
 import PlayerClanProgress from "./clanprogress";
 import PlayerZeeQRew from "./qrew";
+import PlayerUndeployed from "./undeployed";
 
-export default [PlayerActivity, PlayerAvatar, PlayerBouncers, PlayerInventory, PlayerClanProgress, PlayerZeeQRew];
+export default [PlayerActivity, PlayerAvatar, PlayerBouncers, PlayerInventory, PlayerClanProgress, PlayerZeeQRew, PlayerUndeployed];

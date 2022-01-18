@@ -24,6 +24,7 @@ dayjs.extend(dayjsMHQPlugin);
 import "./utils/munzee";
 import { munzeeFetch } from "./utils/munzee";
 import "./extra";
+import { rollbar } from "./extra/rollbar";
 
 declare module "fastify" {
   interface FastifyRequest {
@@ -160,6 +161,19 @@ fastify.setErrorHandler(async function (error, request, reply) {
   console.log(error);
   // Log error
   this.log.error(error);
+
+  let user_id: number | null = null;
+  try {
+    user_id = await request.getUserID()
+  } catch {}
+
+  const rollbarError = new Error(error.message);
+  rollbarError.stack = error.stack;
+  rollbarError.name = error.name;
+  rollbar?.error(rollbarError, {
+    ...request,
+    user_id,
+  });
 
   if (error instanceof Promise) {
     try {
