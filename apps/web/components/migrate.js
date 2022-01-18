@@ -6,7 +6,7 @@ export default function MigrateMaxData() {
     setL(
       typeof window !== "undefined" &&
         localStorage.CUPPAZEE_TEAKENS &&
-        localStorage.migrated !== "2"
+        localStorage.migrated !== "2" && window.location.hostname !== "v1.cuppazee.app"
     );
   }, []);
   if (!l) {
@@ -18,7 +18,7 @@ export default function MigrateMaxData() {
       className="bg-black text-white lg:min-h-[200px] flex flex-col lg:flex-row px-4 py-8 lg:px-20 items-center text-center lg:text-left">
       <div className="flex-grow">
         <h1 className="text-3xl font-bold">Migrate CuppaZee Max Data</h1>
-        <h2 className="text-l">
+        <h2 className="text-lg">
           It looks like you haven't migrated your data from cuppazee.app to max.cuppazee.app.
         </h2>
         <div className="flex flex-row justify-center lg:justify-start">

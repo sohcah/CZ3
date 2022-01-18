@@ -1,5 +1,6 @@
 import Head from "next/head";
 import MigrateMaxData from "../components/migrate";
+import V1ShutDown from "../components/v1shutdown";
 
 export default function Home() {
   return (
@@ -11,6 +12,7 @@ export default function Home() {
 
       <main className="flex flex-col items-stretch w-full">
         <MigrateMaxData />
+        <V1ShutDown />
         <section
           key="express"
           className="bg-[#43BCCA] min-h-[400px] lg:min-h-[600px] flex flex-col lg:flex-row px-4 py-8 lg:px-20 items-center text-center lg:text-left">
