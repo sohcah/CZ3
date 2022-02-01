@@ -27,7 +27,7 @@ function SignUp() {
       properties: {
         targetLevels: [],
         qrates: "",
-        resellers: "",
+        // resellers: "",
         admin: false,
         qrew: false,
         notes: "",
@@ -221,14 +221,14 @@ function SignUp() {
             </FormikProvider>
           </Paper>
 
-          <TextField
+          {/* <TextField
             value={formik.values.properties.resellers}
             onChange={formik.handleChange}
             name="properties.resellers"
             label="Resellers"
             helperText="How many RUMs will you be able to capture/deploy?"
             variant="outlined"
-          />
+          /> */}
 
           <TextField
             value={formik.values.properties.qrates}

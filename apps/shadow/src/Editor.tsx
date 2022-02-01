@@ -179,7 +179,7 @@ function Editor() {
               }
               setData({ ...data });
               const response = await fetch(
-                `https://api.cuppazee.app/shadow/admin/${group}/106/move`,
+                `https://api.cuppazee.app/shadow/admin/${group}/${game_id}/move`,
                 {
                   method: "POST",
                   headers: {
