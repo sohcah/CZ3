@@ -16,10 +16,11 @@ export default function ShadowAdminRoster(fastify: FastifyInstance) {
     
     const clans = await prisma.shadow_clan.findMany({
       where: {
+        game_id: Number(request.params.game_id),
         shadow_clan_group: {
           group_text_id: request.params.group,
-        }
-      }
+        },
+      },
     });
 
     const players = await prisma.shadow_player.findMany({

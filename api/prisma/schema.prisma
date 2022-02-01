@@ -131,3 +131,25 @@ model shadow_player_task_day {
 
   @@unique([user_id, game_id, task_id, date], map: "shadow_player_task_day_user_id_game_id_task_id_date_uindex")
 }
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model challenge_intl_clan {
+  clan_id Int
+  game_id Int
+  players Json? @db.Json
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model challenge_intl_month {
+  game_id Int
+  task_id Int
+
+  @@ignore
+}
+
+model missing_types {
+  icon            String @unique(map: "missing_types_icon_uindex")
+  capture_type_id Int?
+}

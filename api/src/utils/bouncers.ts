@@ -6,6 +6,7 @@ import { Response } from "@cuppazee/api/common";
 import { authenticateAnonymous } from "./auth";
 import config from "./config";
 import { munzeeFetch } from "./munzee";
+import { knownMissing } from "./knownMissing";
 const b64e = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".split("");
 
 function generateBouncerHash(id: number, timestamp: number) {
@@ -70,14 +71,25 @@ async function loadBouncers() {
   let n = 0;
   for (let endpointData of data) {
     body = body.concat(
-      ((endpointData?.data ?? []) as (MunzeeSpecial | MunzeeBouncer)[]).map(i => ({
-        ...i,
-        hash: generateBouncerHash(
-          Number("mythological_munzee" in i ? i.mythological_munzee.munzee_id : i.munzee_id),
-          i.special_good_until
-        ),
-        group: groups[n][2],
-      }))
+      ((endpointData?.data ?? []) as (MunzeeSpecial | MunzeeBouncer)[]).map(i => {
+        const icon = "mythological_munzee" in i ? i.mythological_munzee.munzee_logo : i.logo;
+        if (knownMissing.missingType(icon, null)) {
+          knownMissing.ensureType(icon, null, {
+            from: groups[n][0],
+            item: i,
+            body: groups[n][1],
+            authenticated_entity: endpointData?.authenticated_entity,
+          });
+        }
+        return ({
+          ...i,
+          hash: generateBouncerHash(
+            Number("mythological_munzee" in i ? i.mythological_munzee.munzee_id : i.munzee_id),
+            i.special_good_until
+          ),
+          group: groups[n][2],
+        });
+      })
     );
     n++;
   }

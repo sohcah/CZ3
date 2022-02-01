@@ -78,8 +78,8 @@ export default function PlayerZeeQRew(fastify: FastifyInstance) {
     start = dayjs(`1 ${tfs[4]} ${year}`).add(1, "month").subtract(15, "day");
     end = dayjs(`1 ${tfs[4]} ${year}`).add(1, "month");
   } else {
-    start = dayjs(`${tfs[0]} ${tfs[3].slice(0, -2)} ${year}`);
-    end = dayjs(`${tfs[0]} ${tfs[4].slice(0, -2)} ${year}`).add(1, "day");
+    start = dayjs(`${tfs[0]} ${tfs[1].slice(0, -2)} ${year}`);
+    end = dayjs(`${tfs[0]} ${tfs[3].slice(0, -2)} ${year}`).add(1, "day");
   }
 
   const data: CuppaZeeQRewData = {

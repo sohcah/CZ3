@@ -5,5 +5,6 @@ import map from "./map/_index";
 import database from "./database/_index";
 import shadow from "./shadow/_index";
 import patches from "./patches/_index";
+import misc from "./misc/_index";
 
-export default [...auth, ...player, ...bouncer, ...map, ...database, ...shadow, ...patches];
+export default [...auth, ...player, ...bouncer, ...map, ...database, ...shadow, ...patches, ...misc];
