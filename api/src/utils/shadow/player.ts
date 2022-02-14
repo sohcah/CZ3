@@ -4,6 +4,7 @@ import { getShadowPlayerTask } from "./task";
 import { ActivityData, addActivityItemExtras } from "./tasks";
 import { prisma } from "../prisma";
 import { shadow_player, shadow_player_task, shadow_player_task_day } from "@prisma/client";
+import { rollbar } from "../../extra/rollbar";
 
 export interface ShadowPlayerReference {
   user_id: number;
@@ -53,6 +54,7 @@ export async function getShadowPlayerStats(player: ShadowPlayerReference) {
 
   if (!tasksByGameId[player.game_id]) {
     console.error(`[IMPORTANT] No tasks for game ${player.game_id}`);
+    rollbar?.error(`[IMPORTANT] No tasks for game ${player.game_id}`);
   }
 
   const activityLoader = new ShadowPlayerActivityLoader(player.user_id);

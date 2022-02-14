@@ -175,7 +175,7 @@ export const taskCalculations: { [task_id: number]: TaskCalculator } = {
   27: {
     task_id: 27,
     calculate: count(({ captures, deploys }) =>
-      [...captures, ...deploys].filter(i => i.type?.has_tag(TypeTags.TypeZodiac))),
+      [...captures, ...deploys].filter(i => i.type?.has_tag(TypeTags.TypeZodiac) && !i?.type.has_tag(TypeTags.Scatter))),
   },
   28: {
     task_id: 28,

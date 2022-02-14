@@ -3,6 +3,7 @@ import { APIError } from "../api";
 import { FetchRequest, FetchResponse, Endpoints } from "@cuppazee/api";
 import { URLSearchParams } from "url";
 import { MinimumAuthenticationResult } from "./auth";
+import { rollbar } from "../extra/rollbar";
 
 declare module "node-fetch" {
   interface Response {
@@ -16,6 +17,7 @@ Response.prototype.getMunzeeData = async function() {
     return JSON.parse(text);
   } catch {
     console.error(`Invalid Data from Munzee (${this.url}): ${text}`);
+    rollbar?.error(`Invalid Data from Munzee (${this.url}): ${text}`);
     throw APIError.MunzeeInvalid();
   }
 }

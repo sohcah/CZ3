@@ -158,7 +158,7 @@ fastify.addHook("preSerialization", async (request, reply, payload: any) => {
 });
 
 fastify.setErrorHandler(async function (error, request, reply) {
-  console.log(error);
+  console.log("ERR", error);
   // Log error
   this.log.error(error);
 
