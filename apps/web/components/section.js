@@ -9,9 +9,9 @@ export function Section(props) {
       <div className="lg:flex-grow">
         <h1
           className={`
-              text-4xl lg:text-6xl font-bold
-              ${props.titleClassName}
-    `}>
+            text-4xl lg:text-6xl font-bold
+            ${props.titleClassName ?? ""}
+          `}>
           {props.title}
         </h1>
         <h2 className="text-3xl lg:text-4xl">{props.subtitle}</h2>
