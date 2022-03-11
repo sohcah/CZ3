@@ -17,15 +17,17 @@ export default function Home() {
       available = [
         "Chrome",
         "https://chrome.google.com/webstore/detail/cuppazee-browse/dgddkeakbmjcmnhekhdncbiaipbemfgo",
+        mdiGoogleChrome,
       ];
       if (
         "userAgentData" in navigator &&
         navigator.userAgentData.brands.some(i => i.brand === "Microsoft Edge")
       ) {
         available[0] = "Microsoft Edge";
+        available[2] = mdiMicrosoftEdge;
       }
     } else if (navigator.userAgent.indexOf("Firefox") !== -1) {
-      available = ["Firefox", false];
+      available = ["Firefox", false, mdiFirefox];
     }
   }
   return (
@@ -49,14 +51,14 @@ export default function Home() {
             </a>
             <div className="flex-grow" />
             {!!available[1] && (
-              <a href={available[1]} target="_blank" className="bg-green-500 rounded-md py-2 px-4">
+              <a href={available[1]} target="_blank" className="bg-[#ffd95c] rounded-md py-2 px-4">
                 Get for {available[0]}
               </a>
             )}
           </div>
         </header>
         <section key="top" className="flex flex-col">
-          <div className="lg:flex-grow px-4 py-8 lg:p-10">
+          <div className="flex flex-col items-center lg:flex-grow px-4 py-8 lg:p-10">
             <h2 className="font-extrabold text-5xl lg:text-6xl xl:text-7xl text-center font-display">
               Munzee Website
             </h2>
@@ -72,16 +74,35 @@ export default function Home() {
             <p className="text-center text-lg lg:text-2xl xl:text-3xl font-display font-semibold pt-4">
               CuppaZee Browse is a browser extension to make the Munzee website better.
             </p>
-            <div className="flex flex-row p-4 gap-4 justify-center flex-wrap">
+
+            {!!available[1] ? (
+              <>
+                <a
+                  href={available[1]}
+                  target="_blank"
+                  className="bg-[#ffd95c] rounded-md text-lg mt-4 py-2 px-4 flex flex-row items-center gap-4">
+                  <Icon size={1.5} path={available[2]} /> Download for {available[0]}
+                </a>
+                <p className="text-center text-lg lg:text-xl xl:text-2xl font-display py-2">
+                  or for another browser
+                </p>
+              </>
+            ) : (
+              <p className="text-center text-lg lg:text-xl xl:text-2xl font-display py-2">
+                Download now for
+              </p>
+            )}
+
+            <div className="flex flex-row px-4 pb-4 gap-4 justify-center flex-wrap">
               <a
                 target="_blank"
                 href="https://chrome.google.com/webstore/detail/cuppazee-browse/dgddkeakbmjcmnhekhdncbiaipbemfgo">
-                <Icon size={3} path={mdiMicrosoftEdge} />
+                <Icon size={2} path={mdiMicrosoftEdge} />
               </a>
               <a
                 target="_blank"
                 href="https://chrome.google.com/webstore/detail/cuppazee-browse/dgddkeakbmjcmnhekhdncbiaipbemfgo">
-                <Icon size={3} path={mdiGoogleChrome} />
+                <Icon size={2} path={mdiGoogleChrome} />
               </a>
               <Icon
                 title="Coming soon"
@@ -91,7 +112,7 @@ export default function Home() {
                   )
                 }
                 className="opacity-25 cursor-not-allowed"
-                size={3}
+                size={2}
                 path={mdiAppleIos}
               />
               <Icon
@@ -102,7 +123,7 @@ export default function Home() {
                   )
                 }
                 className="opacity-25 cursor-not-allowed"
-                size={3}
+                size={2}
                 path={mdiFirefox}
               />
               <Icon
@@ -113,7 +134,7 @@ export default function Home() {
                   )
                 }
                 className="opacity-25 cursor-not-allowed"
-                size={3}
+                size={2}
                 path={mdiAppleSafari}
               />
             </div>
@@ -155,7 +176,9 @@ export default function Home() {
           className="bg-[#e8a72555] dark:bg-[#e8a72533] border-[#e8a725]"
           imageClassName="max-h-[150px] lg:max-w-[40%] mr-4 rounded-lg"
         />
-        <div className="text-2xl lg:text-3xl xl:text-6xl px-4 pb-4 text-center">... and so much more</div>
+        <div className="text-2xl lg:text-3xl xl:text-6xl px-4 pb-4 text-center">
+          ... and so much more
+        </div>
       </main>
 
       <footer className="bg-gray-900 text-white flex flex-row justify-center w-full h-24">
