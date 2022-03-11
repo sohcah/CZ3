@@ -19,7 +19,7 @@ export default function Home() {
             <h2 className="font-coiny text-3xl lg:text-4xl text-center">CuppaZee</h2>
             <div className="flex-grow" />
             {/*  href="https://web.cuppazee.app/" */}
-            <a className="bg-green-500 opacity-80 cursor-not-allowed rounded-md py-2 px-4">
+            <a className="invisible md:visible bg-green-500 opacity-80 cursor-not-allowed rounded-md py-2 px-4">
               Open in Browser
             </a>
           </div>

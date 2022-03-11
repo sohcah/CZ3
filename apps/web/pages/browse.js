@@ -51,7 +51,10 @@ export default function Home() {
             </a>
             <div className="flex-grow" />
             {!!available[1] && (
-              <a href={available[1]} target="_blank" className="bg-[#ffd95c] rounded-md py-2 px-4">
+              <a
+                href={available[1]}
+                target="_blank"
+                className="invisible md:visible bg-[#ffd95c] rounded-md py-2 px-4">
                 Get for {available[0]}
               </a>
             )}
