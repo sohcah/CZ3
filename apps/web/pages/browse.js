@@ -49,7 +49,10 @@ export default function Home() {
             </a>
             <div className="flex-grow" />
             {!!available[1] && (
-              <a href={available[1]} target="_blank" className="bg-green-500 rounded-md py-2 px-4">
+              <a
+                href={available[1]}
+                target="_blank"
+                className="invisible md:visible bg-green-500 rounded-md py-2 px-4">
                 Get for {available[0]}
               </a>
             )}
@@ -155,7 +158,9 @@ export default function Home() {
           className="bg-[#e8a72555] dark:bg-[#e8a72533] border-[#e8a725]"
           imageClassName="max-h-[150px] lg:max-w-[40%] mr-4 rounded-lg"
         />
-        <div className="text-2xl lg:text-3xl xl:text-6xl px-4 pb-4 text-center">... and so much more</div>
+        <div className="text-2xl lg:text-3xl xl:text-6xl px-4 pb-4 text-center">
+          ... and so much more
+        </div>
       </main>
 
       <footer className="bg-gray-900 text-white flex flex-row justify-center w-full h-24">
