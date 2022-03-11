@@ -10,7 +10,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="flex flex-col font-display items-stretch w-full bg-white dark:bg-gray-800 dark:text-gray-100 ">
+      <main className="flex flex-col font-display items-stretch w-full bg-white dark:bg-gray-800 dark:text-gray-100">
         <MigrateMaxData />
         <header
           key="header"
@@ -25,19 +25,19 @@ export default function Home() {
           </div>
         </header>
         <section key="top" className="flex flex-col">
-          <div className="lg:flex-grow px-4 py-8 lg:p-20">
-            <h2 className="font-extrabold text-5xl lg:text-7xl xl:text-8xl text-center font-display">
+          <div className="lg:flex-grow px-4 py-8 lg:p-12">
+            <h2 className="font-extrabold text-5xl lg:text-6xl xl:text-7xl text-center font-display">
               Enhancing your
             </h2>
             <h2
               className="
-            font-extrabold text-4xl lg:text-6xl xl:text-8xl text-green-500 text-center color-green font-display
+            font-extrabold text-5xl lg:text-6xl xl:text-7xl text-green-500 text-center color-green font-display
             text-transparent bg-clip-text bg-gradient-to-br from-green-400  to-green-700
             dark:from-green-600 dark:to-green-300
             ">
               Munzee Gameplay
             </h2>
-            <p className="text-center text-lg lg:text-2xl xl:text-5xl font-display font-semibold pt-4">
+            <p className="text-center text-lg lg:text-2xl xl:text-3xl font-display font-semibold pt-4">
               We make the tools you need to play Munzee better!
             </p>
           </div>
@@ -54,6 +54,7 @@ export default function Home() {
             pwa: "https://express.cuppazee.app/",
           }}
           className="bg-[#43BCCA55] dark:bg-[#43BCCA33] border-[#43BCCA]"
+          imageClassName="max-h-[400px] lg:max-h-[650px] lg:max-w-[40%] lg:mt-[-150px] lg:mb-[-50px]"
         />
 
         <Section

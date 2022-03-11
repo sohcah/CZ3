@@ -3,20 +3,22 @@ export function Section(props) {
     <section
       key="express"
       className={`${props.className} lg:border-4 lg:rounded-xl dark:bg-transparen ${
-        props.image ? "min-h-[400px] lg:min-h-[600px]" : "min-h-[200px] lg:min-h-[300px]"
+        props.image && !props.small ? "min-h-[400px] lg:min-h-[600px]" : "min-h-[200px] lg:min-h-[300px]"
       } flex flex-col lg:flex-row lg:mx-4 lg:my-4 px-4 py-4 lg:px-10 items-center text-center lg:text-left`}>
-      {props.image && <img src={props.image} className="max-h-[500px] lg:max-w-[40%]" />}
+      {props.image && (
+        <img src={props.image} className={props.imageClassName ?? `max-h-[500px] lg:max-w-[40%]`} />
+      )}
       <div className="lg:flex-grow">
         <h1
           className={`
-            text-4xl lg:text-6xl font-bold
+            text-3xl md:text-4xl lg:text-5xl font-bold
             ${props.titleClassName ?? ""}
           `}>
           {props.title}
         </h1>
-        <h2 className="text-3xl lg:text-4xl">{props.subtitle}</h2>
+        <h2 className="text-2xl md:text-3xl lg:text-4xl">{props.subtitle}</h2>
         {props.link && (
-          <h3 className="text-3xl lg:text-2xl lg:font-semibold xl:text-4xl whitespace-nowrap">
+          <h3 className="text-2xl lg:text-2xl lg:font-semibold xl:text-4xl whitespace-nowrap">
             <a href={props.link}>→ {props.link}</a>
           </h3>
         )}

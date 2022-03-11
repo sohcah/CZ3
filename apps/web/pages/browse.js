@@ -1,14 +1,27 @@
 import Head from "next/head";
 import MigrateMaxData from "../components/migrate";
-import { Icon  } from "@mdi/react";
-import { mdiAppleIos, mdiAppleSafari, mdiFirefox, mdiGoogleChrome, mdiMicrosoftEdge } from "@mdi/js";
+import { Icon } from "@mdi/react";
+import {
+  mdiAppleIos,
+  mdiAppleSafari,
+  mdiFirefox,
+  mdiGoogleChrome,
+  mdiMicrosoftEdge,
+} from "@mdi/js";
+import { Section } from "../components/section";
 
 export default function Home() {
   let available = ["Your Browser", false];
   if (typeof navigator !== "undefined") {
-    if(navigator.userAgent.indexOf("Chrome") !== -1) {
-      available = ["Chrome", "https://chrome.google.com/webstore/detail/cuppazee-browse/dgddkeakbmjcmnhekhdncbiaipbemfgo"];
-      if ("userAgentData" in navigator && navigator.userAgentData.brands.some(i => i.brand === "Microsoft Edge")) {
+    if (navigator.userAgent.indexOf("Chrome") !== -1) {
+      available = [
+        "Chrome",
+        "https://chrome.google.com/webstore/detail/cuppazee-browse/dgddkeakbmjcmnhekhdncbiaipbemfgo",
+      ];
+      if (
+        "userAgentData" in navigator &&
+        navigator.userAgentData.brands.some(i => i.brand === "Microsoft Edge")
+      ) {
         available[0] = "Microsoft Edge";
       }
     } else if (navigator.userAgent.indexOf("Firefox") !== -1) {
@@ -35,7 +48,6 @@ export default function Home() {
               </h2>
             </a>
             <div className="flex-grow" />
-            {/*  href="https://web.cuppazee.app/" */}
             {!!available[1] && (
               <a href={available[1]} target="_blank" className="bg-green-500 rounded-md py-2 px-4">
                 Get for {available[0]}
@@ -44,37 +56,32 @@ export default function Home() {
           </div>
         </header>
         <section key="top" className="flex flex-col">
-          {/* <img src="/express.png" className="max-h-[500px]" /> */}
-          <div className="lg:flex-grow px-4 py-8 lg:p-20">
-            <h2 className="font-extrabold text-5xl lg:text-7xl xl:text-8xl text-center font-display">
+          <div className="lg:flex-grow px-4 py-8 lg:p-10">
+            <h2 className="font-extrabold text-5xl lg:text-6xl xl:text-7xl text-center font-display">
               Munzee Website
             </h2>
             <h2
               className="
-            font-extrabold text-5xl lg:text-7xl xl:text-9xl text-[#ffd95c] text-center color-green font-display
+            font-extrabold text-5xl lg:text-6xl xl:text-7xl text-[#ffd95c] text-center color-green font-display
             text-transparent bg-clip-text bg-gradient-to-br from-[#ffce2e] to-[#e0ac00]
             dark:from-[#ffe89b] dark:to-[#ffc919]
             
             ">
-              {/* dark:from-green-600 dark:to-green-300 */}
               Refined
             </h2>
-            {/* <h3 className="text-3xl lg:text-2xl lg:font-semibold xl:text-4xl whitespace-nowrap">
-              <a href="https://express.cuppazee.app">→ https://express.cuppazee.app</a>
-            </h3> */}
-            <p className="text-center text-lg lg:text-2xl xl:text-5xl font-display font-semibold pt-4">
-              A browser extension to make the Munzee website better.
+            <p className="text-center text-lg lg:text-2xl xl:text-3xl font-display font-semibold pt-4">
+              CuppaZee Browse is a browser extension to make the Munzee website better.
             </p>
             <div className="flex flex-row p-4 gap-4 justify-center flex-wrap">
               <a
                 target="_blank"
                 href="https://chrome.google.com/webstore/detail/cuppazee-browse/dgddkeakbmjcmnhekhdncbiaipbemfgo">
-                <Icon size={4} path={mdiMicrosoftEdge} />
+                <Icon size={3} path={mdiMicrosoftEdge} />
               </a>
               <a
                 target="_blank"
                 href="https://chrome.google.com/webstore/detail/cuppazee-browse/dgddkeakbmjcmnhekhdncbiaipbemfgo">
-                <Icon size={4} path={mdiGoogleChrome} />
+                <Icon size={3} path={mdiGoogleChrome} />
               </a>
               <Icon
                 title="Coming soon"
@@ -84,7 +91,7 @@ export default function Home() {
                   )
                 }
                 className="opacity-25 cursor-not-allowed"
-                size={4}
+                size={3}
                 path={mdiAppleIos}
               />
               <Icon
@@ -95,7 +102,7 @@ export default function Home() {
                   )
                 }
                 className="opacity-25 cursor-not-allowed"
-                size={4}
+                size={3}
                 path={mdiFirefox}
               />
               <Icon
@@ -106,42 +113,49 @@ export default function Home() {
                   )
                 }
                 className="opacity-25 cursor-not-allowed"
-                size={4}
+                size={3}
                 path={mdiAppleSafari}
               />
             </div>
           </div>
         </section>
 
-        {/* <section
-          key="express"
-          className="bg-[#43BCCA] dark:bg-transparent min-h-[400px] lg:min-h-[600px] flex flex-col lg:flex-row px-4 py-8 lg:px-20 items-center text-center lg:text-left">
-          <img src="/express.png" className="max-h-[500px]" />
-          <div className="lg:flex-grow">
-            <h1
-              className="
-              text-4xl lg:text-6xl font-bold
-              dark:text-[#43BCCA]
-            ">
-              CuppaZee Express
-            </h1>
-            <h2 className="text-3xl lg:text-4xl">Simple. Fast. Effective.</h2>
-            <h3 className="text-3xl lg:text-2xl lg:font-semibold xl:text-4xl whitespace-nowrap">
-              <a href="https://express.cuppazee.app">→ https://express.cuppazee.app</a>
-            </h3>
-          </div>
-          <div className="flex flex-row flex-wrap justify-center w-100 lg:w-auto lg:flex-col align-center">
-            <a href="https://apps.apple.com/us/app/cuppazee-express/id1570474744">
-              <img src="/appstore.svg" className="h-12 md:h-16 m-1" />
-            </a>
-            <a href="https://play.google.com/store/apps/details?id=app.cuppazee.express">
-              <img src="/googleplay.svg" className="h-12 md:h-16 m-1" />
-            </a>
-            <a href="https://express.cuppazee.app/">
-              <img src="/pwa.png" className="h-12 md:h-16 m-1" />
-            </a>
-          </div>
-        </section> */}
+        <Section
+          small
+          title="Better Redeem"
+          subtitle="Spend your credits, without the puzzlement."
+          image="/browse_redeem.png"
+          className="bg-[#aa00ff55] dark:bg-[#aa00ff33] border-[#aa00ff]"
+          imageClassName="max-h-[200px] lg:max-w-[40%] mr-4 rounded-lg"
+        />
+
+        <Section
+          small
+          title="Better Map Sandbox"
+          subtitle="Never forget to hit save again, deploy virtuals with ease."
+          image="/browse_sandbox.png"
+          className="bg-[#5cb85c55] dark:bg-[#5cb85c33] border-[#5cb85c]"
+          imageClassName="max-h-[300px] lg:max-w-[40%] mr-4 rounded-lg"
+        />
+
+        <Section
+          small
+          title="Dark Mode"
+          subtitle="Nobody likes going blind, so now you don't have to."
+          image="/browse_dark.png"
+          className="bg-[#23232355] dark:bg-[#23232333] border-[#232323]"
+          imageClassName="max-h-[300px] lg:max-w-[40%] mr-4 rounded-lg"
+        />
+
+        <Section
+          small
+          title="Bouncer Expiry Times"
+          subtitle="Don't miss that fancy bouncer in your Skyland."
+          image="/browse_expiry.png"
+          className="bg-[#e8a72555] dark:bg-[#e8a72533] border-[#e8a725]"
+          imageClassName="max-h-[150px] lg:max-w-[40%] mr-4 rounded-lg"
+        />
+        <div className="text-2xl lg:text-3xl xl:text-6xl px-4 pb-4 text-center">... and so much more</div>
       </main>
 
       <footer className="bg-gray-900 text-white flex flex-row justify-center w-full h-24">
