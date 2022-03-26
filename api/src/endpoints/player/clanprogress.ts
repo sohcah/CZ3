@@ -10,6 +10,9 @@ export default function PlayerClanProgress(fastify: FastifyInstance) {
       user_id,
       game_id: Number(request.params.game_id),
     })
-    return { stats: shadowPlayerStats };
+    return {
+      stats: shadowPlayerStats,
+      disclaimer: `This data is provided by CuppaZee, and although normally accurate, doesn't always perfectly reflect the progress you will have when you join a clan. If you find issues with this data, you should report the issue to CuppaZee, not Munzee.`,
+    };
   });
 }

@@ -14,11 +14,9 @@
   "author": "CuppaZee",
   "scripts": {
     "lint": "tslint --project tsconfig.json",
-    "prebuild": "node prebuild",
     "build": "tsc",
     "docker-build": "docker build . -t czapi",
-    "dev": "cross-env NODE_ENV=development ts-node-dev --respawn src/server.ts -- --enable-source-maps",
-    "dev-db": "cross-env NODE_ENV=development ts-node-dev --respawn src/database/index.ts -- --enable-source-maps"
+    "dev": "cross-env NODE_ENV=development ts-node-dev --respawn src/server.ts -- --enable-source-maps"
   },
   "dependencies": {
     "@cuppazee/db": "^0.0.8",
@@ -28,6 +26,7 @@
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
     "dayjs": "^1.10.7",
+    "exceljs": "^4.3.0",
     "fastify": "^3.14.2",
     "fastify-cors": "^6.0.1",
     "fastify-formbody": "^5.2.0",
@@ -35,6 +34,7 @@
     "fastify-static": "^4.0.1",
     "geo-tz": "^7.0.1",
     "glob": "^7.2.0",
+    "immer": "^9.0.12",
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^4.1.2",
     "nanoid": "^3.1.30",

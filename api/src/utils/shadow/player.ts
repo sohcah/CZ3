@@ -20,6 +20,7 @@ const tasksByGameId: { [game_id: number]: number[] } = {
   105: [1, 10, 13, 19, 24, 36, 3, 30, 35, 37, 12, 26, 28, 31],
   106: [1, 2, 6, 12, 24, 28, 30, 35, 36, 37, 5038, 4038, 3038, 2038, 3, 13, 14, 26, 34],
   107: [1, 2, 6, 13, 19, 24, 35, 10038, 8038, 6038, 5038, 3038, 3, 37, 27, 26, 28, 29, 32, 36],
+  108: [1, 2, 6, 7, 13, 24, 8038, 7038, 5038, 4038, 3038, 3, 17, 30, 35, 37, 26, 28, 33, 36],
 };
 
 export async function getShadowPlayerStats(player: ShadowPlayerReference) {
@@ -102,8 +103,16 @@ export class ShadowPlayerActivityLoader {
     if (!activityData.data) throw "No data";
 
     return {
-      captures: addActivityItemExtras(activityData.data.captures),
-      deploys: addActivityItemExtras(activityData.data.deploys),
+      captures: addActivityItemExtras([
+        ...activityData.data.captures,
+        // @ts-expect-error
+        ...(activityData.data.passive_captures ?? []),
+      ]),
+      deploys: addActivityItemExtras([
+        ...activityData.data.deploys,
+        // @ts-expect-error
+        ...(activityData.data.passive_deploys ?? []),
+      ]),
       captures_on: addActivityItemExtras(activityData.data.captures_on),
     };
   }

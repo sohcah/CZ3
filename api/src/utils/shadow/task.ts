@@ -20,7 +20,8 @@ export function getDatesForGameID(gameId: GameID, excludeFutureDates: boolean = 
   const dates = [];
 
   for (let i = 3; i <= 31; i++) {
-    const date = dayjs.mhqParse(0).year(gameId.year).month(gameId.month).date(i);
+    // const date = dayjs.mhqParse(0).year(gameId.year).month(gameId.month).date(i);
+    const date = dayjs.mhqParse(`${gameId.year}-${gameId.month+1}-${i}T00:00:00`);
     if (date.month() !== gameId.month) break;
     if (excludeFutureDates && date.valueOf() > dayjs.mhqNow().valueOf()) break;
     dates.push(date);

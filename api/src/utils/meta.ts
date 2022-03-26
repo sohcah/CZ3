@@ -7,7 +7,7 @@ export const dbCache: { value: CuppaZeeDB } = {
 
 export async function loadAgain() {
   console.log("DBLOADING");
-  const response = await fetch(`https://db.cuppazee.app/lzw/`);
+  const response = await fetch(`https://db.cuppazee.app/lzwbeta/`);
   if (!response.ok) throw "e";
   const data = await response.text();
   if (data.length > 0) {

@@ -18,7 +18,9 @@ fastify.register(fastifyMultipart, {
   attachFieldsToBody: true,
 });
 import dayjs from "dayjs";
+import objectSupport from "dayjs/plugin/objectSupport";
 import { dayjsMHQPlugin } from "@cuppazee/utils";
+dayjs.extend(objectSupport);
 dayjs.extend(dayjsMHQPlugin);
 
 import "./utils/munzee";

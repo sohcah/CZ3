@@ -4,17 +4,23 @@ import { FetchRequest, FetchResponse, Endpoints } from "@cuppazee/api";
 import { URLSearchParams } from "url";
 import { MinimumAuthenticationResult } from "./auth";
 import { rollbar } from "../extra/rollbar";
+import { applyEndpointPatches } from "../patcher/apply";
 
 declare module "node-fetch" {
   interface Response {
-    getMunzeeData<T extends any = any>(): Promise<T>;
+    getMunzeeData<T extends any = any>(applyPatches?: boolean): Promise<T>;
+    __munzeeEndpoint?: keyof Endpoints;
   }
 }
 
-Response.prototype.getMunzeeData = async function() {
+Response.prototype.getMunzeeData = async function(applyPatches = true) {
   const text = await this.text();
   try {
-    return JSON.parse(text);
+    const data = JSON.parse(text);
+    if (applyPatches) {
+      return applyEndpointPatches[this.__munzeeEndpoint!]?.(data) ?? data; 
+    }
+    return data;
   } catch {
     console.error(`Invalid Data from Munzee (${this.url}): ${text}`);
     rollbar?.error(`Invalid Data from Munzee (${this.url}): ${text}`);
@@ -32,7 +38,7 @@ export interface MunzeeFetchParams<Path extends keyof Endpoints> {
 }
 
 export async function munzeeFetch<Path extends keyof Endpoints>({ endpoint, params, method, token }: MunzeeFetchParams<Path>): Promise<Omit<Response, "getMunzeeData"> & { getMunzeeData: () => Promise<FetchResponse<Path>> }> {
-  return await fetch(
+  const response =  await fetch(
     "https://api.munzee.com/" +
       endpoint?.replace(/{([A-Za-z0-9_]+)}/g, (_, a) => {
         return params?.[a as keyof FetchRequest<Path>["params"]] || "";
@@ -55,4 +61,6 @@ export async function munzeeFetch<Path extends keyof Endpoints>({ endpoint, para
       },
     }
   );
+  response.__munzeeEndpoint = endpoint;
+  return response;
 }

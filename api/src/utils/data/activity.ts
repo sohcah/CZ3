@@ -59,14 +59,26 @@ interface internal__UserActivityPassiveDeployItem
   extends UserActivityPassiveDeployItem,
     internal__BaseUserActivityItem {}
 
+export interface UserActivityPassiveCaptureItem extends BaseUserActivityItem {
+  type: "passive_capture";
+  creator_username: string;
+  munzee: UserActivityMunzee;
+}
+
+interface internal__UserActivityPassiveCaptureItem
+  extends UserActivityPassiveCaptureItem,
+    internal__BaseUserActivityItem {}
+
 export type UserActivityItem =
   | UserActivityCaptureItem
   | UserActivityDeployItem
+  | UserActivityPassiveCaptureItem
   | UserActivityPassiveDeployItem
   | UserActivityCaptureOnItem;
 
 export type internal__UserActivityItem =
   | internal__UserActivityCaptureItem
+  | internal__UserActivityPassiveCaptureItem
   | internal__UserActivityDeployItem
   | internal__UserActivityPassiveDeployItem
   | internal__UserActivityCaptureOnItem;
@@ -78,41 +90,24 @@ export function GenerateUserActivity(
   if (!playerDay) throw new Error("Player day is null");
   const activity: internal__UserActivityItem[] = [];
 
-
   for (const deploy of playerDay.deploys) {
     const isPassive = false;
-    // Passive Deploys
-    if (isPassive) {
-      activity.push({
-        key: nanoid(),
-        munzee: {
-          username: username,
-          code: Number(deploy.code),
-        },
-        icon: deploy.pin,
-        points: Number(deploy.points),
-        time: deploy.deployed_at,
-        type: "passive_deploy",
-        __internal: {},
-      });
-    } else {
-      // Regular Deploys
-      activity.push({
-        key: nanoid(),
-        munzee: {
-          username: username,
-          code: Number(deploy.code),
-        },
-        icon: deploy.pin,
-        points: Number(deploy.points),
-        time: deploy.deployed_at,
-        type: "deploy",
-        __internal: {},
-      });
-    }
+    activity.push({
+      key: nanoid(),
+      munzee: {
+        username: username,
+        code: Number(deploy.code),
+      },
+      icon: deploy.pin,
+      points: Number(deploy.points),
+      time: deploy.deployed_at,
+      type: isPassive ? "passive_deploy" : "deploy",
+      __internal: {},
+    });
   }
 
   for (const capture of playerDay.captures) {
+    const isPassive = false;
     activity.push({
       key: nanoid(),
       munzee: {
@@ -122,7 +117,7 @@ export function GenerateUserActivity(
       icon: capture.pin,
       points: Number(capture.points),
       time: capture.captured_at,
-      type: "capture",
+      type: isPassive ? "passive_capture" : "capture",
       creator_username: capture.username,
       __internal: {
         bouncer_base: false,
@@ -148,5 +143,7 @@ export function GenerateUserActivity(
     });
   }
 
-  return activity.map(({ __internal, ...item }) => item).sort((a,b) => new Date(b.time).valueOf() - new Date(a.time).valueOf());
+  return activity
+    .map<UserActivityItem>(({ __internal, ...item }) => item)
+    .sort((a, b) => new Date(b.time).valueOf() - new Date(a.time).valueOf());
 }
