@@ -67,7 +67,7 @@ export async function munzeeFetch<Path extends keyof Endpoints>({
               access_token: typeof token === "string" ? token : token.access_token,
             }),
       headers: {
-        "User-Agent": "@cuppazee/api-server (+https://github.com/CuppaZee/CuppaZee)",
+        "User-Agent": "@cz3/api (+https://github.com/CuppaZee/CZ3)",
       },
     }
   );

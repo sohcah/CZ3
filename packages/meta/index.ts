@@ -171,6 +171,14 @@ export class MetaClient {
       if (type.munzeeId) this._types.set(type.munzeeId, type.id);
       for (const icon of type.icons) this._types.set(icon, type.id);
     }
+    for (const type of this._typesRoot.values()) {
+      for (const icon of type.icons) {
+        const base = icon.toLowerCase().replace(/[^a-z0-9]+/g, "");
+        if (this._types.has(base)) {
+          this._types.set(base, type.id);
+        }
+      }
+    }
 
     this._groupsRoot = new Map();
     for (const group of groups) {
@@ -191,6 +199,28 @@ export class MetaClient {
     }
   }
 
+  private *getBaseVariants(base: string) {
+    // Will only lowercase A-Z to match what Munzee did for `tavaszeeszélvizetÁraszt` and `dk:jul2017(Østjylland)`
+    var first = decodeURIComponent(base).replace(/[A-Z]+/g, a => a.toLowerCase());
+    yield first;
+    const set = new Set([first]);
+    const second = base.replace(/[A-Z]+/g, a => a.toLowerCase());
+    if (!set.has(second)) {
+      yield second;
+      set.add(second);
+    }
+    const third = decodeURIComponent(base).toLowerCase();
+    if (!set.has(third)) {
+      yield third;
+      set.add(third);
+    }
+    const fourth = base.toLowerCase();
+    if (!set.has(fourth)) {
+      yield fourth;
+      set.add(fourth);
+    }
+  }
+
   private *getStrippedVariants(id: string) {
     // Strip URL prefix and suffix
     let base = id;
@@ -202,13 +232,7 @@ export class MetaClient {
       }
     }
 
-    for (const baseVariant of new Set([
-      // Will only lowercase A-Z to match what Munzee did for `tavaszeeszélvizetÁraszt` and `dk:jul2017(Østjylland)`
-      decodeURIComponent(base).replace(/[A-Z]/g, a => a.toLowerCase()),
-      base.replace(/[A-Z]/g, a => a.toLowerCase()),
-      decodeURIComponent(base).toLowerCase(),
-      base.toLowerCase(),
-    ])) {
+    for (const baseVariant of this.getBaseVariants(base)) {
       // Remove spaces
       yield baseVariant.replace(/\s/g, "");
 

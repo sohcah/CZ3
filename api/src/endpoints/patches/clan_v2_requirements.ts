@@ -99,7 +99,11 @@ export default function clan_v2_requirements(fastify: FastifyInstance) {
     });
     const result = await response.getMunzeeData();
 
-    if (result.data && Object.keys(result.data.data.levels ?? {}).length === 0) {
+    if (
+      result.data &&
+      result.data?.battle?.game_id === 108 &&
+      Object.keys(result.data.data.levels ?? {}).length === 0
+    ) {
       result.data.data.levels = {
         "1": generateFakeLevel({
           individual: {

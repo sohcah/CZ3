@@ -46,7 +46,7 @@ export async function loginWithAuthorizationCode(
       redirect_uri: apiApplication.redirect_uri,
     }),
     headers: {
-      "User-Agent": "@cuppazee/api-server (+https://github.com/CuppaZee/CuppaZee)",
+      "User-Agent": "@cz3/api (+https://github.com/CuppaZee/CZ3)",
     },
   });
 
@@ -437,7 +437,7 @@ export async function authenticateWithUserID(
       redirect_uri: apiApp.redirect_uri,
     }),
     headers: {
-      "User-Agent": "@cuppazee/api-server (+https://github.com/CuppaZee/CuppaZee)",
+      "User-Agent": "@cz3/api (+https://github.com/CuppaZee/CZ3)",
     },
   });
 
