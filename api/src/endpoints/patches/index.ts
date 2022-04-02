@@ -21,7 +21,7 @@ function loadScriptSync(scriptUrl) {
 `;
 
 export default function clan_v2_requirements(fastify: FastifyInstance) {
-  fastify.get("/patches", async request => {
+  fastify.get("/patches", async () => {
     return {
       patchedMunzeeAPIEndpoints: ["clan/v2/requirements", "statzee/player/day"],
       // patchUserscripts_Old: {

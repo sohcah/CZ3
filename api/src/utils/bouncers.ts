@@ -1,12 +1,12 @@
-import { MunzeeSpecial } from "@cuppazee/api/munzee/specials";
-
+import { config } from "./config.js";
 import pr from "power-radix";
-import { MunzeeBouncer } from "@cuppazee/api/munzee/bouncers";
-import { Response } from "@cuppazee/api/common";
-import { authenticateAnonymous } from "./auth";
-import config from "./config";
-import { munzeeFetch } from "./munzee";
-import { knownMissing } from "./knownMissing";
+import { authenticateAnonymous } from "./auth/index.js";
+
+import { MunzeeSpecial } from "@cuppazee/api/munzee/specials.js";
+import { MunzeeBouncer } from "@cuppazee/api/munzee/bouncers.js";
+import { Response } from "@cuppazee/api/common.js";
+import { munzeeFetch } from "./munzee.js";
+import { knownMissing } from "./knownMissing.js";
 const b64e = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".split("");
 
 function generateBouncerHash(id: number, timestamp: number) {
@@ -22,14 +22,7 @@ function generateBouncerHash(id: number, timestamp: number) {
 export const cache: {
   bouncers: ((MunzeeSpecial | MunzeeBouncer) & {
     hash: string;
-    group:
-      | "regular"
-      | "mythological"
-      | "pouch_creature"
-      | "flat"
-      | "temp"
-      | "retired"
-      | "tob";
+    group: "regular" | "mythological" | "pouch_creature" | "flat" | "temp" | "retired" | "tob";
   })[];
   bouncers_updated: number;
   loading: Promise<unknown> | null;
@@ -41,15 +34,15 @@ export const cache: {
   loading_at: 0,
 };
 
-const Endpoints: any = {};
+// const Endpoints: any = {};
 
 const groups = [
-  ["munzee/specials", {}, "regular", Endpoints.MunzeeSpecials],
-  ["munzee/specials/mythological", {}, "mythological", Endpoints.MunzeeSpecialsMythological],
-  ["munzee/specials/pouchcreatures", {}, "pouch_creature", Endpoints.MunzeeSpecialsPouchcreatures],
-  ["munzee/specials/flat", {}, "flat", Endpoints.MunzeeSpecialsFlat],
-  ["munzee/specials/retired", {}, "retired", Endpoints.MunzeeSpecialsRetired],
-  ["munzee/specials/bouncers", {}, "temp", Endpoints.MunzeeSpecialsBouncers],
+  ["munzee/specials", {}, "regular"], //, Endpoints.MunzeeSpecials
+  ["munzee/specials/mythological", {}, "mythological"], //, Endpoints.MunzeeSpecialsMythological
+  ["munzee/specials/pouchcreatures", {}, "pouch_creature"], //, Endpoints.MunzeeSpecialsPouchcreatures
+  ["munzee/specials/flat", {}, "flat"], //, Endpoints.MunzeeSpecialsFlat
+  ["munzee/specials/retired", {}, "retired"], //, Endpoints.MunzeeSpecialsRetired
+  ["munzee/specials/bouncers", {}, "temp"], //, Endpoints.MunzeeSpecialsBouncers
 ] as const;
 
 async function loadBouncers() {
@@ -69,7 +62,7 @@ async function loadBouncers() {
     group: "regular" | "mythological" | "pouch_creature" | "flat" | "temp" | "retired" | "tob";
   })[] = [];
   let n = 0;
-  for (let endpointData of data) {
+  for (const endpointData of data) {
     body = body.concat(
       ((endpointData?.data ?? []) as (MunzeeSpecial | MunzeeBouncer)[]).map(i => {
         const icon = "mythological_munzee" in i ? i.mythological_munzee.munzee_logo : i.logo;
@@ -81,14 +74,14 @@ async function loadBouncers() {
             authenticated_entity: endpointData?.authenticated_entity,
           });
         }
-        return ({
+        return {
           ...i,
           hash: generateBouncerHash(
             Number("mythological_munzee" in i ? i.mythological_munzee.munzee_id : i.munzee_id),
             i.special_good_until
           ),
           group: groups[n][2],
-        });
+        };
       })
     );
     n++;

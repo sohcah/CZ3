@@ -1,6 +1,6 @@
 import { FastifyInstance } from "fastify";
-import { APIError } from "../../api";
-import { getBouncers } from "../../utils/bouncers";
+import { APIError } from "../../api.js";
+import { getBouncers } from "../../utils/bouncers.js";
 
 const validateParameter = (v: string) =>
   !Number.isNaN(Number(v))

@@ -1,28 +1,33 @@
 {
-  "name": "@cuppazee/api-server",
+  "name": "@cz3/api",
   "version": "0.0.1",
-  "main": "lib",
+  "main": "lib/server.js",
   "license": "MPL-2.0",
+  "type": "module",
   "keywords": [
     "munzee",
     "cuppazee"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/CuppaZee/API.git"
+    "url": "https://github.com/CuppaZee/CZ3.git"
   },
   "author": "CuppaZee",
   "scripts": {
-    "lint": "tslint --project tsconfig.json",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "lint-fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
     "build": "tsc",
     "docker-build": "docker build . -t czapi",
-    "dev": "cross-env NODE_ENV=development ts-node-dev --respawn src/server.ts -- --enable-source-maps"
+    "dev": "cross-env NODE_ENV=development tsc-watch --onSuccess \"node --enable-source-maps .\""
   },
   "dependencies": {
     "@cuppazee/db": "^0.0.8",
     "@cuppazee/utils": "^0.1.2",
-    "@prisma/client": "^3.4.2",
+    "@cz3/meta-client": "workspace:*",
+    "@cz3/prisma": "workspace:*",
     "@webkitty/geo-rev": "^1.1.1",
+    "chalk": "^5.0.1",
+    "chalk-template": "^0.4.0",
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
     "dayjs": "^1.10.7",
@@ -38,15 +43,17 @@
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^4.1.2",
     "nanoid": "^3.1.30",
-    "node-fetch": "^2.6.1",
+    "node-fetch": "^3.2.3",
     "pg": "^8.7.1",
     "power-radix": "~2.5.6",
     "rollbar": "^2.24.0",
     "tslib": "^2.3.1",
-    "zipson": "^0.2.12"
+    "zipson": "^0.2.12",
+    "zod": "^3.14.3"
   },
   "devDependencies": {
     "@cuppazee/api": "^0.0.14",
+    "@cz3/eslint-config": "workspace:*",
     "@types/cors": "^2.8.10",
     "@types/glob": "^7.2.0",
     "@types/jsonwebtoken": "^8.5.5",
@@ -54,9 +61,9 @@
     "@types/node-fetch": "^2.5.10",
     "@types/pg": "^8.6.1",
     "@types/power-radix": "~2.5.0",
-    "prisma": "^3.4.2",
-    "ts-node-dev": "^1.1.8",
+    "node-dev": "^7.3.1",
+    "ts-node": "^10.7.0",
     "tsc-watch": "^4.2.9",
-    "typescript": "^4.5.0-beta"
+    "typescript": "next"
   }
 }

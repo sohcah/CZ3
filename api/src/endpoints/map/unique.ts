@@ -1,6 +1,6 @@
 import { FastifyInstance } from "fastify";
-import { authenticateAnonymous, AuthenticationResult } from "../../utils/auth";
-import { munzeeFetch } from "../../utils/munzee";
+import { authenticateAnonymous, AuthenticationResult } from "../../utils/auth/index.js";
+import { munzeeFetch } from "../../utils/munzee.js";
 
 const uniques: {
   [key: string]: (
@@ -139,13 +139,15 @@ const uniques: {
         lo: 4.5836843,
       },
     ];
-  }
+  },
 };
 
 export default function MapUnique(fastify: FastifyInstance) {
   fastify.get("/map/unique", async () => {
     const token = await authenticateAnonymous();
-    const data = await Promise.all(Object.entries(uniques).map(async i => [i[0], await i[1](token)] as const));
+    const data = await Promise.all(
+      Object.entries(uniques).map(async i => [i[0], await i[1](token)] as const)
+    );
     return Object.fromEntries(data);
   });
 }

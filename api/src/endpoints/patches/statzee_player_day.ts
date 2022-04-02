@@ -1,6 +1,6 @@
 import { FastifyInstance } from "fastify";
-import { munzeeFetch } from "../../utils/munzee";
-import { knownMissing } from "../../utils/knownMissing";
+import { munzeeFetch } from "../../utils/munzee.js";
+import { knownMissing } from "../../utils/knownMissing.js";
 
 export default function statzee_player_day(fastify: FastifyInstance) {
   fastify.post<{
@@ -33,18 +33,18 @@ export default function statzee_player_day(fastify: FastifyInstance) {
       }
     }
     if (!dataParams.__dont_merge_passive) {
-      // @ts-expect-error
+      // @ts-expect-error Missing type information for passive_captures
       if (result.data?.captures && result.data?.passive_captures) {
-        // @ts-expect-error
+        // @ts-expect-error Missing type information for passive_captures
         result.data.captures.push(...result.data.passive_captures);
-        // @ts-expect-error
+        // @ts-expect-error Missing type information for passive_captures
         delete result.data.passive_captures;
       }
-      // @ts-expect-error
+      // @ts-expect-error Missing type information for passive_captures
       if (result.data?.deploys && result.data?.passive_deploys) {
-        // @ts-expect-error
+        // @ts-expect-error Missing type information for passive_captures
         result.data.deploys.push(...result.data.passive_deploys);
-        // @ts-expect-error
+        // @ts-expect-error Missing type information for passive_captures
         delete result.data.passive_deploys;
       }
     }

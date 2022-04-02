@@ -1,6 +1,6 @@
 import { FastifyInstance } from "fastify";
-import { loginWithAuthorizationCode } from "../../utils/auth";
-import config from "../../utils/config";
+import { loginWithAuthorizationCode } from "../../utils/auth/index.js";
+import { config } from "../../utils/config.js";
 
 export default function AuthLogin(fastify: FastifyInstance) {
   fastify.get<{
@@ -11,7 +11,7 @@ export default function AuthLogin(fastify: FastifyInstance) {
     };
     Params: {
       application: string;
-    }
+    };
   }>("/auth/login/:application", async (request, reply) => {
     const applicationConfig = config.applications[request.params.application];
     if (!request.query.code || !request.query.state) {
@@ -21,12 +21,13 @@ export default function AuthLogin(fastify: FastifyInstance) {
         )}&redirect_uri=${encodeURIComponent(
           applicationConfig.redirect_uri
         )}&response_type=code&scope=read&state=${encodeURIComponent(
-          request.query.state ?? JSON.stringify({
-            redirect: "https://example.org/",
-            platform: "web",
-            app: "max",
-            disableTeakens: true,
-          })
+          request.query.state ??
+            JSON.stringify({
+              redirect: "https://example.org/",
+              platform: "web",
+              app: "max",
+              disableTeakens: true,
+            })
         )}`
       );
     }

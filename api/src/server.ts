@@ -1,10 +1,15 @@
-import Fastify, { FastifyReply, FastifyRequest } from "fastify";
-import FastifyCors from "fastify-cors";
-import FastifyFormBody from "fastify-formbody";
-import fastifyMultipart, { MultipartValue } from "fastify-multipart";
-import { APIError, APIResponse, CuppaZeeProperties } from "./api";
-import endpoints from "./endpoints/_index";
-import { authenticatedUser, authenticateHeaders, AuthenticateHeadersOptions, AuthHeaders } from "./utils/auth";
+import { default as Fastify, FastifyReply, FastifyRequest } from "fastify";
+import { default as FastifyCors } from "fastify-cors";
+import { default as FastifyFormBody } from "fastify-formbody";
+import { default as fastifyMultipart, MultipartValue } from "fastify-multipart";
+import { APIError, APIResponse, CuppaZeeProperties } from "./api.js";
+import endpoints from "./endpoints/_index.js";
+import {
+  authenticatedUser,
+  authenticateHeaders,
+  AuthenticateHeadersOptions,
+  AuthHeaders,
+} from "./utils/auth/index.js";
 const fastify = Fastify({
   logger: {
     level: process.env.NODE_ENV === "development" ? "debug" : "warn",
@@ -18,15 +23,15 @@ fastify.register(fastifyMultipart, {
   attachFieldsToBody: true,
 });
 import dayjs from "dayjs";
-import objectSupport from "dayjs/plugin/objectSupport";
-import { dayjsMHQPlugin } from "@cuppazee/utils";
+import objectSupport from "dayjs/plugin/objectSupport.js";
+import { dayjsMHQPlugin } from "@cuppazee/utils/lib/dayjsmhq.js";
 dayjs.extend(objectSupport);
 dayjs.extend(dayjsMHQPlugin);
 
-import "./utils/munzee";
-import { munzeeFetch } from "./utils/munzee";
-import "./extra";
-import { rollbar } from "./extra/rollbar";
+import "./utils/munzee.js";
+import { munzeeFetch } from "./utils/munzee.js";
+import "./extra/index.js";
+import { rollbar } from "./extra/rollbar.js";
 
 declare module "fastify" {
   interface FastifyRequest {
@@ -57,20 +62,14 @@ fastify.decorateRequest(
   }
 );
 
-fastify.decorateRequest(
-  "authenticatedUser",
-  async function (this: FastifyRequest) {
-    const token = await this.authenticateHeaders();
-    return await authenticatedUser(token);
-  }
-)
+fastify.decorateRequest("authenticatedUser", async function (this: FastifyRequest) {
+  const token = await this.authenticateHeaders();
+  return await authenticatedUser(token);
+});
 
-fastify.decorateRequest(
-  "deprecated",
-  function (this: FastifyRequest) {
-    this._cuppazeeIsDeprecated = true;
-  }
-);
+fastify.decorateRequest("deprecated", function (this: FastifyRequest) {
+  this._cuppazeeIsDeprecated = true;
+});
 
 const userIDCache = new Map<string, number>();
 const usernameCache = new Map<number, string>();
@@ -79,7 +78,7 @@ fastify.decorateRequest("getUsername", async function (this: FastifyRequest): Pr
   const { user } = this.params as { user: string };
   if (!user) throw APIError.InvalidRequest("No user found");
   if (user.startsWith("@")) {
-    if(usernameCache.has(Number(user.slice(1)))) return usernameCache.get(Number(user.slice(1)))!;
+    if (usernameCache.has(Number(user.slice(1)))) return usernameCache.get(Number(user.slice(1)))!;
     const token = await this.authenticateHeaders({ anonymous: true });
     const data = await munzeeFetch({
       endpoint: "user",
@@ -123,12 +122,14 @@ fastify.addHook("onRequest", async request => {
 
 fastify.addHook("preValidation", (request, reply, done) => {
   if (request.body && typeof request.body === "object") {
-    request.body = Object.fromEntries(Object.entries(request.body).map(([key, value]) => {
-      if (value && typeof value === "object" && "value" in value) {
-        return [key, (value as MultipartValue<unknown>).value];
-      }
-      return [key, value];
-    }));
+    request.body = Object.fromEntries(
+      Object.entries(request.body).map(([key, value]) => {
+        if (value && typeof value === "object" && "value" in value) {
+          return [key, (value as MultipartValue<unknown>).value];
+        }
+        return [key, value];
+      })
+    );
   }
   done();
 });
@@ -142,11 +143,12 @@ fastify.decorateReply("successRaw", function <T>(this: FastifyReply, data: T) {
   this.send({ __raw: data });
 });
 
-fastify.decorateReply("error", function <T>(this: FastifyReply, error: APIError) {
+fastify.decorateReply("error", function (this: FastifyReply, error: APIError) {
   const response = APIResponse.Error(error, this.request);
   this.status(response.statusCode).send(response);
 });
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 fastify.addHook("preSerialization", async (request, reply, payload: any) => {
   if (payload?.__raw) {
     return payload.__raw;
@@ -160,13 +162,14 @@ fastify.addHook("preSerialization", async (request, reply, payload: any) => {
 });
 
 fastify.setErrorHandler(async function (error, request, reply) {
-  console.log("ERR", error);
+  console.error("ERR", error);
   // Log error
   this.log.error(error);
 
   let user_id: number | null = null;
   try {
-    user_id = await request.getUserID()
+    user_id = await request.getUserID();
+    // eslint-disable-next-line no-empty
   } catch {}
 
   const rollbarError = new Error(error.message);
@@ -180,6 +183,7 @@ fastify.setErrorHandler(async function (error, request, reply) {
   if (error instanceof Promise) {
     try {
       error = await error;
+      // eslint-disable-next-line no-empty
     } catch {}
   }
 

@@ -1,14 +1,14 @@
 import { FastifyInstance } from "fastify";
-import { MunzeeSpecialBouncer } from "@cuppazee/api/munzee/specials";
-import { getBouncers } from "../../utils/bouncers";
-import { munzeeFetch } from "../../utils/munzee";
+import { MunzeeSpecialBouncer } from "@cuppazee/api/munzee/specials.js";
+import { getBouncers } from "../../utils/bouncers.js";
+import { munzeeFetch } from "../../utils/munzee.js";
 import { createRevGeocoder, LookupResult } from "@webkitty/geo-rev";
 import geoTz from "geo-tz";
 
 const geocoder = createRevGeocoder();
 
 export default function PlayerBouncers(fastify: FastifyInstance) {
-  fastify.get("/player/:user/bouncers", async (request, reply) => {
+  fastify.get("/player/:user/bouncers", async request => {
     const user_id = await request.getUserID();
     const authenticationResult = await request.authenticateHeaders({ anonymous: true });
 
@@ -37,7 +37,7 @@ export default function PlayerBouncers(fastify: FastifyInstance) {
         .slice()
         .reverse()
         .map(async i => {
-          let munzee: typeof i & {
+          const munzee: typeof i & {
             bouncer?: MunzeeSpecialBouncer;
             location?: LookupResult;
             timezone?: string;
@@ -52,10 +52,9 @@ export default function PlayerBouncers(fastify: FastifyInstance) {
               latitude: Number(munzee.bouncer.latitude),
               longitude: Number(munzee.bouncer.longitude),
             });
-            munzee.timezone = geoTz.find(
-              Number(munzee.bouncer.latitude),
-              Number(munzee.bouncer.longitude)
-            ).join(", ");
+            munzee.timezone = geoTz
+              .find(Number(munzee.bouncer.latitude), Number(munzee.bouncer.longitude))
+              .join(", ");
           }
           return munzee;
         }) || []

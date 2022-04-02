@@ -1,5 +1,5 @@
-import { Patcher } from "..";
-import produce from "immer";
+import { Patcher } from "../index.js";
+import { produce } from "immer";
 
 export const shamRockCreditPatcher: Patcher = {
   name: "Sham Rock Credits",
@@ -24,7 +24,10 @@ export const shamRockCreditPatcher: Patcher = {
       return produce(data, draft => {
         for (const item of draft.data?.items ?? []) {
           if (item.type.match(/\bSham Rocks?\b/i)) {
-            item.type = item.type.replace(/\bSham Rock(s)?\b(?!\s*n'?\srolla*)/i, "Sham Rock Credit$1");
+            item.type = item.type.replace(
+              /\bSham Rock(s)?\b(?!\s*n'?\srolla*)/i,
+              "Sham Rock Credit$1"
+            );
           }
           if (item.log_text.match(/\bSham Rocks?\b/i)) {
             item.log_text = item.log_text.replace(

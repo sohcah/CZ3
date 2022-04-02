@@ -1,13 +1,13 @@
 import { FastifyInstance } from "fastify";
-import { getBouncers } from "../../utils/bouncers";
+import { getBouncers } from "../../utils/bouncers.js";
 
 export default function BouncerAll(fastify: FastifyInstance) {
   fastify.get<{
     Querystring: {
       force?: string;
     };
-  }>("/bouncer/all", async (request) => {
+  }>("/bouncer/all", async request => {
     const bouncers = await getBouncers(request.query.force === "TRUE");
-    return { bouncers }
+    return { bouncers };
   });
 }

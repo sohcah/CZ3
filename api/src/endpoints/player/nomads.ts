@@ -1,15 +1,15 @@
-import { TypeTags } from "@cuppazee/db/lib";
+import { TypeTags } from "@cz3/meta-client";
 import dayjs from "dayjs";
 import { FastifyInstance } from "fastify";
-import { APIError } from "../../api";
-import { authenticateAnonymous, MinimumAuthenticationResult } from "../../utils/auth";
-import { dbCache } from "../../utils/meta";
-import { munzeeFetch } from "../../utils/munzee";
+import { APIError } from "../../api.js";
+import { authenticateAnonymous, MinimumAuthenticationResult } from "../../utils/auth/index.js";
+import { dbCache } from "../../utils/meta.js";
+import { munzeeFetch } from "../../utils/munzee.js";
 
 export default function PlayerNomads(fastify: FastifyInstance) {
   fastify.get<{
     Params: { year: string };
-  }>("/player/:user/nomads/:year", async (request, reply) => {
+  }>("/player/:user/nomads/:year", async request => {
     const year = Number(request.params.year);
     const user_id = await request.getUserID();
     const token = await authenticateAnonymous();
@@ -29,8 +29,8 @@ export default function PlayerNomads(fastify: FastifyInstance) {
 
     const allNomads = [];
     for (const special of specials.data) {
-      const type = dbCache.value.getType(special.logo);
-      if (type?.has_tag(TypeTags.BouncerNomad)) {
+      const type = dbCache.value.get(special.logo);
+      if (type?.hasTag(TypeTags.BouncerNomad)) {
         const nomads = await getNomads(token, user_id, year, special.name);
         if (nomads.length === 0) {
           break;

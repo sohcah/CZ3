@@ -1,23 +1,14 @@
 import fetch from "node-fetch";
 import { URLSearchParams } from "url";
-import { APIError } from "../../api";
-import config from "../config";
-import { munzeeFetch } from "../munzee";
+import { APIError } from "../../api.js";
+import { config, APIApplication } from "../config.js";
+import { munzeeFetch } from "../munzee.js";
 import Jwt from "jsonwebtoken";
-import { prisma } from "../prisma";
+import { prisma } from "../prisma.js";
 import { FastifyReply } from "fastify";
-import { unableToReadPage } from "./unableToRead";
-import { invalidUsernamePage } from "./invalidUsername";
+import { unableToReadPage } from "./unableToRead.js";
+import { invalidUsernamePage } from "./invalidUsername.js";
 import { randomBytes } from "crypto";
-
-export interface APIApplication {
-  id: string;
-  title: string;
-  client_id: string;
-  client_secret: string;
-  redirect_uri: string;
-  discord?: string;
-}
 
 export interface DeviceDetails {
   app: "express" | "max" | "create" | "browse" | "nomad";
@@ -35,8 +26,8 @@ export async function loginWithAuthorizationCode(
   authorizationCode: string,
   device: DeviceDetails,
   reply: FastifyReply,
-  human: boolean = true,
-  possiblyUseTeakens: boolean = false
+  human = true,
+  possiblyUseTeakens = false
 ) {
   const useTeakens = !device.disableTeakens && possiblyUseTeakens;
   const teaken = useTeakens ? randomBytes(20).toString("hex") : "";
@@ -59,7 +50,9 @@ export async function loginWithAuthorizationCode(
     },
   });
 
-  const data = await response.getMunzeeData();
+  // * TODO: Add TypeScript Definitions
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const data = (await response.json()) as any;
 
   if (!data.data?.token?.access_token) {
     if (human) {
@@ -100,9 +93,9 @@ export async function loginWithAuthorizationCode(
   let userNumber = playerDocument?.user_number;
   let apiUserNumber = authDocument?.user_number;
   let appUserNumber = appDocument?.user_number;
-  let userCount: number = 0;
-  let apiUserCount: number = 0;
-  let appUserCount: number = 0;
+  let userCount = 0;
+  let apiUserCount = 0;
+  let appUserCount = 0;
 
   await prisma.$transaction(async () => {
     userCount =
@@ -239,7 +232,7 @@ export async function loginWithAuthorizationCode(
   const isNewToCuppaZee = !playerDocument;
   const isNewToApi = !authDocument;
   const isNewToApp = !appDocument;
-  const discordEmbed: any = {
+  const discordEmbed = {
     title: `${username} has logged in!${isNewToCuppaZee ? " 🆕" : ""}`,
     thumbnail: {
       url: `https://munzee.global.ssl.fastly.net/images/avatars/ua${Number(user_id).toString(
@@ -391,6 +384,8 @@ export function verifyJwtToken(cuppazeeToken: string) {
   }
   let jwtData;
   try {
+    // * TODO: Add TypeScript Definitions
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     jwtData = typeof jwtParse === "object" ? (jwtParse as any) : JSON.parse(jwtParse.toString());
   } catch {
     throw APIError.InvalidRequest();
@@ -446,7 +441,9 @@ export async function authenticateWithUserID(
     },
   });
 
-  const responseData = await response.getMunzeeData();
+  // * TODO: Add TypeScript Definitions
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const responseData = (await response.json()) as any;
 
   if (!responseData.data?.token) {
     throw APIError.Authentication();
@@ -500,6 +497,8 @@ export async function authenticateHeaders(
 }
 
 export async function authenticatedUser(token: string | MinimumAuthenticationResult) {
+  // * TODO: Update TypeScript Definitions
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const response = await munzeeFetch<any>({ endpoint: "user", params: {}, token });
   const data = await response.getMunzeeData();
   if (data.authenticated_entity_type !== "user") throw APIError.Authentication("Not a user.");

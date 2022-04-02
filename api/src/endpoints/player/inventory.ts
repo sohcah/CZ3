@@ -1,14 +1,12 @@
 import { FastifyInstance } from "fastify";
-import { munzeeFetch } from "../../utils/munzee";
+import { munzeeFetch } from "../../utils/munzee.js";
 
+// interface InventoryHistoryEntry {
 
-
-// interface InventoryHistoryEntry { 
-  
 // }
 
 export default function PlayerInventory(fastify: FastifyInstance) {
-  fastify.get("/player/:user/inventory_raw", async (request, reply) => {
+  fastify.get("/player/:user/inventory_raw", async request => {
     const access_token = await request.authenticateHeaders();
 
     const [undeployed, credits, history, boosters] = await Promise.all([
@@ -41,7 +39,7 @@ export default function PlayerInventory(fastify: FastifyInstance) {
       undeployed: formattedUndeployed,
     };
   });
-  fastify.get("/player/:user/inventory", async (request, reply) => {
+  fastify.get("/player/:user/inventory", async request => {
     const access_token = await request.authenticateHeaders();
 
     const [undeployed, credits, history, boosters] = await Promise.all([

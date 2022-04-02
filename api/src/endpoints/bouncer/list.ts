@@ -1,7 +1,7 @@
-import { MunzeeSpecial, MunzeeSpecialBouncer } from "@cuppazee/api/munzee/specials";
+import { MunzeeSpecial, MunzeeSpecialBouncer } from "@cuppazee/api/munzee/specials.js";
 import { FastifyInstance } from "fastify";
-import { APIError } from "../../api";
-import { getBouncers } from "../../utils/bouncers";
+import { APIError } from "../../api.js";
+import { getBouncers } from "../../utils/bouncers.js";
 
 function logo(special: MunzeeSpecial | MunzeeSpecialBouncer): string {
   if ("logo" in special) {
@@ -15,15 +15,15 @@ function logo(special: MunzeeSpecial | MunzeeSpecialBouncer): string {
 }
 
 export default function BouncerList(fastify: FastifyInstance) {
-  fastify.get < {
-    Params: { types: string }
+  fastify.get<{
+    Params: { types: string };
   }>("/v1/bouncer/list/:types", async request => {
     request.deprecated();
     if (!request.params.types) {
       throw APIError.InvalidRequest();
     }
     const bouncers = await getBouncers();
-    var output = bouncers
+    const output = bouncers
       .filter(i => request.params.types!.split(",").includes(logo(i).slice(49, -4)))
       .map(i => [
         Number(i.latitude),

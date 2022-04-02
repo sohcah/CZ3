@@ -1,0 +1,29 @@
+{
+  "name": "@cz3/root",
+  "version": "0.0.0",
+  "private": true,
+  "workspaces": [
+    "api",
+    "apps/*",
+    "config/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "turbo run build",
+    "api:dev": "turbo run api:dev",
+    "api:build": "turbo run api:build",
+    "api:docker": "docker build . -t cz3api -f Dockerfile.api",
+    "lint": "turbo run lint",
+    "lint:fix": "turbo run lint:fix"
+  },
+  "devDependencies": {
+    "eslint": "^8.12.0",
+    "prettier": "^2.6.1",
+    "turbo": "latest"
+  },
+  "engines": {
+    "npm": ">=7.0.0",
+    "node": ">=14.0.0"
+  },
+  "packageManager": "pnpm@6.28.0"
+}

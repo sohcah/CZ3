@@ -1,5 +1,5 @@
 import { FastifyInstance } from "fastify";
-import { munzeeFetch } from "../../utils/munzee";
+import { munzeeFetch } from "../../utils/munzee.js";
 
 interface FakeLevelParams {
   individual: { [key: number]: number };

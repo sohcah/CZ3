@@ -1,7 +1,7 @@
-import { StatzeePlayerDay } from "@cuppazee/api/statzee/player/day";
-import { shadow_player_task_day } from "@prisma/client";
-import { Type, TypeState, TypeTags } from "@cuppazee/db";
-import { dbCache } from "../meta";
+import { StatzeePlayerDay } from "@cuppazee/api/statzee/player/day.js";
+import { shadow_player_task_day } from "@cz3/prisma";
+import { Type, TypeState, TypeTags } from "@cz3/meta-client";
+import { dbCache } from "../meta.js";
 
 type BaseActivityData = NonNullable<StatzeePlayerDay["response"]["data"]>;
 export type ActivityItemExtras = {
@@ -12,10 +12,12 @@ export type ActivityData = {
   captures_on: (BaseActivityData["captures_on"][number] & ActivityItemExtras)[];
   deploys: (BaseActivityData["deploys"][number] & ActivityItemExtras)[];
 };
-export function addActivityItemExtras<T extends { pin: string }>(items: T[]): (T & ActivityItemExtras)[] {
+export function addActivityItemExtras<T extends { pin: string }>(
+  items: T[]
+): (T & ActivityItemExtras)[] {
   return items.map(item => ({
     ...item,
-    type: dbCache.value.getType(item.pin) ?? undefined,
+    type: dbCache.value.get(item.pin) ?? undefined,
   }));
 }
 
@@ -49,11 +51,10 @@ const calculatePoints = (data: ActivityItem[]): number => {
     }
     return a + Number(b.points);
   }, 0);
-}
+};
 
 const points: BasicTaskCalculateFunctionGenerator = func => {
-  return items =>
-    calculatePoints(func(items));
+  return items => calculatePoints(func(items));
 };
 
 const count: BasicTaskCalculateFunctionGenerator = func => {
@@ -65,9 +66,11 @@ export const taskCalculations: { [task_id: number]: TaskCalculator } = {
     task_id: 1,
     calculate: ({ captures, deploys }) =>
       [...captures, ...deploys].filter(i => {
-        if (i.type?.has_tag(TypeTags.TypePersonal)) return false;
-        if (i.type?.has_tag(TypeTags.TypeUniversal)) return false;
-        if (!("captured_at" in i) && i.type?.has_tag(TypeTags.Scatter)) return false;
+        if ("captured_at" in i && i.type?.properties.isPassiveCapture) return false;
+        if (!("captured_at" in i) && i.type?.properties.isPassiveDeploy) return false;
+        // if (i.type?.hasTag(TypeTags.TypePersonal)) return false;
+        // if (i.type?.hasTag(TypeTags.TypeUniversal)) return false;
+        // if (!("captured_at" in i) && i.type?.hasTag(TypeTags.Scatter)) return false;
         return true;
       }).length > 0
         ? 1
@@ -80,43 +83,51 @@ export const taskCalculations: { [task_id: number]: TaskCalculator } = {
   },
   3: {
     task_id: 3,
-    calculate: points(({ captures, deploys, captures_on }) => [...captures, ...deploys, ...captures_on]),
+    calculate: points(({ captures, deploys, captures_on }) => [
+      ...captures,
+      ...deploys,
+      ...captures_on,
+    ]),
   },
   6: {
     task_id: 6,
-    calculate: count(({ deploys }) => [...deploys]
-        .filter(
-          i =>
-            !i.type?.has_tag(TypeTags.TypePersonal) &&
-            !i.type?.has_tag(TypeTags.TypeUniversal) &&
-            !i.type?.has_tag(TypeTags.Scatter)
-        )),
+    calculate: count(({ deploys }) =>
+      [...deploys].filter(
+        i => !i.type?.properties.isPassiveDeploy
+        // !i.type?.hasTag(TypeTags.TypePersonal) &&
+        // !i.type?.hasTag(TypeTags.TypeUniversal) &&
+        // !i.type?.hasTag(TypeTags.Scatter)
+      )
+    ),
   },
   7: {
     task_id: 7,
     calculate: points(({ captures, deploys, captures_on }) =>
-      [...captures, ...deploys, ...captures_on]
-        .filter(i => i.type?.has_tag(TypeTags.TypeDestination))),
+      [...captures, ...deploys, ...captures_on].filter(i =>
+        i.type?.hasTag(TypeTags.TypeDestination)
+      )
+    ),
   },
   8: {
     task_id: 8,
     calculate: points(({ captures, deploys, captures_on }) =>
-      [...captures, ...deploys, ...captures_on].filter(i => i.type?.state === TypeState.Physical)),
+      [...captures, ...deploys, ...captures_on].filter(i => i.type?.state === TypeState.Physical)
+    ),
   },
   9: {
     task_id: 9,
-    calculate: count(({ captures }) => captures.filter((i: any) => i.type?.icon === "munzee")),
+    calculate: count(({ captures }) => captures.filter(i => i.type?.icon === "munzee")),
   },
   10: {
     task_id: 10,
     calculate: points(({ deploys }) =>
-      deploys
-        .filter(
-          (i: any) =>
-            !i.type?.has_tag(TypeTags.TypePersonal) &&
-            !i.type?.has_tag(TypeTags.TypeUniversal) &&
-            !i.type?.has_tag(TypeTags.Scatter)
-        )),
+      deploys.filter(
+        i => !i.type?.properties.isPassiveDeploy
+        // !i.type?.hasTag(TypeTags.TypePersonal) &&
+        // !i.type?.hasTag(TypeTags.TypeUniversal) &&
+        // !i.type?.hasTag(TypeTags.Scatter)
+      )
+    ),
   },
   11: {
     task_id: 11,
@@ -125,111 +136,130 @@ export const taskCalculations: { [task_id: number]: TaskCalculator } = {
   12: {
     task_id: 12,
     calculate: points(({ captures, deploys, captures_on }) =>
-      [...captures, ...deploys, ...captures_on].filter(i => i.type?.has_tag(TypeTags.Evolution))),
+      [...captures, ...deploys, ...captures_on].filter(i => i.type?.hasTag(TypeTags.Evolution))
+    ),
   },
   13: {
     task_id: 13,
-    calculate: count(({ captures }) => captures.filter((i: any) => i.type?.has_tag(TypeTags.TypePOI))),
+    calculate: count(({ captures }) => captures.filter(i => i.type?.hasTag(TypeTags.TypePOI))),
   },
   14: {
     task_id: 14,
     calculate: count(({ captures, deploys }) =>
-      [...deploys, ...captures].filter(i => i.type?.has_tag(TypeTags.TypeJewel))),
+      [...deploys, ...captures].filter(i => i.type?.hasTag(TypeTags.TypeJewel))
+    ),
   },
   17: {
     task_id: 17,
     calculate: count(({ captures, deploys }) =>
-      [...deploys, ...captures].filter(i => i.type?.has_tag(TypeTags.Evolution))),
+      [...deploys, ...captures].filter(i => i.type?.hasTag(TypeTags.Evolution))
+    ),
   },
   19: {
     task_id: 19,
     calculate: points(({ captures, deploys, captures_on }) =>
-      [...captures, ...deploys, ...captures_on].filter(i => i.type?.has_tag(TypeTags.TypeJewel))),
+      [...captures, ...deploys, ...captures_on].filter(i => i.type?.hasTag(TypeTags.TypeJewel))
+    ),
   },
   22: {
     task_id: 22,
-    calculate: count(({ captures, deploys }) => [...captures, ...deploys].filter(i => i.type?.icon === "urbanfit")),
+    calculate: count(({ captures, deploys }) =>
+      [...captures, ...deploys].filter(i => i.type?.icon === "urbanfit")
+    ),
   },
   23: {
     task_id: 23,
     calculate: points(({ captures, deploys, captures_on }) =>
-      [...captures, ...deploys, ...captures_on]
-        .filter(i => i.type?.has_tag(TypeTags.TypeWeaponClan) || i.type?.icon === "trojanunicorn")),
+      [...captures, ...deploys, ...captures_on].filter(
+        i => i.type?.hasTag(TypeTags.TypeWeaponClan) || i.type?.icon === "trojanunicorn"
+      )
+    ),
   },
   24: {
     task_id: 24,
-    calculate: count(({ captures }) => captures.filter((i: any) => i.type?.has_tag(TypeTags.Bouncer))),
+    calculate: count(({ captures }) => captures.filter(i => i.type?.hasTag(TypeTags.Bouncer))),
   },
   25: {
     task_id: 25,
     calculate: count(({ captures, deploys }) =>
-      [...captures, ...deploys].filter(i => i.type?.has_tag(TypeTags.TypeMystery))),
+      [...captures, ...deploys].filter(i => i.type?.hasTag(TypeTags.TypeMystery))
+    ),
   },
   26: {
     task_id: 26,
     calculate: count(({ captures, deploys }) =>
       [...captures, ...deploys].filter(
-        i => i.type?.has_tag(TypeTags.TypeWeaponClan) || i.type?.icon === "trojanunicorn"
-      )),
+        i => i.type?.hasTag(TypeTags.TypeWeaponClan) || i.type?.icon === "trojanunicorn"
+      )
+    ),
   },
   27: {
     task_id: 27,
     calculate: count(({ captures, deploys }) =>
-      [...captures, ...deploys].filter(i => i.type?.has_tag(TypeTags.TypeZodiac) && !i?.type.has_tag(TypeTags.Scatter))),
+      [...captures, ...deploys].filter(
+        i => i.type?.hasTag(TypeTags.TypeZodiac) && !i.type?.hasTag(TypeTags.Scatter)
+      )
+    ),
   },
   28: {
     task_id: 28,
     calculate: points(({ captures, deploys, captures_on }) =>
-      [...captures, ...deploys, ...captures_on].filter(i => i.type?.has_tag(TypeTags.TypeFlat))),
+      [...captures, ...deploys, ...captures_on].filter(i => i.type?.hasTag(TypeTags.TypeFlat))
+    ),
   },
   29: {
     task_id: 29,
     calculate: points(({ captures, deploys, captures_on }) =>
-      [...captures, ...deploys, ...captures_on]
-        .filter(
-          i =>
-            (i.type?.has_tag(TypeTags.TypeMysteryElemental) && !i.type?.has_tag(TypeTags.Scatter)) ||
-            ["fire", "waterdroplet", "frozengreenie", "charge"].includes(i.type?.icon || "")
-        )),
+      [...captures, ...deploys, ...captures_on].filter(
+        i =>
+          (i.type?.hasTag(TypeTags.TypeMysteryElemental) && !i.type?.hasTag(TypeTags.Scatter)) ||
+          ["fire", "waterdroplet", "frozengreenie", "charge"].includes(i.type?.icon || "")
+      )
+    ),
   },
   30: {
     task_id: 30,
     calculate: count(({ captures, deploys }) =>
       [...captures, ...deploys].filter(
         i =>
-          i.type?.has_tag(TypeTags.TypeReseller) &&
-          !i.type?.has_tag(TypeTags.Scatter) &&
-          !i.type?.has_tag(TypeTags.Bouncer)
-      )),
+          i.type?.hasTag(TypeTags.TypeReseller) &&
+          !i.type?.hasTag(TypeTags.Scatter) &&
+          !i.type?.hasTag(TypeTags.Bouncer)
+      )
+    ),
   },
   31: {
     task_id: 31,
     calculate: points(({ captures, deploys, captures_on }) =>
-      [...captures, ...deploys, ...captures_on].filter(i => i.type?.has_tag(TypeTags.TypeGaming))),
+      [...captures, ...deploys, ...captures_on].filter(i => i.type?.hasTag(TypeTags.TypeGaming))
+    ),
   },
   32: {
     task_id: 32,
     calculate: count(({ captures, deploys }) =>
-      [...captures, ...deploys].filter(i => i.type?.has_tag(TypeTags.TypeGaming))),
+      [...captures, ...deploys].filter(i => i.type?.hasTag(TypeTags.TypeGaming))
+    ),
   },
   33: {
     task_id: 33,
-    calculate: count(({ captures }) => captures.filter((i: any) => i.type?.icon === "renovation")),
+    calculate: count(({ captures }) => captures.filter(i => i.type?.icon === "renovation")),
   },
   34: {
     task_id: 34,
     calculate: points(({ captures, deploys, captures_on }) =>
-      [...captures, ...deploys, ...captures_on].filter(i => i.type?.has_tag(TypeTags.TypeMystery))),
+      [...captures, ...deploys, ...captures_on].filter(i => i.type?.hasTag(TypeTags.TypeMystery))
+    ),
   },
   35: {
     task_id: 35,
     calculate: ({ captures }) =>
-      captures.filter((i: any) => i.type?.icon === "qrewzee" || i.type?.icon === "sleepzee").length,
+      captures.filter(i => i.type?.icon === "qrewzee" || i.type?.icon === "sleepzee").length,
   },
   36: {
     task_id: 36,
     calculate: points(({ captures, deploys, captures_on }) =>
-      [...captures, ...deploys, ...captures_on].filter(i => i.type?.has_tag(TypeTags.Card))),
+      [...captures, ...deploys, ...captures_on].filter(i => i.type?.hasTag(TypeTags.Card))
+    ),
   },
   37: {
     task_id: 37,
@@ -239,7 +269,7 @@ export const taskCalculations: { [task_id: number]: TaskCalculator } = {
   38: {
     task_id: 38,
     calculate: ({ captures, deploys, captures_on }, task_id) => {
-      return calculatePoints([...captures, ...deploys, ...captures_on]) >= (task_id - 38) ? 1 : 0;
+      return calculatePoints([...captures, ...deploys, ...captures_on]) >= task_id - 38 ? 1 : 0;
     },
   },
 };

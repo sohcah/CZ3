@@ -25,8 +25,6 @@ export class APIError {
   type!: APIErrorType;
   authentication_details!: APIAuthenticationDetails;
 
-  private constructor() {}
-
   static Unexpected(error?: Error, message?: string) {
     const apiError = new APIError();
     apiError.message = message ?? "An unexpected error occurred";
@@ -76,7 +74,7 @@ export class APIError {
     return apiError;
   }
 
-  // create static method for Forbidden 
+  // create static method for Forbidden
   static Forbidden(message?: string) {
     const apiError = new APIError();
     apiError.message = message ?? "Forbidden";
@@ -86,8 +84,6 @@ export class APIError {
 }
 
 export class APIResponse<T> {
-  private constructor() {}
-
   statusCode!: number;
   data!: T;
   error!: APIError | null;

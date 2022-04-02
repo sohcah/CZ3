@@ -1,13 +1,13 @@
 import { FastifyInstance } from "fastify";
-import { MinimumAuthenticationResult } from "../../utils/auth";
-import { munzeeFetch } from "../../utils/munzee";
+import { MinimumAuthenticationResult } from "../../utils/auth/index.js";
+import { munzeeFetch } from "../../utils/munzee.js";
 
 async function getUndeployed(token: MinimumAuthenticationResult) {
   const undeployed = [];
   for (let page = 0; page < 100; page++) {
     const response = await munzeeFetch({
       endpoint: "user/undeploys",
-      params: {page},
+      params: { page },
       token,
     });
     const data = await response.getMunzeeData();
@@ -23,13 +23,13 @@ async function getUndeployed(token: MinimumAuthenticationResult) {
 export default function PlayerUndeployed(fastify: FastifyInstance) {
   fastify.get<{
     Params: { game_id: string };
-  }>("/player/:user/undeployed", async (request, reply) => {
+  }>("/player/:user/undeployed", async request => {
     const token = await request.authenticateHeaders();
     return await getUndeployed(token);
   });
   fastify.get<{
     Params: { game_id: string };
-  }>("/player/:user/undeployed/withcoordinates", async (request, reply) => {
+  }>("/player/:user/undeployed/withcoordinates", async request => {
     const token = await request.authenticateHeaders();
     return (await getUndeployed(token)).filter(i => i.latitude !== "0" || i.longitude !== "0");
   });

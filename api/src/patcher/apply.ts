@@ -1,6 +1,6 @@
 import { Endpoints } from "@cuppazee/api";
-import { PatchFunction } from ".";
-import * as Patches from "./patches";
+import { PatchFunction } from "./index.js";
+import * as Patches from "./patches.js";
 
 export const iconPatches = Object.values(Patches).filter(i => i.patchIcon);
 export const namePatches = Object.values(Patches).filter(i => i.patchName);
@@ -33,9 +33,11 @@ export const applyEndpointPatches = new Proxy(
         target[prop] = (async (value: Endpoints[typeof prop]["response"]) => {
           let patched = value;
           for (const patch of patchFns) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             patched = await patch.patchEndpoints![prop]!(patched as any);
           }
           return patched;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
         }) as any;
       }
 

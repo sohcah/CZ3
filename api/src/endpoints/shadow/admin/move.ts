@@ -1,6 +1,6 @@
 import { FastifyInstance } from "fastify";
-import { APIError } from "../../../api";
-import { prisma } from "../../../utils/prisma";
+import { APIError } from "../../../api.js";
+import { prisma } from "../../../utils/prisma.js";
 
 export default function ShadowAdminMove(fastify: FastifyInstance) {
   fastify.post<{
@@ -12,7 +12,7 @@ export default function ShadowAdminMove(fastify: FastifyInstance) {
       user_id: string;
       clan_id: string;
     };
-  }>("/shadow/admin/:group/:game_id/move", async (request, reply) => {
+  }>("/shadow/admin/:group/:game_id/move", async request => {
     const authenticatedUser = await request.authenticatedUser();
     const group = await prisma.shadow_clan_group.findFirst({
       where: {

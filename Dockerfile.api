@@ -1,0 +1,65 @@
+# DEPENDENCIES
+
+FROM --platform=linux/amd64 node:16-alpine AS deps
+ENV PRISMA_CLI_BINARY_TARGETS=linux-musl
+
+WORKDIR /czapi
+
+# Builder Enviroment Variables
+
+RUN npm i -g pnpm
+
+COPY *.json ./
+COPY pnpm-*.yaml ./
+COPY api/*.json ./api/
+COPY config/eslint/*.json ./config/eslint/
+COPY packages/prisma ./packages/prisma
+
+RUN pnpm install
+
+# BUILDER
+FROM --platform=linux/amd64 node:16-alpine AS builder
+ENV PRISMA_CLI_BINARY_TARGETS=linux-musl
+ENV NODE_ENV=production
+
+RUN npm i -g pnpm
+
+WORKDIR /czapi
+
+COPY . .
+
+COPY --from=deps /czapi ./
+
+RUN pnpm api:build
+
+RUN pnpm prune --prod
+
+# RUNNER
+
+FROM --platform=linux/amd64 node:16-alpine AS runner
+ENV PRISMA_CLI_BINARY_TARGETS=linux-musl
+
+RUN npm i -g pnpm
+
+WORKDIR /czapi
+
+ENV NODE_ENV production
+
+COPY --from=builder \
+    /czapi/api/package.json \
+    ./api/
+COPY --from=builder /czapi/node_modules ./node_modules
+COPY --from=builder /czapi/package.json ./package.json
+
+# MODULES
+# PRISMA
+COPY --from=builder /czapi/packages/prisma ./packages/prisma
+# API
+COPY --from=builder /czapi/api/package.json ./api/package.json
+COPY --from=builder /czapi/api/node_modules ./api/node_modules
+COPY --from=builder /czapi/api/lib ./api/lib
+
+
+EXPOSE 80
+WORKDIR /czapi/api
+CMD [ "node", "lib/server.js", "--enable-source-maps" ] 

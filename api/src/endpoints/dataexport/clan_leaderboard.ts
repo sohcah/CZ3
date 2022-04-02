@@ -1,11 +1,52 @@
 import { FastifyInstance } from "fastify";
-import { authenticateAnonymous } from "../../utils/auth";
-import { munzeeFetch } from "../../utils/munzee";
+import { authenticateAnonymous } from "../../utils/auth/index.js";
+import { munzeeFetch } from "../../utils/munzee.js";
+// TODO: Move to utils package
+export class GameID {
+  private _gameID: number;
+  private _dayjs: Dayjs;
+
+  constructor(game_id: number);
+  constructor(date: Dayjs);
+  constructor(year: number, month: number);
+  constructor();
+  constructor(a?: number | Dayjs, b?: number) {
+    if (typeof a === "number" && typeof b === "undefined") {
+      this._gameID = a;
+    } else if (typeof a === "number" && typeof b === "number") {
+      this._gameID = a * 12 + b - 24158;
+    } else if (typeof a === "object") {
+      this._gameID = a.get("year") * 12 + a.get("month") - 24158;
+    } else if (!a && !b) {
+      this._gameID = dayjs.mhqNow().get("year") * 12 + dayjs.mhqNow().get("month") - 24158;
+    } else {
+      throw "Invalid input";
+    }
+    this._dayjs = dayjs(
+      new Date(Math.floor((this._gameID + 24158) / 12), (this._gameID + 24158) % 12)
+    );
+  }
+
+  get month() {
+    return this._dayjs.month();
+  }
+
+  get year() {
+    return this._dayjs.year();
+  }
+
+  get game_id() {
+    return this._gameID;
+  }
+
+  get date() {
+    return this._dayjs.toDate();
+  }
+}
 
 import ExcelJS from "exceljs";
-import { APIError } from "../../api";
-import { GameID } from "@cuppazee/utils/lib";
-import dayjs from "dayjs";
+import { APIError } from "../../api.js";
+import { default as dayjs, Dayjs } from "dayjs";
 
 export default function DataExportClanLeaderboard(fastify: FastifyInstance) {
   for (const path of ["/export/clan/:game_id/leaderboard", "/export/clan/:year/:month/leaderboard"])
@@ -36,9 +77,7 @@ export default function DataExportClanLeaderboard(fastify: FastifyInstance) {
 
       const workbook = new ExcelJS.Workbook();
 
-      const sheet = workbook.addWorksheet(
-        `Leaderboard - ${dayjs(gameID.date).format("MM YYYY")}`
-      );
+      const sheet = workbook.addWorksheet(`Leaderboard - ${dayjs(gameID.date).format("MM YYYY")}`);
 
       sheet.columns = [
         { header: "Rank", key: "rank", width: 10 },

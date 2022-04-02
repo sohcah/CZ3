@@ -1,5 +1,5 @@
 import { FastifyInstance } from "fastify";
-import { prisma } from "../../../utils/prisma";
+import { prisma } from "../../../utils/prisma.js";
 
 export default function ShadowAdminRoster(fastify: FastifyInstance) {
   fastify.get<{
@@ -7,13 +7,13 @@ export default function ShadowAdminRoster(fastify: FastifyInstance) {
       group: string;
       game_id: string;
     };
-  }>("/shadow/admin/:group/:game_id/roster", async (request, reply) => {
+  }>("/shadow/admin/:group/:game_id/roster", async request => {
     const group = await prisma.shadow_clan_group.findUnique({
       where: {
         group_text_id: request.params.group,
       },
     });
-    
+
     const clans = await prisma.shadow_clan.findMany({
       where: {
         game_id: Number(request.params.game_id),
@@ -37,7 +37,7 @@ export default function ShadowAdminRoster(fastify: FastifyInstance) {
             shadow_clan: {
               shadow_clan_group: {
                 group_text_id: request.params.group,
-              }
+              },
             },
           },
         ],
@@ -50,15 +50,15 @@ export default function ShadowAdminRoster(fastify: FastifyInstance) {
         },
         shadow_player_properties: {
           distinct: "user_id",
-        }
-      }
+        },
+      },
     });
 
     // Check Authentication
     let isAdmin = false;
     try {
       const authenticatedUser = await request.authenticatedUser();
-      console.log(authenticatedUser);
+      console.info(authenticatedUser);
       const adminGroup = await prisma.shadow_clan_group.findFirst({
         where: {
           group_text_id: request.params.group,
@@ -70,7 +70,8 @@ export default function ShadowAdminRoster(fastify: FastifyInstance) {
         },
       });
       isAdmin = !!adminGroup;
-    } catch { }
+      // eslint-disable-next-line no-empty
+    } catch {}
     if (isAdmin) {
       // Admin
       return {
@@ -85,7 +86,7 @@ export default function ShadowAdminRoster(fastify: FastifyInstance) {
           properties: player.shadow_player_properties[0]?.properties ?? null,
         })),
         group,
-      }
+      };
     }
     return {
       clans: clans.map(clan => ({

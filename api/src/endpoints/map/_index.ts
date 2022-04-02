@@ -1,3 +1,3 @@
-import unique from "./unique";
+import unique from "./unique.js";
 
 export default [unique];

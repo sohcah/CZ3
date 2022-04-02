@@ -1,12 +1,12 @@
-import PlayerInventory from "./inventory";
-import PlayerBouncers from "./bouncers";
-import PlayerAvatar from "./avatar";
-import PlayerActivity from "./activity";
-import PlayerClanProgress from "./clanprogress";
-import PlayerZeeQRew from "./qrew";
-import PlayerUndeployed from "./undeployed";
-import PlayerNomads from "./nomads";
-import PlayerRooms from "./rooms";
+import PlayerInventory from "./inventory.js";
+import PlayerBouncers from "./bouncers.js";
+import PlayerAvatar from "./avatar.js";
+import PlayerActivity from "./activity.js";
+import PlayerClanProgress from "./clanprogress.js";
+import PlayerZeeQRew from "./qrew.js";
+import PlayerUndeployed from "./undeployed.js";
+import PlayerNomads from "./nomads.js";
+import PlayerRooms from "./rooms.js";
 
 export default [
   PlayerActivity,

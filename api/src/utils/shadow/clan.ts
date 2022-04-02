@@ -1,5 +1,5 @@
-import { prisma } from "../prisma";
-import { getShadowPlayerStats } from "./player";
+import { prisma } from "../prisma.js";
+import { getShadowPlayerStats } from "./player.js";
 
 export interface getShadowClanStatsOptions {
   clanId: number;
@@ -25,11 +25,11 @@ export async function getShadowClanStats(options: getShadowClanStatsOptions) {
       shadow_player_task: {
         include: {
           shadow_player_task_day: true,
-        }
-      }
+        },
+      },
     },
   });
-  
+
   const stats = await Promise.all(
     players.map(async player => {
       try {
@@ -52,6 +52,6 @@ export async function getShadowClanStats(options: getShadowClanStatsOptions) {
       }
     })
   );
-  
+
   return stats;
 }

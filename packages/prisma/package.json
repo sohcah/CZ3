@@ -1,0 +1,25 @@
+{
+    "name": "@cz3/prisma",
+    "version": "0.0.1",
+    "main": ".prisma/client",
+    "license": "MPL-2.0",
+    "keywords": [
+        "munzee",
+        "cuppazee"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/CuppaZee/CZ3.git"
+    },
+    "author": "CuppaZee",
+    "scripts": {
+        "postinstall": "prisma generate",
+        "build": "prisma generate"
+    },
+    "dependencies": {
+        "@prisma/client": "^3.11.1"
+    },
+    "devDependencies": {
+        "prisma": "^3.11.1"
+    }
+}

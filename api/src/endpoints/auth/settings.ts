@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify";
-import { APIError } from "../../api";
-// import { verifyJwtToken } from "../../utils/auth";
-// import mongo from "../../utils/mongo";
+import { APIError } from "../../api.js";
+// import { verifyJwtToken } from "../../utils/auth/index.js";
+// import mongo from "../../utils/mongo.js";
 
 export interface UserSettingsUser {
   user_id: number;
@@ -25,7 +25,7 @@ export default function AuthSettings(fastify: FastifyInstance) {
     Querystring: {
       token?: string;
     };
-  }>("/auth/settings/get", async (request, reply) => {
+  }>("/auth/settings/get", async request => {
     if (!request.query.token) {
       throw APIError.InvalidRequest();
     }

@@ -1,13 +1,13 @@
 import { FastifyInstance } from "fastify";
-import { APIError } from "../../api";
-import { getBouncers } from "../../utils/bouncers";
+import { APIError } from "../../api.js";
+import { getBouncers } from "../../utils/bouncers.js";
 
 export default function BouncerExpiring(fastify: FastifyInstance) {
   fastify.get<{
     Querystring: {
       time?: string;
     };
-  }>("/bouncer/expiring", async (request) => {
+  }>("/bouncer/expiring", async request => {
     if (request.query.time && Number.isNaN(Number(request.query.time))) {
       throw APIError.InvalidRequest("Time must be a number");
     }
@@ -22,7 +22,10 @@ export default function BouncerExpiring(fastify: FastifyInstance) {
         bouncer.munzee_id,
         index,
         ...("mythological_munzee" in bouncer
-          ? [bouncer.mythological_munzee.friendly_name, bouncer.mythological_munzee.creator_username]
+          ? [
+              bouncer.mythological_munzee.friendly_name,
+              bouncer.mythological_munzee.creator_username,
+            ]
           : []),
       ]);
   });

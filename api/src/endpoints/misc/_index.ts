@@ -1,3 +1,3 @@
-import knownMissing from "./knownMissing"
+import knownMissing from "./knownMissing.js";
 
 export default [knownMissing];

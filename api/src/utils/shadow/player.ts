@@ -1,10 +1,10 @@
-import { authenticateWithUserID, AuthenticationResult } from "../auth";
-import { munzeeFetch } from "../munzee";
-import { getShadowPlayerTask } from "./task";
-import { ActivityData, addActivityItemExtras } from "./tasks";
-import { prisma } from "../prisma";
-import { shadow_player, shadow_player_task, shadow_player_task_day } from "@prisma/client";
-import { rollbar } from "../../extra/rollbar";
+import { authenticateWithUserID, AuthenticationResult } from "../auth/index.js";
+import { munzeeFetch } from "../munzee.js";
+import { getShadowPlayerTask } from "./task.js";
+import { ActivityData, addActivityItemExtras } from "./tasks.js";
+import { prisma } from "../prisma.js";
+import { shadow_player, shadow_player_task, shadow_player_task_day } from "@cz3/prisma";
+import { rollbar } from "../../extra/rollbar.js";
 
 export interface ShadowPlayerReference {
   user_id: number;
@@ -26,23 +26,25 @@ const tasksByGameId: { [game_id: number]: number[] } = {
 export async function getShadowPlayerStats(player: ShadowPlayerReference) {
   const tasksOutput: { [task_id: number]: number | null } = {};
 
-  const shadowPlayer = player.shadowPlayer ?? await (() => {
-    return prisma.shadow_player.findUnique({
-      where: {
-        user_id_game_id: {
-          user_id: player.user_id,
-          game_id: player.game_id,
-        },
-      },
-      include: {
-        shadow_player_task: {
-          include: {
-            shadow_player_task_day: true,
+  const shadowPlayer =
+    player.shadowPlayer ??
+    (await (() => {
+      return prisma.shadow_player.findUnique({
+        where: {
+          user_id_game_id: {
+            user_id: player.user_id,
+            game_id: player.game_id,
           },
         },
-      },
-    })
-  })();
+        include: {
+          shadow_player_task: {
+            include: {
+              shadow_player_task_day: true,
+            },
+          },
+        },
+      });
+    })());
 
   if (!shadowPlayer) {
     await prisma.shadow_player.create({
@@ -105,12 +107,12 @@ export class ShadowPlayerActivityLoader {
     return {
       captures: addActivityItemExtras([
         ...activityData.data.captures,
-        // @ts-expect-error
+        // @ts-expect-error passive_captures isn't in the API types data yet
         ...(activityData.data.passive_captures ?? []),
       ]),
       deploys: addActivityItemExtras([
         ...activityData.data.deploys,
-        // @ts-expect-error
+        // @ts-expect-error passive_deploys isn't in the API types data yet
         ...(activityData.data.passive_deploys ?? []),
       ]),
       captures_on: addActivityItemExtras(activityData.data.captures_on),

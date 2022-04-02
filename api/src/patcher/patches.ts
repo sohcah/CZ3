@@ -1,1 +1,1 @@
-export * from "./patches/sham_rock_credit";
+export * from "./patches/sham_rock_credit.js";

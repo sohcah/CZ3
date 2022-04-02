@@ -1,1 +1,1 @@
-import "./rollbar";
+import "./rollbar.js";

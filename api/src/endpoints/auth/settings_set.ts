@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify";
-import { APIError } from "../../api";
-// import { verifyJwtToken } from "../../utils/auth";
-// import mongo from "../../utils/mongo";
+import { APIError } from "../../api.js";
+// import { verifyJwtToken } from "../../utils/auth/index.js";
+// import mongo from "../../utils/mongo.js";
 
 export interface UserSettingsUser {
   user_id: number;
@@ -25,9 +25,9 @@ export default function AuthSettingsSet(fastify: FastifyInstance) {
     Querystring: {
       token?: string;
     };
-    Body: string
-  }>("/auth/settings/set", async (request, reply) => {
-    console.log(request);
+    Body: string;
+  }>("/auth/settings/set", async request => {
+    console.info(request);
     let body: { settings?: string };
     try {
       body = JSON.parse(request.body);

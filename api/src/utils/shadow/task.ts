@@ -1,18 +1,18 @@
-import { prisma } from "../prisma";
-import { ShadowPlayerActivityLoader, ShadowPlayerReference } from "./player";
+import { prisma } from "../prisma.js";
+import { ShadowPlayerActivityLoader, ShadowPlayerReference } from "./player.js";
 import dayjs, { Dayjs } from "dayjs";
-import { GameID } from "@cuppazee/utils";
-import { shadow_player_task, shadow_player_task_day } from "@prisma/client";
-import { defaultSum, taskCalculations } from "./tasks";
+import { shadow_player_task, shadow_player_task_day } from "@cz3/prisma";
+import { defaultSum, taskCalculations } from "./tasks.js";
+import { GameID } from "../../endpoints/dataexport/clan_leaderboard.js";
 
 export interface ShadowPlayerTaskReference extends ShadowPlayerReference {
   task_id: number;
-  task?: shadow_player_task & {shadow_player_task_day: shadow_player_task_day[]};
+  task?: shadow_player_task & { shadow_player_task_day: shadow_player_task_day[] };
 }
 
 const datesCache = new Map<string, Dayjs[]>();
 
-export function getDatesForGameID(gameId: GameID, excludeFutureDates: boolean = true): Dayjs[] {
+export function getDatesForGameID(gameId: GameID, excludeFutureDates = true): Dayjs[] {
   const key = `${gameId}-${excludeFutureDates}-${dayjs.mhqNow().format("DDMMYYYY")}`;
   if (datesCache.has(key)) {
     return datesCache.get(key)!;
@@ -21,7 +21,7 @@ export function getDatesForGameID(gameId: GameID, excludeFutureDates: boolean = 
 
   for (let i = 3; i <= 31; i++) {
     // const date = dayjs.mhqParse(0).year(gameId.year).month(gameId.month).date(i);
-    const date = dayjs.mhqParse(`${gameId.year}-${gameId.month+1}-${i}T00:00:00`);
+    const date = dayjs.mhqParse(`${gameId.year}-${gameId.month + 1}-${i}T00:00:00`);
     if (date.month() !== gameId.month) break;
     if (excludeFutureDates && date.valueOf() > dayjs.mhqNow().valueOf()) break;
     dates.push(date);
@@ -32,7 +32,10 @@ export function getDatesForGameID(gameId: GameID, excludeFutureDates: boolean = 
   return dates;
 }
 
-export async function getShadowPlayerTask(ref: ShadowPlayerTaskReference, activityLoader: ShadowPlayerActivityLoader) {
+export async function getShadowPlayerTask(
+  ref: ShadowPlayerTaskReference,
+  activityLoader: ShadowPlayerActivityLoader
+) {
   const task = ref.task;
 
   if (!task) {
@@ -41,7 +44,7 @@ export async function getShadowPlayerTask(ref: ShadowPlayerTaskReference, activi
         user_id: ref.user_id,
         game_id: ref.game_id,
         task_id: ref.task_id,
-      }
+      },
     });
   }
 
@@ -67,7 +70,7 @@ export async function getShadowPlayerTask(ref: ShadowPlayerTaskReference, activi
 
       let value = null;
       let calculatedValue = false;
-      
+
       let hasAnyChanges = false;
       try {
         const taskCalculator = taskCalculations[ref.task_id % 1000];
@@ -81,16 +84,16 @@ export async function getShadowPlayerTask(ref: ShadowPlayerTaskReference, activi
         value = taskCalculator.calculate(activityData, ref.task_id);
         if (value !== existingData?.value) hasAnyChanges = true;
         calculatedValue = true;
-      } catch { }
-
+        // eslint-disable-next-line no-empty
+      } catch {}
 
       const willBeFinalised =
         dayjs.mhqNow().add(-1, "hour").startOf("day").valueOf() >= date.add(1, "day").valueOf() &&
         calculatedValue;
-      
+
       if (willBeFinalised) hasAnyChanges = true;
 
-      if(hasAnyChanges) hasAnyChangesAtAll = true;
+      if (hasAnyChanges) hasAnyChangesAtAll = true;
 
       const newData = {
         user_id: ref.user_id,
@@ -129,5 +132,8 @@ export async function getShadowPlayerTask(ref: ShadowPlayerTaskReference, activi
 
   if (!taskCalculator) return null;
 
-  return (taskCalculator.sum ?? defaultSum)(taskDays.map(d => d[0]), ref.task_id);
+  return (taskCalculator.sum ?? defaultSum)(
+    taskDays.map(d => d[0]),
+    ref.task_id
+  );
 }

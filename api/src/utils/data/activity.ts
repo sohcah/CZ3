@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid";
-import { StatzeePlayerDay } from "@cuppazee/api/statzee/player/day";
+import { StatzeePlayerDay } from "@cuppazee/api/statzee/player/day.js";
 
 export type UserActivityMunzee =
   | {
