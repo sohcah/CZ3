@@ -1,5 +1,6 @@
 import { GroupData, GroupSeasonalProperties } from "./groups";
 import { TypeData, TypeMeta, TypePoints, TypeHidden, TypeState, TypeTags } from "./types";
+
 export {
   TypeData,
   TypeMeta,
@@ -30,6 +31,7 @@ const internalTypesSymbol = Symbol();
 export class Type {
   private _data: TypeInternalData;
   private _client: MetaClient;
+
   constructor(data: TypeData, client: MetaClient) {
     this._client = client;
     const internalDefaultIcon = data.name.toLowerCase().replace(/\s/g, "_");
@@ -154,11 +156,16 @@ export class Group {
 }
 
 export class MetaClient {
-  private _typesRoot: Map<number, Type>;
-  private _types: Map<string | number, number>;
-  private _groupsRoot: Map<number, Group>;
-  private _groups: Map<string | number, number>;
+  private _typesRoot!: Map<number, Type>;
+  private _types!: Map<string | number, number>;
+  private _groupsRoot!: Map<number, Group>;
+  private _groups!: Map<string | number, number>;
+
   constructor(types: TypeData[], groups: GroupData[]) {
+    this.loadData(types, groups);
+  }
+
+  public loadData(types: TypeData[], groups: GroupData[]) {
     this._typesRoot = new Map();
     for (const type of types) {
       this._typesRoot.set(type.id, new Type(type, this));
@@ -199,9 +206,23 @@ export class MetaClient {
     }
   }
 
-  private *getBaseVariants(base: string) {
+  public getIcon(id: string): string {
+    let icon = this.get(id)?.icon;
+    if (icon) return `https://images.cuppazee.app/types/64/${icon}.png`;
+    icon = id;
+    if (icon.startsWith("https://munzee.global.ssl.fastly.net/images/")) {
+      if (icon.startsWith("https://munzee.global.ssl.fastly.net/images/v4pins/")) {
+        icon = icon.slice(51, -4);
+      } else {
+        icon = icon.slice(49, -4);
+      }
+    }
+    return `https://images.cuppazee.app/types/64/${icon}.png`;
+  }
+
+  private static *getBaseVariants(base: string) {
     // Will only lowercase A-Z to match what Munzee did for `tavaszeeszélvizetÁraszt` and `dk:jul2017(Østjylland)`
-    var first = decodeURIComponent(base).replace(/[A-Z]+/g, a => a.toLowerCase());
+    const first = decodeURIComponent(base).replace(/[A-Z]+/g, a => a.toLowerCase());
     yield first;
     const set = new Set([first]);
     const second = base.replace(/[A-Z]+/g, a => a.toLowerCase());
@@ -221,7 +242,7 @@ export class MetaClient {
     }
   }
 
-  private *getStrippedVariants(id: string) {
+  private static *getStrippedVariants(id: string) {
     // Strip URL prefix and suffix
     let base = id;
     if (id.startsWith("https://munzee.global.ssl.fastly.net/images/")) {
@@ -232,7 +253,7 @@ export class MetaClient {
       }
     }
 
-    for (const baseVariant of this.getBaseVariants(base)) {
+    for (const baseVariant of MetaClient.getBaseVariants(base)) {
       // Remove spaces
       yield baseVariant.replace(/\s/g, "");
 
@@ -254,7 +275,7 @@ export class MetaClient {
 
   get(id: number | string): Type | undefined {
     if (typeof id === "string") {
-      for (const variant of this.getStrippedVariants(id)) {
+      for (const variant of MetaClient.getStrippedVariants(id)) {
         const typeId = this._types.get(variant);
         if (typeId === undefined) continue;
         const type = this._typesRoot.get(typeId);
@@ -283,6 +304,7 @@ export class MetaClient {
 
 export class TypeProperties {
   private _type: Type;
+
   constructor(type: Type) {
     this._type = type;
   }
@@ -300,5 +322,21 @@ export class TypeProperties {
       this._type.hasTag(TypeTags.Scatter) ||
       (this._type.hasTag(TypeTags.Evolution) && (this._type.meta.evolution?.stage ?? 0) > 1)
     );
+  }
+
+  get isBouncerBase(): boolean {
+    return (
+      this._type.hasTag(TypeTags.BouncerHost) ||
+      this._type.hasTag(TypeTags.DestinationBouncer) ||
+      this._type.hasTag(TypeTags.DestinationRooms)
+    );
+  }
+
+  get isDestinationBase(): boolean {
+    return this._type.hasTag(TypeTags.DestinationRooms);
+  }
+
+  get isDestinationRoom(): boolean {
+    return this._type.hasTag(TypeTags.DestinationRoom);
   }
 }

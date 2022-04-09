@@ -18,6 +18,11 @@
   "esm": true,
   "compileOnSave": true,
   "include": [
-    "src"
+    "endpoints",
+    "extra",
+    "patcher",
+    "routers",
+    "utils",
+    "*.ts"
   ]
 }

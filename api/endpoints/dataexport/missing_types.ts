@@ -3,7 +3,7 @@ import { authenticateAnonymous } from "../../utils/auth/index.js";
 import { munzeeFetch } from "../../utils/munzee.js";
 
 import ExcelJS from "exceljs";
-import { dbCache } from "../../utils/meta.js";
+import { meta } from "../../utils/meta.js";
 
 export default function DataExportMissingTypes(fastify: FastifyInstance) {
   fastify.get<{
@@ -65,7 +65,7 @@ export default function DataExportMissingTypes(fastify: FastifyInstance) {
         sharedFormula: `IMAGE("${encodeURI(item.logo.replace(/"/g, '""'))}")`,
         date1904: false,
       };
-      if (!dbCache.value.get(item.logo)) {
+      if (!meta.get(item.logo)) {
         missing.addRow({
           number: Number(item.number),
           munzee_id: item.capture_type_id.toString().padStart(4, "0"),
@@ -87,7 +87,7 @@ export default function DataExportMissingTypes(fastify: FastifyInstance) {
               fgColor: { argb: "ffffaaaa" },
             })
         );
-      } else if (Number(dbCache.value.get(item.logo)?.munzeeId) !== Number(item.capture_type_id)) {
+      } else if (Number(meta.get(item.logo)?.munzeeId) !== Number(item.capture_type_id)) {
         missingIds.addRow({
           number: Number(item.number),
           munzee_id: item.capture_type_id.toString().padStart(4, "0"),
@@ -136,14 +136,14 @@ export default function DataExportMissingTypes(fastify: FastifyInstance) {
     const missingIds = [];
 
     for (const item of items) {
-      if (!dbCache.value.get(item.logo)) {
+      if (!meta.get(item.logo)) {
         missing.push({
           number: Number(item.number),
           munzee_id: item.capture_type_id,
           name: item.name,
           icon: item.logo.slice(49, -4),
         });
-      } else if (Number(dbCache.value.get(item.logo)?.munzeeId) !== Number(item.capture_type_id)) {
+      } else if (Number(meta.get(item.logo)?.munzeeId) !== Number(item.capture_type_id)) {
         missingIds.push({
           number: Number(item.number),
           munzee_id: item.capture_type_id,

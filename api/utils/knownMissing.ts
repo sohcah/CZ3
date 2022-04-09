@@ -1,14 +1,14 @@
 import { TypeTags } from "@cz3/meta-client";
 import fetch from "node-fetch";
 import { config } from "./config.js";
-import { dbCache } from "./meta.js";
+import { meta } from "./meta.js";
 import { prisma } from "./prisma.js";
 
 class KnownMissing {
   private types = new Set<string>();
   missingType(icon: string, capture_type_id: number | string | null = null): boolean {
     if (this.types.has(`${icon}-${capture_type_id}`)) return false;
-    const type = dbCache.value.get(icon);
+    const type = meta.get(icon);
     if (!type) return true;
     if (capture_type_id !== null) {
       if (type.hasTag(TypeTags.Evolution)) return false;

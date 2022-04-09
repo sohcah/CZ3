@@ -10,6 +10,13 @@ import {
   AuthenticateHeadersOptions,
   AuthHeaders,
 } from "./utils/auth/index.js";
+import {
+  fastifyTRPCPlugin,
+  fastifyRequestHandler,
+} from "@trpc/server/adapters/fastify/dist/trpc-server-adapters-fastify.cjs.js";
+import { createContext } from "./context.js";
+import { appRouter } from "./router.js";
+
 const fastify = Fastify({
   logger: {
     level: process.env.NODE_ENV === "development" ? "debug" : "warn",
@@ -196,6 +203,41 @@ fastify.setErrorHandler(async function (error, request, reply) {
   reply.error(APIError.Unexpected(error));
 });
 
+const trpcOptions = { router: appRouter, createContext };
+
+fastify.all<{
+  Params: {
+    path: string;
+  };
+}>(`/api/:path`, async (req, res) => {
+  const path = req.params.path;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const input = (req.query as any).input;
+  await fastifyRequestHandler({
+    ...trpcOptions,
+    req: {
+      ...req,
+      method: req.method,
+      headers: req.headers,
+      body: req.body,
+      query:
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        Object.keys(req.query as any).length > 0
+          ? {
+              input: input ? JSON.stringify(input) : JSON.stringify(req.query),
+            }
+          : {},
+    },
+    res,
+    path,
+  });
+});
+
+fastify.register(fastifyTRPCPlugin, {
+  prefix: "/trpc",
+  trpcOptions,
+});
+
 fastify.setNotFoundHandler(function (request, reply) {
   // Send error response
   reply.error(APIError.NotFound());
@@ -211,4 +253,4 @@ const start = async () => {
     process.exit(1);
   }
 };
-start();
+await start();
