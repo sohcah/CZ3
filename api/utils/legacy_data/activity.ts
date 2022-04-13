@@ -67,7 +67,7 @@ export function getLegacyPlayerActivity(
       creator: item.munzee.username,
       // Old internal
       group_capture: undefined,
-      icon: item.icon,
+      icon: item.icon.slice("https://images.cuppazee.app/types/64/".length, -".png".length),
       key: item.key,
       munzee_type: item.munzee.type,
       name: item.munzee.name,
@@ -108,7 +108,7 @@ export function getLegacyPlayerActivity(
         return [i, ...(i.sub_captures ?? [])].some(item => {
           if (!filters) return true;
           if (filters.activity.length !== 0 && !filters.activity.includes(item.type)) return false;
-          if (!item.munzee_type) return false;
+          if (!item.munzee_type) return true;
           const g = meta.get(item.munzee_type);
           if (!g) return true;
           if (filters.state.length !== 0 && !filters.state.includes(g.state)) return false;

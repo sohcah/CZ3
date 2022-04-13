@@ -162,7 +162,7 @@ export function getPlayerActivity(
         type: type?.humanId,
       },
       icon: meta.getIcon(capon.pin),
-      points: Number(capon.points),
+      points: Number(capon.points_for_creator),
       time: new Date(capon.captured_at),
       type: "capon",
       capper_username: capon.username,
