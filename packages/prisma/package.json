@@ -1,6 +1,6 @@
 {
     "name": "@cz3/prisma",
-    "version": "0.0.1",
+    "version": "0.0.0",
     "main": ".prisma/client",
     "license": "MPL-2.0",
     "keywords": [

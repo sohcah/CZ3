@@ -1,14 +1,15 @@
 {
   "compilerOptions": {
-    "module": "NodeNext",
+    "module": "esnext",
     "noImplicitReturns": true,
     "noUnusedLocals": true,
     "outDir": "lib",
     "sourceMap": true,
     "strict": true,
     "lib": ["es2020"],
-    "types": ["node"],
+    "types": ["node", "vitest/importMeta"],
     "target": "es2020",
+    "moduleResolution": "node",
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
@@ -17,12 +18,5 @@
   },
   "esm": true,
   "compileOnSave": true,
-  "include": [
-    "endpoints",
-    "extra",
-    "patcher",
-    "routers",
-    "utils",
-    "*.ts"
-  ]
+  "include": ["endpoints", "extra", "patcher", "routers", "utils", "*.ts"]
 }

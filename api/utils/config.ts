@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import { z } from "zod";
-import { default as chalk } from "chalk-template";
+import chalk from "chalk";
 
 const fileContent = JSON.parse(
   fs.readFileSync(
@@ -30,13 +30,6 @@ export const configSchema = z.object({
       endpoint: z.string(),
       prefix: z.string(),
     }),
-  }),
-  pg: z.object({
-    user: z.string(),
-    host: z.string(),
-    port: z.number(),
-    database: z.string(),
-    password: z.string(),
   }),
   rollbar: z
     .object({

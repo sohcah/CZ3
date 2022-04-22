@@ -17,7 +17,8 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
     "build": "tsc",
-    "dev": "cross-env NODE_ENV=development tsc-watch --onSuccess \"node --enable-source-maps .\""
+    "dev": "cross-env NODE_ENV=development tsc-watch --onSuccess \"node --enable-source-maps .\"",
+    "test": "vitest --ui"
   },
   "dependencies": {
     "@cuppazee/db": "^0.0.8",
@@ -26,8 +27,7 @@
     "@cz3/prisma": "workspace:*",
     "@trpc/server": "^9.21.0",
     "@webkitty/geo-rev": "^1.1.1",
-    "chalk": "^5.0.1",
-    "chalk-template": "^0.4.0",
+    "chalk": "^3.0.0",
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
     "dayjs": "^1.10.7",
@@ -62,9 +62,11 @@
     "@types/node-fetch": "^2.5.10",
     "@types/pg": "^8.6.1",
     "@types/power-radix": "~2.5.0",
+    "@vitest/ui": "^0.9.4",
     "node-dev": "^7.3.1",
     "ts-node": "^10.7.0",
     "tsc-watch": "^4.2.9",
-    "typescript": "next"
+    "typescript": "next",
+    "vitest": "^0.9.4"
   }
 }
