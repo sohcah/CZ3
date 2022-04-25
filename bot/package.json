@@ -1,0 +1,53 @@
+{
+  "name": "@cz3/bot",
+  "version": "0.0.1",
+  "main": "lib/main.js",
+  "license": "MPL-2.0",
+  "type": "module",
+  "keywords": [
+    "munzee",
+    "cuppazee"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CuppaZee/CZ3.git"
+  },
+  "author": "CuppaZee",
+  "scripts": {
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
+    "build": "tsc",
+    "dev": "cross-env NODE_ENV=development tsc-watch --onSuccess \"node --enable-source-maps .\"",
+    "test": "vitest --ui"
+  },
+  "dependencies": {
+    "@cz3/api": "workspace:*",
+    "@cz3/meta-client": "workspace:*",
+    "@trpc/client": "^9.21.0",
+    "@trpc/server": "^9.21.0",
+    "chalk": "^3.0.0",
+    "dayjs": "^1.10.7",
+    "discord.js": "^13.6.0",
+    "glob": "^7.2.0",
+    "immer": "^9.0.12",
+    "mongodb": "^4.1.2",
+    "nanoid": "^3.1.30",
+    "node-fetch": "^3.2.3",
+    "superjson": "^1.8.1",
+    "tslib": "^2.3.1",
+    "zod": "^3.14.3"
+  },
+  "devDependencies": {
+    "@cz3/eslint-config": "workspace:*",
+    "@types/glob": "^7.2.0",
+    "@types/node": "^14.17.32",
+    "@types/node-fetch": "^2.5.10",
+    "@vitest/ui": "^0.9.4",
+    "cross-env": "^7.0.3",
+    "node-dev": "^7.3.1",
+    "ts-node": "^10.7.0",
+    "tsc-watch": "^4.2.9",
+    "typescript": "next",
+    "vitest": "^0.9.4"
+  }
+}

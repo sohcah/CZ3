@@ -4,6 +4,7 @@
   "private": true,
   "workspaces": [
     "api",
+    "bot",
     "apps/*",
     "config/*",
     "packages/*"
@@ -16,6 +17,10 @@
     "api:build": "turbo run build --filter=api",
     "api:docker": "docker build . -t cz3api -f Dockerfile.api",
     "api:test": "turbo run test --filter=api",
+    "bot:dev": "turbo run dev --filter=bot",
+    "bot:build": "turbo run build --filter=bot",
+    "bot:docker": "docker build . -t cz3bot -f Dockerfile.bot",
+    "bot:test": "turbo run test --filter=bot",
     "app:web": "turbo run web",
     "app:ios": "turbo run ios",
     "app:android": "turbo run android"

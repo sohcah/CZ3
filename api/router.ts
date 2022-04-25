@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { flagsRouter } from "./routers/flags/router.js";
 import { createRouter } from "./routers/index.js";
+import { playerRouter } from "./routers/player.js";
 
 type User = {
   id: string;
@@ -30,7 +31,8 @@ export const appRouter = createRouter()
       return user;
     },
   })
-  .merge("flags:", flagsRouter);
+  .merge("flags:", flagsRouter)
+  .merge("player:", playerRouter);
 
 // export type definition of API
 export type AppRouter = typeof appRouter;

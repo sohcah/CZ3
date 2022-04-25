@@ -218,11 +218,11 @@ type PlayerActivityTypeOverview = {
     count: number;
     points: number;
     types: {
-      [key: string]: {
-        count: number;
-        points: number;
-      };
-    };
+      type?: string;
+      icon: string;
+      count: number;
+      points: number;
+    }[];
   };
 };
 
@@ -236,27 +236,27 @@ export function getPlayerActivityOverview(activity: PlayerActivityItem[]): Playe
     deploy: {
       count: 0,
       points: 0,
-      types: {},
+      types: [],
     },
     capture: {
       count: 0,
       points: 0,
-      types: {},
+      types: [],
     },
     capon: {
       count: 0,
       points: 0,
-      types: {},
+      types: [],
     },
     passive_deploy: {
       count: 0,
       points: 0,
-      types: {},
+      types: [],
     },
     passive_capture: {
       count: 0,
       points: 0,
-      types: {},
+      types: [],
     },
   };
   for (const item of activity) {
@@ -265,14 +265,18 @@ export function getPlayerActivityOverview(activity: PlayerActivityItem[]): Playe
     typeOverview.count++;
     typeOverview.points += item.points;
     const munzeeType = item.munzee.type ?? item.icon;
-    if (!typeOverview.types[munzeeType]) {
-      typeOverview.types[munzeeType] = {
+    let type = typeOverview.types.find(i => i.type === munzeeType);
+    if (!type) {
+      type = {
+        type: item.munzee.type,
+        icon: item.icon,
         count: 0,
         points: 0,
       };
+      typeOverview.types.push(type);
     }
-    typeOverview.types[munzeeType].count++;
-    typeOverview.types[munzeeType].points += item.points;
+    type.count++;
+    type.points += item.points;
   }
   return overview;
 }

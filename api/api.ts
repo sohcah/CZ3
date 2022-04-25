@@ -1,3 +1,4 @@
+import "./server.js";
 import { FastifyRequest } from "fastify";
 
 export interface CuppaZeeProperties {
