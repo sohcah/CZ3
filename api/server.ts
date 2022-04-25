@@ -18,6 +18,7 @@ import { createContext } from "./context.js";
 import { appRouter } from "./router.js";
 
 const fastify = Fastify({
+  maxParamLength: 1000,
   logger: {
     level: process.env.NODE_ENV === "development" ? "debug" : "warn",
   },

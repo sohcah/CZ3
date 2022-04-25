@@ -200,7 +200,10 @@ export function getPlayerActivity(
     // Group destination room captures with destination capture
     if ((item.type === "capture" || item.type === "deploy") && item.__internal.destination_room) {
       const destinationBase = destinationBases.find(
-        destinationBase => Math.abs(destinationBase.time.valueOf() - item.time.getTime()) < 10
+        destinationBase =>
+          Math.abs(destinationBase.time.valueOf() - item.time.getTime()) < 60000 &&
+          destinationBase.munzee.name ===
+            item.munzee.name.replace(/ Room #\d+/, "")
       );
       if (destinationBase) {
         item.parent = destinationBase.key;
