@@ -18,5 +18,5 @@
   },
   "esm": true,
   "compileOnSave": true,
-  "include": ["endpoints", "extra", "patcher", "routers", "utils", "*.ts"]
+  "include": ["action_types", "actions", "trpc", "utils", "*.ts"]
 }

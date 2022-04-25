@@ -4,17 +4,26 @@
   "private": true,
   "workspaces": [
     "api",
+    "bot",
     "apps/*",
     "config/*",
     "packages/*"
   ],
   "scripts": {
-    "build": "turbo run build",
-    "api:dev": "turbo run api:dev",
-    "api:build": "turbo run api:build",
-    "api:docker": "docker build . -t cz3api -f Dockerfile.api",
     "lint": "turbo run lint",
-    "lint:fix": "turbo run lint:fix"
+    "lint:fix": "turbo run lint:fix",
+    "build": "turbo run build",
+    "api:dev": "turbo run dev --filter=api",
+    "api:build": "turbo run build --filter=api",
+    "api:docker": "docker build . -t cz3api -f Dockerfile.api",
+    "api:test": "turbo run test --filter=api",
+    "bot:dev": "turbo run dev --filter=bot",
+    "bot:build": "turbo run build --filter=bot",
+    "bot:docker": "docker build . -t cz3bot -f Dockerfile.bot",
+    "bot:test": "turbo run test --filter=bot",
+    "app:web": "turbo run web",
+    "app:ios": "turbo run ios",
+    "app:android": "turbo run android"
   },
   "devDependencies": {
     "eslint": "^8.12.0",
@@ -23,7 +32,7 @@
   },
   "engines": {
     "npm": ">=7.0.0",
-    "node": ">=14.0.0"
+    "node": ">=16.0.0"
   },
   "packageManager": "pnpm@6.28.0"
 }

@@ -36,6 +36,30 @@
     },
     "lint:fix": {
       "outputs": []
+    },
+
+    "test": {
+      "outputs": [],
+      "cache": false
+    },
+
+    "web": {
+      "dependsOn": [
+        "^build"
+      ],
+      "cache": false
+    },
+    "ios": {
+      "dependsOn": [
+        "^build"
+      ],
+      "cache": false
+    },
+    "android": {
+      "dependsOn": [
+        "^build"
+      ],
+      "cache": false
     }
   }
 }

@@ -9,28 +9,10 @@ const fileContent = JSON.parse(
   )
 );
 
-export const apiApplicationSchema = z.object({
-  client_id: z.string(),
-  client_secret: z.string(),
-  redirect_uri: z.string(),
-  id: z.string(),
-  title: z.string(),
-  discord: z.string().optional(),
-});
-export type APIApplication = z.infer<typeof apiApplicationSchema>;
-
 export const configSchema = z.object({
-  mongoURI: z.string(),
-  mongoDB: z.string(),
-  jwtSecret: z.string(),
-  applications: z.record(apiApplicationSchema),
-  discord: z.object({
-    all_auth: z.string().optional(),
-    missing_data: z.object({
-      endpoint: z.string(),
-      prefix: z.string(),
-    }),
-  }),
+  token: z.string(),
+  apiUrl: z.string().url(),
+  devGuild: z.string(),
   rollbar: z
     .object({
       accessToken: z.string(),

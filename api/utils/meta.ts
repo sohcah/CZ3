@@ -17,4 +17,6 @@ export async function loadAgain() {
   }
 }
 
-loadAgain();
+const load = loadAgain();
+
+if (process.env.VITEST) await load;

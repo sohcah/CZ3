@@ -247,7 +247,9 @@ export const taskCalculations: { [task_id: number]: TaskCalculator } = {
   34: {
     task_id: 34,
     calculate: points(({ captures, deploys, captures_on }) =>
-      [...captures, ...deploys, ...captures_on].filter(i => i.type?.hasTag(TypeTags.TypeMystery) && !i.type?.hasTag(TypeTags.Scatter))
+      [...captures, ...deploys, ...captures_on].filter(
+        i => i.type?.hasTag(TypeTags.TypeMystery) && !i.type?.hasTag(TypeTags.Scatter)
+      )
     ),
   },
   35: {
