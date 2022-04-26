@@ -40,6 +40,7 @@ importers:
       fastify-formbody: ^5.2.0
       fastify-multipart: ^5.2.1
       fastify-static: ^4.0.1
+      fuse.js: ^6.5.3
       geo-tz: ^7.0.1
       glob: ^7.2.0
       immer: ^9.0.12
@@ -77,6 +78,7 @@ importers:
       fastify-formbody: 5.2.0
       fastify-multipart: 5.3.1
       fastify-static: 4.6.1
+      fuse.js: 6.5.3
       geo-tz: 7.0.1
       glob: 7.2.0
       immer: 9.0.12
@@ -2344,6 +2346,11 @@ packages:
 
   /functions-have-names/1.2.3:
     resolution: {integrity: sha512-xckBUXyTIqT97tq2x2AMb+g163b5JFysYk0x4qxNFwbfQkmNZoiRHb6sPzI9/QV33WeuvVYBUIiD4NzNIyqaRQ==}
+    dev: false
+
+  /fuse.js/6.5.3:
+    resolution: {integrity: sha512-sA5etGE7yD/pOqivZRBvUBd/NaL2sjAu6QuSaFoe1H2BrJSkH/T/UXAJ8CdXdw7DvY3Hs8CXKYkDWX7RiP5KOg==}
+    engines: {node: '>=10'}
     dev: false
 
   /geo-tz/7.0.1:
