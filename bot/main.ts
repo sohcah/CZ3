@@ -1,8 +1,6 @@
 import dayjs from "dayjs";
 import objectSupport from "dayjs/plugin/objectSupport.js";
-import { dayjsMHQPlugin } from "@cuppazee/utils/lib/dayjsmhq.js";
 dayjs.extend(objectSupport);
-dayjs.extend(dayjsMHQPlugin);
 
 import { ChatInputAction } from "./action_types/chatinput.js";
 
@@ -134,6 +132,22 @@ async function load() {
           content: "⚠️ Oops! Something went wrong when running this Button Action.",
           ephemeral: true,
         });
+      }
+    }
+
+    if (interaction.isAutocomplete()) {
+      const commandName = interaction.commandName.startsWith("dev__")
+        ? interaction.commandName.slice(5)
+        : interaction.commandName;
+      const command = chatInputActions.find(i => i.name === commandName);
+      if (!command?.autocompleteHandler) {
+        return interaction.respond([]);
+      }
+      try {
+        await Promise.resolve(command.autocompleteHandler(interaction));
+      } catch (e) {
+        console.error(e);
+        interaction.respond([]);
       }
     }
 

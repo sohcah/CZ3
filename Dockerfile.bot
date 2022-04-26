@@ -1,14 +1,15 @@
-# DEPENDENCIES
+# BASE
 
-FROM --platform=linux/amd64 node:16-alpine AS deps
-ENV PRISMA_CLI_BINARY_TARGETS=linux-musl
-
+FROM --platform=linux/amd64 node:16-alpine AS base
 WORKDIR /czbot
-
-# Builder Enviroment Variables
-
+ENV PRISMA_CLI_BINARY_TARGETS=linux-musl
+RUN apk add git
 RUN npm i -g pnpm
 
+# BUILDER
+FROM base AS builder
+
+COPY .git ./.git
 COPY *.json ./
 COPY pnpm-*.yaml ./
 COPY api/*.json ./api/
@@ -17,35 +18,15 @@ COPY config/eslint/*.json ./config/eslint/
 COPY packages/prisma ./packages/prisma
 COPY packages/meta ./packages/meta
 
-RUN pnpm install
-
-# BUILDER
-FROM --platform=linux/amd64 node:16-alpine AS builder
-ENV PRISMA_CLI_BINARY_TARGETS=linux-musl
-ENV NODE_ENV=production
-
-RUN npm i -g pnpm
-
-WORKDIR /czbot
+RUN pnpm install --frozen-lockfile
 
 COPY . .
 
-COPY --from=deps /czbot ./
-
 RUN pnpm bot:build
-
-RUN pnpm prune --prod
 
 # RUNNER
 
-FROM --platform=linux/amd64 node:16-alpine AS runner
-ENV PRISMA_CLI_BINARY_TARGETS=linux-musl
-
-RUN npm i -g pnpm
-
-WORKDIR /czbot
-
-ENV NODE_ENV production
+FROM base AS runner
 
 COPY --from=builder \
     /czbot/bot/package.json \
@@ -66,4 +47,4 @@ COPY --from=builder /czbot/bot/lib ./bot/lib
 
 EXPOSE 80
 WORKDIR /czbot/bot
-CMD [ "node", "lib/server.js", "--enable-source-maps" ] 
+CMD [ "node", "lib/main.js", "--enable-source-maps" ] 

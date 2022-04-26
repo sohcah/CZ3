@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionData, CommandInteraction } from "discord.js";
+import { ApplicationCommandOptionData, AutocompleteInteraction, CommandInteraction } from "discord.js";
 import { ApplicationCommandTypes } from "discord.js/typings/enums.d.js";
 import { CommandAction } from "./action.js";
 
@@ -16,5 +16,8 @@ export abstract class ChatInputAction extends CommandAction<CommandInteraction> 
       options: this.options,
       defaultPermission: this.defaultPermission,
     } as const;
+  }
+  autocompleteHandler(interaction: AutocompleteInteraction): Promise<void> {
+    return Promise.resolve();
   }
 }

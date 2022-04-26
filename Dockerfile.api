@@ -1,14 +1,15 @@
-# DEPENDENCIES
+# BASE
 
-FROM --platform=linux/amd64 node:16-alpine AS deps
-ENV PRISMA_CLI_BINARY_TARGETS=linux-musl
-
+FROM --platform=linux/amd64 node:16-alpine AS base
 WORKDIR /czapi
-
-# Builder Enviroment Variables
-
+ENV PRISMA_CLI_BINARY_TARGETS=linux-musl
+RUN apk add git
 RUN npm i -g pnpm
 
+# BUILDER
+FROM base AS builder
+
+COPY .git ./.git
 COPY *.json ./
 COPY pnpm-*.yaml ./
 COPY api/*.json ./api/
@@ -16,35 +17,15 @@ COPY config/eslint/*.json ./config/eslint/
 COPY packages/prisma ./packages/prisma
 COPY packages/meta ./packages/meta
 
-RUN pnpm install
-
-# BUILDER
-FROM --platform=linux/amd64 node:16-alpine AS builder
-ENV PRISMA_CLI_BINARY_TARGETS=linux-musl
-ENV NODE_ENV=production
-
-RUN npm i -g pnpm
-
-WORKDIR /czapi
+RUN pnpm install --frozen-lockfile
 
 COPY . .
 
-COPY --from=deps /czapi ./
-
 RUN pnpm api:build
-
-RUN pnpm prune --prod
 
 # RUNNER
 
-FROM --platform=linux/amd64 node:16-alpine AS runner
-ENV PRISMA_CLI_BINARY_TARGETS=linux-musl
-
-RUN npm i -g pnpm
-
-WORKDIR /czapi
-
-ENV NODE_ENV production
+FROM base AS runner
 
 COPY --from=builder \
     /czapi/api/package.json \

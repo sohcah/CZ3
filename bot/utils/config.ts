@@ -12,7 +12,7 @@ const fileContent = JSON.parse(
 export const configSchema = z.object({
   token: z.string(),
   apiUrl: z.string().url(),
-  devGuild: z.string(),
+  devGuild: z.string().optional(),
   rollbar: z
     .object({
       accessToken: z.string(),
