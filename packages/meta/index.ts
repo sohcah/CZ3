@@ -173,7 +173,6 @@ export class MetaClient {
 
     this._types = new Map();
     for (const type of this._typesRoot.values()) {
-      this._types.set(type.id, type.id);
       this._types.set(type.name, type.id);
       if (type.munzeeId) this._types.set(type.munzeeId, type.id);
       for (const icon of type.icons) this._types.set(icon, type.id);
@@ -195,6 +194,7 @@ export class MetaClient {
     this._groups = new Map();
     for (const group of this._groupsRoot.values()) {
       this._groups.set(group.id, group.id);
+      this._groups.set(group.humanId, group.id);
       this._groups.set(group.name, group.id);
       for (const icon of group.icons) this._groups.set(icon, group.id);
     }
