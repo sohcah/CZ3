@@ -27,7 +27,8 @@ function SignUp() {
       properties: {
         targetLevels: [],
         qrates: "",
-        // resellers: "",
+        resellers: "",
+        renovations: "",
         admin: false,
         qrew: false,
         notes: "",
@@ -87,10 +88,18 @@ function SignUp() {
           justifyContent: "center",
         }}>
         <h1>Submitted!</h1>
-        <Button onClick={() => {
-          formik.resetForm();
-          setStatus("input")
-        }}>Submit again</Button>
+        <Button
+          onClick={() => {
+            formik.resetForm();
+            setStatus("input");
+          }}>
+          Submit again
+        </Button>
+        <Button
+          variant="contained"
+          href={`/${group}/${game_id}/roster`}>
+          View Roster
+        </Button>
       </div>
     );
   }
@@ -221,12 +230,21 @@ function SignUp() {
             </FormikProvider>
           </Paper>
 
-          {/* <TextField
+          <TextField
             value={formik.values.properties.resellers}
             onChange={formik.handleChange}
             name="properties.resellers"
             label="Resellers"
             helperText="How many RUMs will you be able to capture/deploy?"
+            variant="outlined"
+          />
+
+          {/* <TextField
+            value={formik.values.properties.renovations}
+            onChange={formik.handleChange}
+            name="properties.renovations"
+            label="Renovations"
+            helperText="How many Renovations will you be able to do?"
             variant="outlined"
           /> */}
 

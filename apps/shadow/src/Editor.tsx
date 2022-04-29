@@ -41,6 +41,7 @@ export interface Properties {
   targetLevels: string[];
   qrates: string;
   resellers: string;
+  renovations: string;
   admin: boolean;
   qrew: boolean;
   notes: string;
@@ -243,7 +244,11 @@ function Editor() {
                         }
                       })
                       .map((i, n) => (
-                        <Draggable isDragDisabled={!isLoggedIn} key={i.user_id} index={n} draggableId={`${i.user_id}`}>
+                        <Draggable
+                          isDragDisabled={!isLoggedIn}
+                          key={i.user_id}
+                          index={n}
+                          draggableId={`${i.user_id}`}>
                           {(provided, snapshot) => (
                             <div
                               ref={provided.innerRef}
@@ -304,6 +309,15 @@ function Editor() {
                                       color="info"
                                       style={{ margin: 2, maxWidth: "100%", overflow: "hidden" }}
                                       label={`RUMs: ${i.properties?.resellers}`}
+                                    />
+                                  ) : null}
+                                  {i.properties?.renovations ? (
+                                    <Chip
+                                      key="renovations"
+                                      size="small"
+                                      color="info"
+                                      style={{ margin: 2, maxWidth: "100%", overflow: "hidden" }}
+                                      label={`Reno: ${i.properties?.renovations}`}
                                     />
                                   ) : null}
                                 </div>
