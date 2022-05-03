@@ -1,9 +1,14 @@
 import { FastifyInstance } from "fastify";
 import fetch from "node-fetch";
+import { loadAgain } from "../../utils/meta";
 
 const cache = new Map<string, string>();
 
 export default function Database(fastify: FastifyInstance) {
+  fastify.get("/database/reload", async () => {
+    await loadAgain();
+    return true;
+  });
   fastify.get("/database/resetcache", async () => {
     cache.clear();
     return true;
