@@ -23,7 +23,11 @@
     "bot:test": "turbo run test --filter=bot",
     "app:web": "turbo run web",
     "app:ios": "turbo run ios",
-    "app:android": "turbo run android"
+    "app:android": "turbo run android",
+    "app:desktop": "turbo run desktop",
+    "shadow:dev": "turbo run dev --filter=shadow",
+    "shadow:build": "turbo run build --filter=shadow",
+    "components:build": "turbo run build --filter=components"
   },
   "devDependencies": {
     "eslint": "^8.12.0",

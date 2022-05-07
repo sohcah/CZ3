@@ -65,10 +65,12 @@ export class TypeChatInputAction extends ChatInputAction {
       required: true,
     },
   ];
+
   async handler(interaction: CommandInteraction) {
     const typeOption = interaction.options.getString("type");
     return await handler(interaction, typeOption);
   }
+
   async autocompleteHandler(interaction: AutocompleteInteraction<CacheType>) {
     const currentInput = interaction.options.getFocused();
     if (!currentInput) {
@@ -83,6 +85,7 @@ export class TypeChatInputAction extends ChatInputAction {
 
 export class TypeSelectMenuAction extends SelectMenuAction {
   customId = "type";
+
   async handler(interaction: SelectMenuInteraction) {
     const typeOption = interaction.values[0];
     return await handler(interaction, typeOption);

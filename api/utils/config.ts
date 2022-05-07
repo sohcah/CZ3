@@ -16,10 +16,13 @@ export const apiApplicationSchema = z.object({
   id: z.string(),
   title: z.string(),
   discord: z.string().optional(),
+  variant: z.number().optional(),
 });
 export type APIApplication = z.infer<typeof apiApplicationSchema>;
 
 export const configSchema = z.object({
+  apiUrl: z.string(),
+  botUrl: z.string(),
   mongoURI: z.string(),
   mongoDB: z.string(),
   jwtSecret: z.string(),

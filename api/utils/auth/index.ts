@@ -12,7 +12,7 @@ import { randomBytes } from "crypto";
 
 export interface DeviceDetails {
   app: "express" | "max" | "create" | "browse" | "nomad";
-  platform: "ios" | "android" | "web";
+  platform: "ios" | "android" | "web" | "discord";
   redirect: string;
   /** @deprecated used for backwards compatibility with CuppaZee Max */
   max_alt?: boolean;
@@ -32,7 +32,7 @@ export async function loginWithAuthorizationCode(
   const useTeakens = !device.disableTeakens && possiblyUseTeakens;
   const teaken = useTeakens ? randomBytes(20).toString("hex") : "";
   if (useTeakens && !device.app) device.app = "max";
-  if (!["express", "max", "nomad", "shadow"].includes(device.app) || !apiApplication) {
+  if (!["express", "max", "nomad", "shadow", "bot"].includes(device.app) || !apiApplication) {
     throw APIError.InvalidRequest();
   }
 
@@ -143,8 +143,9 @@ export async function loginWithAuthorizationCode(
     });
     await prisma.player_auth.upsert({
       where: {
-        user_id_api: {
+        user_id_api_api_variant: {
           api: apiApplication.id,
+          api_variant: apiApplication.variant ?? 1,
           user_id: user_id!,
         },
       },
@@ -208,12 +209,14 @@ export async function loginWithAuthorizationCode(
       android: "🤖",
       ios: "🍎",
       web: "🌐",
+      discord: "💬",
     }[device.platform] || `[${device.platform}] `;
   const platformName =
     {
       android: "Android",
       ios: "iOS",
       web: "Web",
+      discord: "Discord",
     }[device.platform] || device.platform;
   const app = {
     express: "🔵",
@@ -221,6 +224,7 @@ export async function loginWithAuthorizationCode(
     create: "🟣",
     browse: "🟡",
     nomad: "🟠",
+    bot: "🤖",
   }[device.app];
   const appColor = {
     express: 0x00b1d5,
@@ -228,6 +232,7 @@ export async function loginWithAuthorizationCode(
     create: 0xaf4eff,
     browse: 0xffd95c,
     nomad: 0xff5500,
+    bot: 0x7289da,
   }[device.app];
   const isNewToCuppaZee = !playerDocument;
   const isNewToApi = !authDocument;
@@ -450,7 +455,7 @@ export async function authenticateWithUserID(
   }
 
   await prisma.player_auth.update({
-    where: { user_id_api: { api: apiApp.id, user_id: Number(user_id) } },
+    where: { user_id_api_api_variant: { api: apiApp.id, api_variant: apiApp.variant ?? 1, user_id: Number(user_id) } },
     data: {
       api: apiApp.id,
       access_token: responseData.data.token.access_token,

@@ -1,8 +1,8 @@
 generator client {
   provider        = "prisma-client-js"
+  output          = "./.prisma/client"
   previewFeatures = ["interactiveTransactions"]
-  binaryTargets = ["native", "linux-musl"]
-  output = "./.prisma/client"
+  binaryTargets   = ["native", "linux-musl"]
 }
 
 datasource db {
@@ -16,6 +16,7 @@ model player {
   user_number              Int                        @unique(map: "player_user_number_uindex")
   player_app               player_app[]
   player_auth              player_auth[]
+  player_discord           player_discord[]
   player_teaken            player_teaken[]
   shadow_clan_group_admin  shadow_clan_group_admin[]
   shadow_player            shadow_player[]
@@ -31,10 +32,11 @@ model player_auth {
   refresh_token         String
   refresh_token_expires DateTime @db.Date
   user_number           Int
+  api_variant           Int      @default(1)
   player                player   @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "player_auth_player_user_id_fk")
 
-  @@unique([api, user_number], map: "player_auth_application_user_number_uindex")
-  @@unique([user_id, api], map: "player_auth_user_id_application_uindex")
+  @@unique([api, user_number, api_variant], map: "player_auth_application_user_number_uindex")
+  @@unique([user_id, api, api_variant], map: "player_auth_user_id_application_uindex")
 }
 
 model player_teaken {
@@ -154,4 +156,17 @@ model challenge_intl_month {
 model missing_types {
   icon            String @unique(map: "missing_types_icon_uindex")
   capture_type_id Int?
+}
+
+model player_discord {
+  user_id           Int
+  discord_snowflake String @unique(map: "player_discord_discord_snowflake_uindex")
+  player            player @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "player_discord_player_user_id_fk")
+}
+
+model uniques {
+  munzee_id Int      @id(map: "uniques_pk") @unique(map: "uniques_munzee_id_uindex")
+  url       String   @unique(map: "uniques_url_uindex")
+  type      String
+  added_at  DateTime @db.Timestamp(6)
 }

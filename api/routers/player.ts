@@ -1,6 +1,11 @@
 import dayjs from "dayjs";
 import { z } from "zod";
-import { authenticateAnonymous, authenticateWithUserID } from "../utils/auth/index.js";
+import {
+  authenticateAnonymous,
+  authenticatedUser,
+  authenticateWithCuppaZeeToken,
+  authenticateWithUserID,
+} from "../utils/auth/index.js";
 import { getPlayerActivity, getPlayerActivityOverview } from "../utils/data/activity.js";
 import { munzeeFetch } from "../utils/munzee.js";
 import { createRouter } from "./index.js";
@@ -38,12 +43,25 @@ export const playerRouter = createRouter()
         z.object({
           userId: z.number(),
         })
+      )
+      .or(
+        z.object({
+          cuppazeeToken: z.string(),
+        })
       ),
-    async resolve({ input }) {
-      const token = await authenticateAnonymous();
+    async resolve({ ctx, input }) {
+      const token =
+        "cuppazeeToken" in input
+          ? await authenticateWithCuppaZeeToken(input.cuppazeeToken)
+          : await authenticateAnonymous();
       const response = await munzeeFetch({
         endpoint: "user",
-        params: "userId" in input ? { user_id: input.userId } : { username: input.username },
+        params:
+          "cuppazeeToken" in input
+            ? { user_id: (await authenticatedUser(token))! }
+            : "userId" in input
+            ? { user_id: input.userId }
+            : { username: input.username },
         token,
       });
       const data = await response.getMunzeeData();
@@ -63,6 +81,8 @@ export const playerRouter = createRouter()
               id: data.data.clan.id,
             }
           : null,
+        premium: !!data.data.premium,
+        mhq: data.data.titles.includes("MHQ"),
       };
     },
   });

@@ -60,6 +60,12 @@
         "^build"
       ],
       "cache": false
+    },
+    "desktop": {
+      "dependsOn": [
+        "^build"
+      ],
+      "cache": false
     }
   }
 }

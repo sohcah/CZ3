@@ -1,6 +1,6 @@
 import { FastifyInstance } from "fastify";
 import fetch from "node-fetch";
-import { loadAgain } from "../../utils/meta";
+import { loadAgain } from "../../utils/meta.js";
 
 const cache = new Map<string, string>();
 

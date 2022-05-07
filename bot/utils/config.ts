@@ -13,6 +13,8 @@ export const configSchema = z.object({
   token: z.string(),
   apiUrl: z.string().url(),
   devGuild: z.string().optional(),
+  mainGuild: z.string(),
+  jwtSecret: z.string(),
   rollbar: z
     .object({
       accessToken: z.string(),
@@ -20,6 +22,12 @@ export const configSchema = z.object({
       captureUnhandledRejections: z.boolean(),
     })
     .optional(),
+  roles: z.object({
+    mhq: z.string(),
+    premium: z.string(),
+    player: z.string(),
+    unverified: z.string(),
+  }),
 });
 export type Config = z.infer<typeof configSchema>;
 

@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import objectSupport from "dayjs/plugin/objectSupport.js";
+
 dayjs.extend(objectSupport);
 
 import { ChatInputAction } from "./action_types/chatinput.js";
@@ -17,6 +18,9 @@ import { UserAction } from "./action_types/user.js";
 import { MessageAction } from "./action_types/message.js";
 import { ButtonAction } from "./action_types/button.js";
 import { SelectMenuAction } from "./action_types/select.js";
+
+import "./server.js";
+import { syncMember } from "./utils/syncMember.js";
 
 export const client = new Client({
   allowedMentions: {
@@ -93,6 +97,14 @@ async function load() {
         })),
       ]);
     }
+    client.user?.setPresence({
+      activities: [
+        {
+          name: ` | Bot by CuppaZee`,
+          type: "WATCHING",
+        },
+      ],
+    });
   });
 
   client.on("interactionCreate", async interaction => {
@@ -211,6 +223,11 @@ async function load() {
     }
   });
 
+  client.on("guildMemberAdd", async member => {
+    await syncMember(member);
+  });
+
   client.login(config.token);
 }
+
 load();
