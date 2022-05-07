@@ -17,7 +17,7 @@ COPY config/eslint/*.json ./config/eslint/
 COPY packages/prisma ./packages/prisma
 COPY packages/meta ./packages/meta
 
-RUN pnpm install --frozen-lockfile
+RUN pnpm install
 
 COPY . .
 

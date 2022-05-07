@@ -18,7 +18,7 @@ COPY config/eslint/*.json ./config/eslint/
 COPY packages/prisma ./packages/prisma
 COPY packages/meta ./packages/meta
 
-RUN pnpm install --frozen-lockfile
+RUN pnpm install
 
 COPY . .
 
@@ -45,6 +45,6 @@ COPY --from=builder /czbot/bot/node_modules ./bot/node_modules
 COPY --from=builder /czbot/bot/lib ./bot/lib
 
 
-EXPOSE 80
+EXPOSE 81
 WORKDIR /czbot/bot
 CMD [ "node", "lib/main.js", "--enable-source-maps" ] 

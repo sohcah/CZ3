@@ -96,6 +96,8 @@ async function load() {
           name: (i instanceof ChatInputAction ? "dev__" : "DEV - ") + i.getCommandConfig().name,
         })),
       ]);
+    } else if (config.exDevGuild) {
+      client.guilds.resolve(config.exDevGuild)?.commands.set([]);
     }
     client.user?.setPresence({
       activities: [
