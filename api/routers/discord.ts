@@ -18,13 +18,28 @@ export const discordRouter = createRouter()
     },
   })
   .mutation("link", {
-    input: z.object({
-      cuppazeeToken: z.string(),
-      snowflake: z.string(),
-    }),
-    async resolve({ input: { cuppazeeToken, snowflake } }) {
-      const token = await authenticateWithCuppaZeeToken(cuppazeeToken);
-      const userId = await authenticatedUser(token);
+    input: z
+      .object({
+        cuppazeeToken: z.string(),
+        snowflake: z.string(),
+      })
+      .or(
+        z.object({
+          apiKey: z.string(),
+          userId: z.number(),
+          snowflake: z.string(),
+        })
+      ),
+    async resolve({ input: { snowflake, ...input } }) {
+      let userId;
+      if ("cuppazeeToken" in input) {
+        const token = await authenticateWithCuppaZeeToken(input.cuppazeeToken);
+        userId = await authenticatedUser(token);
+      } else if ("userId" in input && input.apiKey === config.botApiKey) {
+        userId = input.userId;
+      } else {
+        throw new Error("Invalid input");
+      }
       await prisma.player_discord.upsert({
         where: {
           discord_snowflake: snowflake,

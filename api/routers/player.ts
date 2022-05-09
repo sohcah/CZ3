@@ -83,6 +83,7 @@ export const playerRouter = createRouter()
           : null,
         premium: !!data.data.premium,
         mhq: data.data.titles.includes("MHQ"),
+        id: data.data.user_id,
       };
     },
   });

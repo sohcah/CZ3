@@ -233,3 +233,8 @@ async function load() {
 }
 
 load();
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+process.on("unhandledRejection", (reason: any, _promise: Promise<any>) => {
+  console.error("Unhandled Rejection at:", reason?.stack || reason);
+});

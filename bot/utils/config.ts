@@ -12,6 +12,7 @@ const fileContent = JSON.parse(
 export const configSchema = z.object({
   token: z.string(),
   apiUrl: z.string().url(),
+  apiKey: z.string(),
   devGuild: z.string().optional(),
   exDevGuild: z.string().optional(),
   mainGuild: z.string(),
