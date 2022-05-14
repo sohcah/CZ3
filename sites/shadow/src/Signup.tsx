@@ -2,15 +2,12 @@ import {
   Alert,
   AlertTitle,
   Button,
-  Checkbox,
   FormControl,
-  FormControlLabel,
   FormGroup,
   FormHelperText,
   FormLabel,
   Paper,
   TextField,
-  Typography,
 } from "@mui/material";
 import { useState } from "react";
 import { Field, FormikProvider, useFormik } from "formik";
@@ -37,7 +34,6 @@ function SignUp() {
     onSubmit: async data => {
       setStatus("loading");
       setFailureMessage("");
-      console.log(data);
       try {
         const response = await fetch(
           `https://api.cuppazee.app/shadow/admin/${group}/${game_id}/signup`,
@@ -71,7 +67,8 @@ function SignUp() {
           minHeight: "100vh",
           alignItems: "center",
           justifyContent: "center",
-        }}>
+        }}
+      >
         <h1>Submitting...</h1>
       </div>
     );
@@ -86,18 +83,18 @@ function SignUp() {
           minHeight: "100vh",
           alignItems: "center",
           justifyContent: "center",
-        }}>
+        }}
+      >
         <h1>Submitted!</h1>
         <Button
           onClick={() => {
             formik.resetForm();
             setStatus("input");
-          }}>
+          }}
+        >
           Submit again
         </Button>
-        <Button
-          variant="contained"
-          href={`/${group}/${game_id}/roster`}>
+        <Button variant="contained" href={`/${group}/${game_id}/roster`}>
           View Roster
         </Button>
       </div>
@@ -112,7 +109,8 @@ function SignUp() {
         minHeight: "100vh",
         alignItems: "center",
         justifyContent: "center",
-      }}>
+      }}
+    >
       <div
         style={{
           width: "100%",
@@ -120,10 +118,12 @@ function SignUp() {
           display: "flex",
           flexDirection: "column",
           padding: 8,
-        }}>
+        }}
+      >
         <form
           style={{ display: "flex", flexDirection: "column", alignItems: "stretch", gap: 16 }}
-          onSubmit={formik.handleSubmit}>
+          onSubmit={formik.handleSubmit}
+        >
           {status === "failed" && (
             <Alert severity="error">
               <AlertTitle>Submission failed.</AlertTitle>
@@ -148,7 +148,8 @@ function SignUp() {
               display: "flex",
               flexDirection: "column",
               alignItems: "stretch",
-            }}>
+            }}
+          >
             <FormikProvider value={formik}>
               <FormControl component="fieldset" variant="standard">
                 <FormLabel component="legend">Target Levels</FormLabel>
@@ -189,7 +190,8 @@ function SignUp() {
               display: "flex",
               flexDirection: "column",
               alignItems: "stretch",
-            }}>
+            }}
+          >
             <FormikProvider value={formik}>
               <FormControl required component="fieldset" variant="standard">
                 <FormGroup>
@@ -214,7 +216,8 @@ function SignUp() {
               display: "flex",
               flexDirection: "column",
               alignItems: "stretch",
-            }}>
+            }}
+          >
             <FormikProvider value={formik}>
               <FormControl component="fieldset" variant="standard">
                 <FormGroup>
