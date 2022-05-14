@@ -23,6 +23,7 @@ export type APIApplication = z.infer<typeof apiApplicationSchema>;
 export const configSchema = z.object({
   apiUrl: z.string(),
   botUrl: z.string(),
+  botApiKey: z.string(),
   mongoURI: z.string(),
   mongoDB: z.string(),
   jwtSecret: z.string(),

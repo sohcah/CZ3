@@ -96,6 +96,8 @@ async function load() {
           name: (i instanceof ChatInputAction ? "dev__" : "DEV - ") + i.getCommandConfig().name,
         })),
       ]);
+    } else if (config.exDevGuild) {
+      client.guilds.resolve(config.exDevGuild)?.commands.set([]);
     }
     client.user?.setPresence({
       activities: [
@@ -231,3 +233,8 @@ async function load() {
 }
 
 load();
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+process.on("unhandledRejection", (reason: any, _promise: Promise<any>) => {
+  console.error("Unhandled Rejection at:", reason?.stack || reason);
+});
