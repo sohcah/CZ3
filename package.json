@@ -26,6 +26,9 @@
     "app:ios": "turbo run ios",
     "app:android": "turbo run android",
     "app:desktop": "turbo run desktop",
+    "app:docker": "docker build . -t cz3app -f Dockerfile.app",
+    "app:next-build": "turbo run build --filter=@cz3/app_next",
+    "app:next-start": "turbo run start --filter=@cz3/app_next",
     "shadow:dev": "turbo run dev --filter=shadow",
     "shadow:build": "turbo run build --filter=shadow",
     "components:build": "turbo run build --filter=components"
