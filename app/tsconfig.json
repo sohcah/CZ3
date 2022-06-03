@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "paths": {
+      "@cz3/app/*": ["./app/*"]
+    }
+  },
+  "extends": "./tsconfig.base"
+}

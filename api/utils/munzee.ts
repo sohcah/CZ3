@@ -54,7 +54,7 @@ export async function munzeeFetch<Path extends keyof Endpoints>({
         ? `?access_token=${encodeURIComponent(
             typeof token === "string" ? token : token.access_token
           )}${Object.entries(params ?? {})
-            .map(i => `&${i[0]}=${encodeURIComponent(i[1].toString())}`)
+            .map(i => `&${i[0]}=${encodeURIComponent((i[1] as string).toString())}`)
             .join("")}`
         : ""),
     {

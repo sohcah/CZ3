@@ -1,6 +1,7 @@
 packages:
   - "api"
   - "bot"
+  - "app/*"
   - "sites/*"
   - "config/*"
   - "packages/*"

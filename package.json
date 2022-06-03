@@ -5,6 +5,7 @@
   "workspaces": [
     "api",
     "bot",
+    "app/*",
     "sites/*",
     "config/*",
     "packages/*"

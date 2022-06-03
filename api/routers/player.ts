@@ -9,6 +9,7 @@ import {
 import { getPlayerActivity, getPlayerActivityOverview } from "../utils/data/activity.js";
 import { munzeeFetch } from "../utils/munzee.js";
 import { createRouter } from "./index.js";
+import { alternamythRouter } from "./player/alternamyth.js";
 
 export const playerRouter = createRouter()
   .query("activity", {
@@ -86,4 +87,5 @@ export const playerRouter = createRouter()
         id: data.data.user_id,
       };
     },
-  });
+  })
+  .merge(alternamythRouter);

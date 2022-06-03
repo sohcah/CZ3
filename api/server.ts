@@ -1,7 +1,7 @@
 import { default as Fastify, FastifyReply, FastifyRequest } from "fastify";
-import { default as FastifyCors } from "fastify-cors";
-import { default as FastifyFormBody } from "fastify-formbody";
-import { default as fastifyMultipart, MultipartValue } from "fastify-multipart";
+import { default as FastifyCors } from "@fastify/cors";
+import { default as FastifyFormBody } from "@fastify/formbody";
+import { default as fastifyMultipart, MultipartValue } from "@fastify/multipart";
 import { APIError, APIResponse, CuppaZeeProperties } from "./api.js";
 import endpoints from "./endpoints/_index.js";
 import {
