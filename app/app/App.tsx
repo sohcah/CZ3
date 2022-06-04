@@ -61,7 +61,7 @@ function ThemeProvider({ children }: { children: ReactNode }) {
   const theme = selectedTheme === "system" ? colorScheme : selectedTheme;
   return (
     <Tamagui.Provider disableRootThemeClass defaultTheme={theme}>
-      <YStack flex={1} theme="cz">
+      <YStack flex={1} theme="green">
         {children}
       </YStack>
     </Tamagui.Provider>
@@ -72,7 +72,7 @@ export default function App() {
   const [trpcClient] = useState(() =>
     trpc.createClient({
       url: "https://api.cuppazee.app/trpc",
-
+      // url: "http://localhost/trpc",
       // optional
       headers() {
         return {

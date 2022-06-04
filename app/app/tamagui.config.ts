@@ -45,6 +45,8 @@ const bodyFont = createInterFont(
 const config = createTamagui({
   animations,
   defaultTheme: "light",
+  shouldAddPrefersColorThemes: true,
+  themeClassNameOnRoot: true,
   shorthands,
   fonts: {
     heading: headingFont,
@@ -79,6 +81,7 @@ const config = createTamagui({
 export type Conf = typeof config;
 
 declare module "@cz3/app_ui" {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
   interface TamaguiCustomConfig extends Conf {}
 }
 
