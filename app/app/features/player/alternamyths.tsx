@@ -1,8 +1,19 @@
-import { H2, Text, YStack, XStack, Popover, Group, Button, Label } from "@cz3/app_ui";
+import {
+  H2,
+  Text,
+  YStack,
+  XStack,
+  Popover,
+  Group,
+  Button,
+  Label,
+  Image,
+  useMedia,
+} from "@cz3/app_ui";
 import { trpc } from "@cz3/app/common/trpc/trpc";
-import { Image } from "react-native";
 import { useMatch } from "react-router";
 import { useState } from "react";
+import { ScrollView } from "react-native";
 
 export function PlayerAlternamythsScreen() {
   const { params: { player = null } = {} } = useMatch("/player/:player/*") ?? {};
@@ -20,6 +31,10 @@ export function PlayerAlternamythsScreen() {
 
   const [layout, setLayout] = useState("type");
 
+  const media = useMedia();
+
+  const [grid, setGrid] = useState(() => !media.sm);
+
   if (!query.data) {
     return <H2>AlternaMyth Captures - Loading...</H2>;
   }
@@ -32,11 +47,190 @@ export function PlayerAlternamythsScreen() {
     creatorTypeMap.set(`${myth.creator}-${myth.munzee_logo}`, myth);
   }
 
+  if (!grid) {
+    return (
+      <YStack>
+        <H2>AlternaMyth Captures</H2>
+        <XStack py="$2">
+          <Label>Group by</Label>
+          <Group size="$3">
+            <Button
+              onPress={() => setLayout("type")}
+              bc={layout === "type" ? "$backgroundStrong" : "$background"}
+            >
+              Type
+            </Button>
+            <Button
+              onPress={() => setLayout("player")}
+              bc={layout === "player" ? "$backgroundStrong" : "$background"}
+            >
+              Player
+            </Button>
+          </Group>
+        </XStack>
+        <XStack py="$2">
+          <Label>Layout</Label>
+          <Group size="$3">
+            <Button onPress={() => setGrid(true)} bc={grid ? "$backgroundStrong" : "$background"}>
+              Grid
+            </Button>
+            <Button onPress={() => setGrid(false)} bc={!grid ? "$backgroundStrong" : "$background"}>
+              Sections
+            </Button>
+          </Group>
+        </XStack>
+        {layout === "type" ? (
+          <XStack w="100%" flexWrap="wrap">
+            {[...types].map(type => (
+              <YStack
+                bc="$backgroundSoft"
+                borderWidth={2}
+                borderColor="$borderColor"
+                borderRadius="$4"
+                elevation="$4"
+                p="$2"
+                space="$2"
+                m="$2"
+                width={400}
+                maxWidth="100%"
+                flexGrow={1}
+                key={type}
+              >
+                <XStack alignItems="center" space="$2">
+                  <Image src={type} height={32} width={32} />
+                  <Text fontFamily="$body" fontWeight="bold">
+                    {type.slice(49, -4)}
+                  </Text>
+                </XStack>
+                <XStack flexWrap="wrap">
+                  {[...creators].map(creator => {
+                    const myth = creatorTypeMap.get(`${creator}-${type}`);
+                    if (!myth) {
+                      return null;
+                    }
+                    return (
+                      <Popover key={creator} placement="bottom-start">
+                        <Popover.Trigger>
+                          <YStack
+                            p="$1"
+                            m="$1"
+                            borderRadius={1000}
+                            bc={myth.captured ? "#00ff0022" : "#ff000022"}
+                          >
+                            <Image
+                              src={`https://api.cuppazee.app/player/${creator}/avatar`}
+                              height={32}
+                              width={32}
+                              borderRadius={16}
+                              opacity={myth.captured ? 1 : 0.25}
+                              scale={myth.captured ? 1 : 0.8}
+                            />
+                          </YStack>
+                        </Popover.Trigger>
+                        <Popover.Content>
+                          <YStack>
+                            <Text
+                              tag="a"
+                              className="external-link"
+                              href={myth.code}
+                              fontFamily="$body"
+                              fontWeight="bold"
+                            >
+                              {myth.friendly_name}
+                            </Text>
+                            <Text fontFamily="$body">by {myth.creator}</Text>
+                          </YStack>
+                        </Popover.Content>
+                      </Popover>
+                    );
+                  })}
+                </XStack>
+              </YStack>
+            ))}
+          </XStack>
+        ) : (
+          <XStack w="100%" flexWrap="wrap">
+            {[...creators].map(creator => (
+              <YStack
+                bc="$backgroundSoft"
+                borderWidth={2}
+                borderColor="$borderColor"
+                borderRadius="$4"
+                elevation="$4"
+                p="$2"
+                space="$2"
+                m="$2"
+                width={400}
+                maxWidth="100%"
+                flexGrow={1}
+                key={creator}
+              >
+                <XStack alignItems="center" space="$2">
+                  <Image
+                    src={`https://api.cuppazee.app/player/${creator}/avatar`}
+                    height={32}
+                    width={32}
+                    borderRadius={16}
+                  />
+                  <Text fontFamily="$body" fontWeight="bold">
+                    {creator}
+                  </Text>
+                </XStack>
+                <XStack flexWrap="wrap">
+                  {[...types].map(type => {
+                    const myth = creatorTypeMap.get(`${creator}-${type}`);
+                    if (!myth) {
+                      return null;
+                    }
+                    return (
+                      <Popover key={type} placement="bottom-start">
+                        <Popover.Trigger>
+                          <YStack
+                            p="$1"
+                            m="$1"
+                            borderRadius={1000}
+                            bc={myth.captured ? "#00ff0022" : "#ff000022"}
+                          >
+                            <Image
+                              src={type}
+                              height={32}
+                              width={32}
+                              opacity={myth.captured ? 1 : 0.25}
+                              scale={myth.captured ? 1 : 0.8}
+                            />
+                          </YStack>
+                        </Popover.Trigger>
+                        <Popover.Content>
+                          <YStack>
+                            <Text
+                              tag="a"
+                              className="external-link"
+                              href={myth.code}
+                              fontFamily="$body"
+                              fontWeight="bold"
+                            >
+                              {myth.friendly_name}
+                            </Text>
+                            <Text fontFamily="$body">by {myth.creator}</Text>
+                          </YStack>
+                        </Popover.Content>
+                      </Popover>
+                    );
+                  })}
+                </XStack>
+              </YStack>
+            ))}
+          </XStack>
+        )}
+      </YStack>
+    );
+  }
+
   return (
     <YStack>
       <H2>AlternaMyth Captures</H2>
-      <XStack p="$2">
-        <Label>Group by </Label>
+      <XStack py="$2">
+        <Label>Group by</Label>
         <Group size="$3">
           <Button
             onPress={() => setLayout("type")}
@@ -52,121 +246,148 @@ export function PlayerAlternamythsScreen() {
           </Button>
         </Group>
       </XStack>
-      {layout === "type" ? (
-        <YStack>
-          <XStack>
-            {[...creators].map(creator => (
-              <Image
-                key={creator}
-                source={{ uri: `https://api.cuppazee.app/player/${creator}/avatar` }}
-                style={{ height: 32, width: 32, borderRadius: 16 }}
-              />
+      <XStack py="$2">
+        <Label>Layout</Label>
+        <Group size="$3">
+          <Button onPress={() => setGrid(true)} bc={grid ? "$backgroundStrong" : "$background"}>
+            Grid
+          </Button>
+          <Button onPress={() => setGrid(false)} bc={!grid ? "$backgroundStrong" : "$background"}>
+            Sections
+          </Button>
+        </Group>
+      </XStack>
+      <ScrollView horizontal>
+        {layout === "type" ? (
+          <YStack>
+            <XStack>
+              {[...creators].map(creator => (
+                <YStack
+                  animation="bouncy"
+                  hoverStyle={{
+                    rotate: "180deg",
+                  }}
+                >
+                  <Image
+                    key={creator}
+                    src={`https://api.cuppazee.app/player/${creator}/avatar`}
+                    height={32}
+                    width={32}
+                    borderRadius={16}
+                  />
+                </YStack>
+              ))}
+            </XStack>
+            {[...types].map(type => (
+              <XStack key={type}>
+                {[...creators].map(creator => {
+                  const myth = creatorTypeMap.get(`${creator}-${type}`);
+                  if (!myth) {
+                    return <YStack key={creator} w={32} h={32} />;
+                  }
+                  return (
+                    <Popover key={creator} placement="bottom-start">
+                      <Popover.Trigger>
+                        <YStack bc={myth.captured ? "#00ff0022" : "#ff000022"}>
+                          <Image
+                            src={myth.munzee_logo}
+                            height={32}
+                            width={32}
+                            opacity={myth.captured ? 1 : 0.25}
+                            scale={myth.captured ? 1 : 0.8}
+                          />
+                        </YStack>
+                      </Popover.Trigger>
+                      <Popover.Content>
+                        <YStack>
+                          <Text
+                            tag="a"
+                            className="external-link"
+                            href={myth.code}
+                            fontFamily="$body"
+                            fontWeight="bold"
+                          >
+                            {myth.friendly_name}
+                          </Text>
+                          <Text fontFamily="$body">by {myth.creator}</Text>
+                        </YStack>
+                      </Popover.Content>
+                    </Popover>
+                  );
+                })}
+              </XStack>
             ))}
-          </XStack>
-          {[...types].map(type => (
-            <XStack key={type}>
-              {[...creators].map(creator => {
-                const myth = creatorTypeMap.get(`${creator}-${type}`);
-                if (!myth) {
-                  return <YStack key={creator} w={32} h={32} />;
-                }
-                return (
-                  <Popover key={creator} placement="bottom-start">
-                    <Popover.Trigger>
-                      <YStack bc={myth.captured ? "#00ff0022" : "#ff000022"}>
-                        <Image
-                          source={{ uri: myth.munzee_logo }}
-                          style={{
-                            height: 32,
-                            width: 32,
-                            opacity: myth.captured ? 1 : 0.25,
-                            transform: [{ scale: myth.captured ? 1 : 0.8 }],
-                          }}
-                        />
-                      </YStack>
-                    </Popover.Trigger>
-                    <Popover.Content>
-                      <YStack>
-                        <Text
-                          tag="a"
-                          className="external-link"
-                          href={myth.code}
-                          fontFamily="$body"
-                          fontWeight="bold"
-                        >
-                          {myth.friendly_name}
-                        </Text>
-                        <Text fontFamily="$body">by {myth.creator}</Text>
-                      </YStack>
-                    </Popover.Content>
-                  </Popover>
-                );
-              })}
-            </XStack>
-          ))}
-        </YStack>
-      ) : (
-        <YStack>
-          {[...creators].map(creator => (
-            <XStack key={creator}>
-              <Image
-                key={creator}
-                source={{ uri: `https://api.cuppazee.app/player/${creator}/avatar` }}
-                style={{ height: 32, width: 32, borderRadius: 16 }}
-              />
-              <Text
-                px="$2"
-                alignSelf="center"
-                fontFamily="$body"
-                fontSize="sm"
-                overflow="hidden"
-                textOverflow="ellipsis"
-                whiteSpace="nowrap"
-                w={100}
-              >
-                {creator}
-              </Text>
-              {[...types].map(type => {
-                const myth = creatorTypeMap.get(`${creator}-${type}`);
-                if (!myth) {
-                  return <YStack key={type} w={32} h={32} />;
-                }
-                return (
-                  <Popover key={type} placement="bottom-start">
-                    <Popover.Trigger>
-                      <YStack bc={myth.captured ? "#00ff0022" : "#ff000022"}>
-                        <Image
-                          source={{ uri: myth.munzee_logo }}
-                          style={{
-                            height: 32,
-                            width: 32,
-                            opacity: myth.captured ? 1 : 0.25,
-                            transform: [{ scale: myth.captured ? 1 : 0.8 }],
-                          }}
-                        />
-                      </YStack>
-                    </Popover.Trigger>
-                    <Popover.Content>
-                      <YStack>
-                        <Text
-                          tag="a"
-                          className="external-link"
-                          href={myth.code}
-                          fontFamily="$body"
-                          fontWeight="bold"
-                        >
-                          {myth.friendly_name}
-                        </Text>
-                        <Text fontFamily="$body">by {myth.creator}</Text>
-                      </YStack>
-                    </Popover.Content>
-                  </Popover>
-                );
-              })}
-            </XStack>
-          ))}
-        </YStack>
-      )}
+          </YStack>
+        ) : (
+          <YStack>
+            {[...creators].map(creator => (
+              <XStack key={creator}>
+                <YStack
+                  animation="bouncy"
+                  hoverStyle={{
+                    rotateY: "180deg",
+                  }}
+                >
+                  <Image
+                    key={creator}
+                    src={`https://api.cuppazee.app/player/${creator}/avatar`}
+                    height={32}
+                    width={32}
+                    borderRadius={16}
+                  />
+                </YStack>
+                <Text
+                  px="$2"
+                  alignSelf="center"
+                  fontFamily="$body"
+                  fontSize="sm"
+                  overflow="hidden"
+                  textOverflow="ellipsis"
+                  whiteSpace="nowrap"
+                  w={100}
+                >
+                  {creator}
+                </Text>
+                {[...types].map(type => {
+                  const myth = creatorTypeMap.get(`${creator}-${type}`);
+                  if (!myth) {
+                    return <YStack key={type} w={32} h={32} />;
+                  }
+                  return (
+                    <Popover key={type} placement="bottom-start">
+                      <Popover.Trigger>
+                        <YStack bc={myth.captured ? "#00ff0022" : "#ff000022"}>
+                          <Image
+                            src={myth.munzee_logo}
+                            height={32}
+                            width={32}
+                            opacity={myth.captured ? 1 : 0.25}
+                            scale={myth.captured ? 1 : 0.8}
+                          />
+                        </YStack>
+                      </Popover.Trigger>
+                      <Popover.Content>
+                        <YStack>
+                          <Text
+                            tag="a"
+                            className="external-link"
+                            href={myth.code}
+                            fontFamily="$body"
+                            fontWeight="bold"
+                          >
+                            {myth.friendly_name}
+                          </Text>
+                          <Text fontFamily="$body">by {myth.creator}</Text>
+                        </YStack>
+                      </Popover.Content>
+                    </Popover>
+                  );
+                })}
+              </XStack>
+            ))}
+          </YStack>
+        )}
+      </ScrollView>
     </YStack>
   );
 }

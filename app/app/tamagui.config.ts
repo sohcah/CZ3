@@ -52,7 +52,39 @@ const config = createTamagui({
     heading: headingFont,
     body: bodyFont,
   },
-  themes,
+  themes: {
+    ...themes,
+    // @ts-expect-error Incorrect typings for themes
+    dark_green: themes.dark_gray,
+    dark_green_alt1: themes.dark_gray_alt1,
+    dark_green_alt2: themes.dark_gray_alt2,
+    dark_green_alt3: themes.dark_gray_alt3,
+    dark_green_alt4: themes.dark_gray_alt4,
+    // dark_green_alt1_Button: themes.dark_gray_alt1_Button,
+    // dark_green_alt2_Button: themes.dark_gray_alt2_Button,
+    // dark_green_alt3_Button: themes.dark_gray_alt3_Button,
+    // dark_green_alt4_Button: themes.dark_gray_alt4_Button,
+    // dark_green_Button: themes.dark_gray_Button,
+    // @ts-expect-error Incorrect typings for themes
+    dark_green_DrawerFrame: themes.dark_gray_DrawerFrame,
+    // dark_green_SliderTrack: themes.dark_gray_SliderTrack,
+    // dark_green_SliderTrackActive: themes.dark_gray_SliderTrackActive,
+    // dark_green_SliderThumb: themes.dark_gray_SliderThumb,
+    // @ts-expect-error Incorrect typings for themes
+    dark_green_Progress: themes.dark_gray_Progress,
+    // @ts-expect-error Incorrect typings for themes
+    dark_green_ProgressIndicator: themes.dark_gray_ProgressIndicator,
+    // @ts-expect-error Incorrect typings for themes
+    dark_green_Switch: themes.dark_gray_Switch,
+    // @ts-expect-error Incorrect typings for themes
+    dark_green_SwitchThumb: themes.dark_gray_SwitchThumb,
+    // dark_green_TooltipArrow: themes.dark_gray_TooltipArrow,
+    // dark_green_TooltipContent: themes.dark_gray_TooltipContent,
+    // @ts-expect-error Incorrect typings for themes
+    dark_green_darker: themes.dark_gray_darker,
+    // @ts-expect-error Incorrect typings for themes
+    dark_green_active: themes.dark_gray_active,
+  },
   tokens: createTokens({
     size,
     space,

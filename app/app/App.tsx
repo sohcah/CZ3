@@ -61,7 +61,7 @@ function ThemeProvider({ children }: { children: ReactNode }) {
   const theme = selectedTheme === "system" ? colorScheme : selectedTheme;
   return (
     <Tamagui.Provider disableRootThemeClass defaultTheme={theme}>
-      <YStack flex={1} theme="green">
+      <YStack width={Platform.OS === "web" ? "100vw" : "100%"} overflow="hidden" minHeight={Platform.OS === "web" ? "100vh" : "100%"} flex={1} theme="green">
         {children}
       </YStack>
     </Tamagui.Provider>
