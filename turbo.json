@@ -66,6 +66,10 @@
         "^build"
       ],
       "cache": false
+    },
+    "start": {
+      "dependsOn": [],
+      "cache": false
     }
   }
 }
