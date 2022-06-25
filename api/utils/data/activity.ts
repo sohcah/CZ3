@@ -3,7 +3,7 @@ import {
   StatzeePlayerDay,
   StatzeePlayerDayCapture,
   StatzeePlayerDayDeploy,
-} from "@cuppazee/api/statzee/player/day.js";
+} from "@cz3/api-types/statzee/player/day.js";
 import { meta } from "../meta.js";
 
 export type PlayerActivityMunzee = {
@@ -202,8 +202,7 @@ export function getPlayerActivity(
       const destinationBase = destinationBases.find(
         destinationBase =>
           Math.abs(destinationBase.time.valueOf() - item.time.getTime()) < 60000 &&
-          destinationBase.munzee.name ===
-            item.munzee.name.replace(/ Room #\d+/, "")
+          destinationBase.munzee.name === item.munzee.name.replace(/ Room #\d+/, "")
       );
       if (destinationBase) {
         item.parent = destinationBase.key;

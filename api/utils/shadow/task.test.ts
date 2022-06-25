@@ -1,5 +1,5 @@
 import { test, expect } from "vitest";
-import { StatzeePlayerDay } from "@cuppazee/api/statzee/player/day.js";
+import { StatzeePlayerDay } from "@cz3/api-types/statzee/player/day.js";
 import { ActivityData, addActivityItemExtras, taskCalculations } from "./tasks.js";
 
 type DeepPartial<T> = T extends object

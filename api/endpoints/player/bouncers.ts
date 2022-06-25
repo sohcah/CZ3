@@ -1,5 +1,5 @@
 import { FastifyInstance } from "fastify";
-import { MunzeeSpecialBouncer } from "@cuppazee/api/munzee/specials.js";
+import { MunzeeSpecialBouncer } from "@cz3/api-types/munzee/specials.js";
 import { getBouncers } from "../../utils/bouncers.js";
 import { munzeeFetch } from "../../utils/munzee.js";
 import { createRevGeocoder, LookupResult } from "@webkitty/geo-rev";

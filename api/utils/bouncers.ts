@@ -2,9 +2,9 @@ import { config } from "./config.js";
 import pr from "power-radix";
 import { authenticateAnonymous } from "./auth/index.js";
 
-import { MunzeeSpecial } from "@cuppazee/api/munzee/specials.js";
-import { MunzeeBouncer } from "@cuppazee/api/munzee/bouncers.js";
-import { Response } from "@cuppazee/api/common.js";
+import { MunzeeSpecial } from "@cz3/api-types/munzee/specials.js";
+import { MunzeeBouncer } from "@cz3/api-types/munzee/bouncers.js";
+import { Response } from "@cz3/api-types/common.js";
 import { munzeeFetch } from "./munzee.js";
 import { knownMissing } from "./knownMissing.js";
 const b64e = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".split("");

@@ -1,4 +1,4 @@
-import { MunzeeSpecial, MunzeeSpecialBouncer } from "@cuppazee/api/munzee/specials.js";
+import { MunzeeSpecial, MunzeeSpecialBouncer } from "@cz3/api-types/munzee/specials.js";
 import { FastifyInstance } from "fastify";
 import { APIError } from "../../api.js";
 import { getBouncers } from "../../utils/bouncers.js";

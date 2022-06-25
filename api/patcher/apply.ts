@@ -1,4 +1,4 @@
-import { Endpoints } from "@cuppazee/api";
+import { EndpointPath, EndpointResponse } from "@cz3/api-types";
 import { PatchFunction } from "./index.js";
 import * as Patches from "./patches.js";
 
@@ -24,13 +24,13 @@ export async function applyNamePatches(value: string) {
 
 export const applyEndpointPatches = new Proxy(
   {} as {
-    [key in keyof Endpoints]: NonNullable<PatchFunction<Endpoints[key]["response"]>>;
+    [key in EndpointPath]: NonNullable<PatchFunction<EndpointResponse<key>>>;
   },
   {
-    get(target, prop: keyof Endpoints) {
+    get(target, prop: EndpointPath) {
       if (!(prop in target)) {
         const patchFns = endpointPatches.filter(i => i.patchEndpoints?.[prop]);
-        target[prop] = (async (value: Endpoints[typeof prop]["response"]) => {
+        target[prop] = (async (value: EndpointResponse<typeof prop>) => {
           let patched = value;
           for (const patch of patchFns) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any

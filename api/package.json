@@ -21,8 +21,8 @@
     "test": "vitest --ui"
   },
   "dependencies": {
-    "@cuppazee/db": "^0.0.8",
     "@cuppazee/utils": "^0.1.2",
+    "@cz3/api-types": "workspace:*",
     "@cz3/meta-client": "workspace:*",
     "@cz3/prisma": "workspace:*",
     "@trpc/server": "^9.21.0",
@@ -54,7 +54,6 @@
     "zod": "^3.14.3"
   },
   "devDependencies": {
-    "@cuppazee/api": "^0.0.14",
     "@cz3/eslint-config": "workspace:*",
     "@types/cors": "^2.8.10",
     "@types/glob": "^7.2.0",

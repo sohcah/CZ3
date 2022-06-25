@@ -1,4 +1,4 @@
-import { Endpoints } from "@cuppazee/api";
+import { EndpointPath, EndpointResponse } from "@cz3/api-types";
 
 type PossiblePromise<T> = T | Promise<T>;
 
@@ -13,6 +13,6 @@ export interface Patcher {
   patchName?: PatchFunction<string>;
 
   patchEndpoints?: {
-    [key in keyof Endpoints]?: PatchFunction<Endpoints[key]["response"]>;
+    [key in EndpointPath]?: PatchFunction<EndpointResponse<key>>;
   };
 }

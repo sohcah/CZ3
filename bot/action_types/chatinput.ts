@@ -1,4 +1,8 @@
-import { ApplicationCommandOptionData, AutocompleteInteraction, CommandInteraction } from "discord.js";
+import {
+  ApplicationCommandOptionData,
+  AutocompleteInteraction,
+  CommandInteraction,
+} from "discord.js";
 import { ApplicationCommandTypes } from "discord.js/typings/enums.d.js";
 import { CommandAction } from "./action.js";
 

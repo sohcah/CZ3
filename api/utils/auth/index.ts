@@ -455,7 +455,13 @@ export async function authenticateWithUserID(
   }
 
   await prisma.player_auth.update({
-    where: { user_id_api_api_variant: { api: apiApp.id, api_variant: apiApp.variant ?? 1, user_id: Number(user_id) } },
+    where: {
+      user_id_api_api_variant: {
+        api: apiApp.id,
+        api_variant: apiApp.variant ?? 1,
+        user_id: Number(user_id),
+      },
+    },
     data: {
       api: apiApp.id,
       access_token: responseData.data.token.access_token,

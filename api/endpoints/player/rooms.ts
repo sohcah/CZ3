@@ -1,4 +1,4 @@
-import { UserDeploys } from "@cuppazee/api/user/deploys.js";
+import { UserDeploys } from "@cz3/api-types/user/deploys.js";
 import dayjs from "dayjs";
 import { FastifyInstance } from "fastify";
 import { authenticateWithUserID } from "../../utils/auth/index.js";

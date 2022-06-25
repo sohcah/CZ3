@@ -1,4 +1,4 @@
-import { StatzeePlayerDay } from "@cuppazee/api/statzee/player/day.js";
+import { StatzeePlayerDay } from "@cz3/api-types/statzee/player/day.js";
 import { shadow_player_task_day } from "@cz3/prisma";
 import { Type, TypeState, TypeTags } from "@cz3/meta-client";
 import { meta } from "../meta.js";

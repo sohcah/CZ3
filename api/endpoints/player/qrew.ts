@@ -2,13 +2,13 @@ import dayjs, { Dayjs } from "dayjs";
 import { FastifyInstance } from "fastify";
 import { authenticateWithUserID } from "../../utils/auth/index.js";
 import { munzeeFetch } from "../../utils/munzee.js";
+import { APIError } from "../../api.js";
 
 export interface CuppaZeeQRewData {
   start: Dayjs;
   end: Dayjs;
   zeeqrew: {
     premium: boolean;
-    // lifetime_physical_capture: number;
     lifetime_physical_deploy: number;
     lifetime_score: number;
     timeframe_capture: boolean;
@@ -16,32 +16,10 @@ export interface CuppaZeeQRewData {
   };
   qrew: {
     premium: boolean;
-    // lifetime_capture: number;
     lifetime_deploy: number;
     timeframe_capture: boolean;
     timeframe_deploy: boolean;
   };
-}
-
-export interface Data {
-  timeframe: string;
-  zeeqrew_requirements: ZeeqrewRequirements;
-  qrew_requirements: QrewRequirements;
-}
-
-export interface QrewRequirements {
-  premium_requirement: boolean;
-  lifetime_deploy_requirement: boolean;
-  timeframe_capture_requirement: boolean;
-  timeframe_deploy_requirement: string;
-}
-
-export interface ZeeqrewRequirements {
-  premium_requirement: boolean;
-  lifetime_physical_deploy_requirement: string;
-  lifetime_score_requirement: boolean;
-  timeframe_capture_requirement: boolean;
-  timeframe_deploy_requirement: string;
 }
 
 function stringOrBooleanToNumber(
@@ -61,9 +39,7 @@ export default function PlayerZeeQRew(fastify: FastifyInstance) {
   }>("/player/:user/zeeqrew", async request => {
     const user_id = await request.getUserID();
     const authenticationResult = await authenticateWithUserID(user_id);
-    // * TODO: Add TypeScript Definitions
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const response = await munzeeFetch<any>({
+    const response = await munzeeFetch({
       endpoint: "user/zeeqrew",
       method: "GET",
       params: {
@@ -71,7 +47,11 @@ export default function PlayerZeeQRew(fastify: FastifyInstance) {
       },
       token: authenticationResult.access_token,
     });
-    const munzeeData: Data = (await response.getMunzeeData()).data;
+    const munzeeData = (await response.getMunzeeData()).data;
+
+    if (!munzeeData) {
+      throw APIError.MunzeeInvalid();
+    }
 
     let start, end;
     const tfs = munzeeData.timeframe.split(" ");
