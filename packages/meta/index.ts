@@ -180,7 +180,7 @@ export class MetaClient {
     for (const type of this._typesRoot.values()) {
       for (const icon of type.icons) {
         const base = icon.toLowerCase().replace(/[^a-z0-9]+/g, "");
-        if (this._types.has(base)) {
+        if (!this._types.has(base)) {
           this._types.set(base, type.id);
         }
       }
