@@ -33,4 +33,6 @@ yarn-error.log*
 .turbo
 
 # yarn
-.yarn
+.yarn/cache
+.yarn/unplugged
+.yarn/install-state.gz
