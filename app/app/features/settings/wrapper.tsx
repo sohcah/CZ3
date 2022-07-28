@@ -1,14 +1,10 @@
 import { H2, XStack, YStack, Text } from "@cz3/app_ui";
 import { Outlet, useMatch } from "react-router";
-import { ScrollView } from "react-native";
+import { settingsSections } from "@cz3/app/settings/all";
 
-export function PlayerScreen() {
-  const { params: { player = null } = {} } = useMatch("/player/:player/*") ?? {};
-  if (!player) {
-    return <H2>No player found</H2>;
-  }
+export function SettingsWrapper() {
   return (
-    <XStack height="100vh" flex={1}>
+    <XStack flex={1}>
       <YStack
         display="none"
         $gtMd={{
@@ -16,9 +12,6 @@ export function PlayerScreen() {
         }}
         my="$4"
         mr="$4"
-        position="relative"
-        top="$0"
-        bottom="$0"
         borderTopRightRadius="$4"
         borderBottomRightRadius="$4"
         bc="$backgroundSoft"
@@ -29,13 +22,11 @@ export function PlayerScreen() {
         elevation="$4"
         w={300}
       >
-        <H2>{player}</H2>
-        <Text fontFamily="$body">This is a sidebar. I might put some things here eventually.</Text>
+        <H2>Settings</H2>
+        {settingsSections.map(i => <Text fontFamily="$body">{i.title}</Text>)}
       </YStack>
       <YStack flex={1} w={0}>
-        <ScrollView style={{ flex: 1 }}>
-          <Outlet />
-        </ScrollView>
+        <Outlet />
       </YStack>
     </XStack>
   );

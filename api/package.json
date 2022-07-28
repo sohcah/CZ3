@@ -18,7 +18,8 @@
     "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
     "build": "tsc",
     "dev": "cross-env NODE_ENV=development tsc-watch --onSuccess \"node --enable-source-maps .\"",
-    "test": "vitest --ui"
+    "test": "vitest --ui",
+    "webstorm-integration": "vitest --watch --reporter=dot --reporter=json --outputFile=.vitest-result.json"
   },
   "dependencies": {
     "@cuppazee/utils": "^0.1.2",

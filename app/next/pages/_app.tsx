@@ -10,7 +10,7 @@ import type { SolitoAppProps } from 'solito'
 import 'raf/polyfill'
 
 function MyApp({ Component, pageProps }: SolitoAppProps) {
-  const [theme, setTheme] = useRootTheme()
+  // const [theme, setTheme] = useRootTheme()
 
   const contents = useMemo(() => {
     return (
@@ -25,9 +25,9 @@ function MyApp({ Component, pageProps }: SolitoAppProps) {
         <meta name="description" content="CuppaZee Alpha" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <NextThemeProvider onChangeTheme={setTheme}>
+      {/*<NextThemeProvider onChangeTheme={setTheme}>*/}
         {contents}
-      </NextThemeProvider>
+      {/*</NextThemeProvider>*/}
     </>
   )
 }

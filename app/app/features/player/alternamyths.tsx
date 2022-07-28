@@ -1,19 +1,10 @@
-import {
-  H2,
-  Text,
-  YStack,
-  XStack,
-  Popover,
-  Group,
-  Button,
-  Label,
-  Image,
-  useMedia,
-} from "@cz3/app_ui";
+import { H2, Text, YStack, XStack, Popover, Stack, Image } from "@cz3/app_ui";
 import { trpc } from "@cz3/app/common/trpc/trpc";
 import { useMatch } from "react-router";
 import { useState } from "react";
 import { ScrollView } from "react-native";
+import { captureGridSettings } from "@cz3/app/settings/captureGrids";
+import { SettingPanels } from "@cz3/app/features/settings/editor";
 
 export function PlayerAlternamythsScreen() {
   const { params: { player = null } = {} } = useMatch("/player/:player/*") ?? {};
@@ -29,11 +20,8 @@ export function PlayerAlternamythsScreen() {
     }
   );
 
-  const [layout, setLayout] = useState("type");
-
-  const media = useMedia();
-
-  const [grid, setGrid] = useState(() => !media.sm);
+  const groupBy = captureGridSettings.useGroupBy();
+  const layout = captureGridSettings.useLayout();
 
   if (!query.data) {
     return <H2>AlternaMyth Captures - Loading...</H2>;
@@ -47,39 +35,11 @@ export function PlayerAlternamythsScreen() {
     creatorTypeMap.set(`${myth.creator}-${myth.munzee_logo}`, myth);
   }
 
-  if (!grid) {
+  if (layout === "cards") {
     return (
       <YStack>
         <H2>AlternaMyth Captures</H2>
-        <XStack py="$2">
-          <Label>Group by</Label>
-          <Group size="$3">
-            <Button
-              onPress={() => setLayout("type")}
-              bc={layout === "type" ? "$backgroundStrong" : "$background"}
-            >
-              Type
-            </Button>
-            <Button
-              onPress={() => setLayout("player")}
-              bc={layout === "player" ? "$backgroundStrong" : "$background"}
-            >
-              Player
-            </Button>
-          </Group>
-        </XStack>
-        <XStack py="$2">
-          <Label>Layout</Label>
-          <Group size="$3">
-            <Button onPress={() => setGrid(true)} bc={grid ? "$backgroundStrong" : "$background"}>
-              Grid
-            </Button>
-            <Button onPress={() => setGrid(false)} bc={!grid ? "$backgroundStrong" : "$background"}>
-              Sections
-            </Button>
-          </Group>
-        </XStack>
-        {layout === "type" ? (
+        {groupBy === "type" ? (
           <XStack w="100%" flexWrap="wrap">
             {[...types].map(type => (
               <YStack
@@ -222,6 +182,7 @@ export function PlayerAlternamythsScreen() {
             ))}
           </XStack>
         )}
+        <SettingPanels settings={[captureGridSettings.groupBy, captureGridSettings.layout]} />
       </YStack>
     );
   }
@@ -229,113 +190,25 @@ export function PlayerAlternamythsScreen() {
   return (
     <YStack>
       <H2>AlternaMyth Captures</H2>
-      <XStack py="$2">
-        <Label>Group by</Label>
-        <Group size="$3">
-          <Button
-            onPress={() => setLayout("type")}
-            bc={layout === "type" ? "$backgroundStrong" : "$background"}
-          >
-            Type
-          </Button>
-          <Button
-            onPress={() => setLayout("player")}
-            bc={layout === "player" ? "$backgroundStrong" : "$background"}
-          >
-            Player
-          </Button>
-        </Group>
-      </XStack>
-      <XStack py="$2">
-        <Label>Layout</Label>
-        <Group size="$3">
-          <Button onPress={() => setGrid(true)} bc={grid ? "$backgroundStrong" : "$background"}>
-            Grid
-          </Button>
-          <Button onPress={() => setGrid(false)} bc={!grid ? "$backgroundStrong" : "$background"}>
-            Sections
-          </Button>
-        </Group>
-      </XStack>
       <ScrollView horizontal>
-        {layout === "type" ? (
-          <YStack>
-            <XStack>
-              {[...creators].map(creator => (
-                <YStack
-                  animation="bouncy"
-                  hoverStyle={{
-                    rotate: "180deg",
-                  }}
-                >
-                  <Image
-                    key={creator}
-                    src={`https://api.cuppazee.app/player/${creator}/avatar`}
-                    height={32}
-                    width={32}
-                    borderRadius={16}
-                  />
-                </YStack>
-              ))}
-            </XStack>
-            {[...types].map(type => (
-              <XStack key={type}>
-                {[...creators].map(creator => {
-                  const myth = creatorTypeMap.get(`${creator}-${type}`);
-                  if (!myth) {
-                    return <YStack key={creator} w={32} h={32} />;
-                  }
-                  return (
-                    <Popover key={creator} placement="bottom-start">
-                      <Popover.Trigger>
-                        <YStack bc={myth.captured ? "#00ff0022" : "#ff000022"}>
-                          <Image
-                            src={myth.munzee_logo}
-                            height={32}
-                            width={32}
-                            opacity={myth.captured ? 1 : 0.25}
-                            scale={myth.captured ? 1 : 0.8}
-                          />
-                        </YStack>
-                      </Popover.Trigger>
-                      <Popover.Content>
-                        <YStack>
-                          <Text
-                            tag="a"
-                            className="external-link"
-                            href={myth.code}
-                            fontFamily="$body"
-                            fontWeight="bold"
-                          >
-                            {myth.friendly_name}
-                          </Text>
-                          <Text fontFamily="$body">by {myth.creator}</Text>
-                        </YStack>
-                      </Popover.Content>
-                    </Popover>
-                  );
-                })}
-              </XStack>
-            ))}
-          </YStack>
-        ) : (
-          <YStack>
-            {[...creators].map(creator => (
-              <XStack key={creator}>
-                <YStack
-                  animation="bouncy"
-                  hoverStyle={{
-                    rotateY: "180deg",
-                  }}
-                >
-                  <Image
-                    key={creator}
-                    src={`https://api.cuppazee.app/player/${creator}/avatar`}
-                    height={32}
-                    width={32}
-                    borderRadius={16}
-                  />
-                </YStack>
+        <Stack flexDirection={groupBy === "player" ? "column" : "row"}>
+          {[...creators].map(creator => (
+            <Stack flexDirection={groupBy === "player" ? "row" : "column"} key={creator}>
+              <YStack
+                animation="bouncy"
+                hoverStyle={{
+                  rotateY: "180deg",
+                }}
+              >
+                <Image
+                  key={creator}
+                  src={`https://api.cuppazee.app/player/${creator}/avatar`}
+                  height={32}
+                  width={32}
+                  borderRadius={16}
+                />
+              </YStack>
+              {groupBy === "player" && (
                 <Text
                   px="$2"
                   alignSelf="center"
@@ -348,46 +221,54 @@ export function PlayerAlternamythsScreen() {
                 >
                   {creator}
                 </Text>
-                {[...types].map(type => {
-                  const myth = creatorTypeMap.get(`${creator}-${type}`);
-                  if (!myth) {
-                    return <YStack key={type} w={32} h={32} />;
-                  }
-                  return (
-                    <Popover key={type} placement="bottom-start">
-                      <Popover.Trigger>
-                        <YStack bc={myth.captured ? "#00ff0022" : "#ff000022"}>
-                          <Image
-                            src={myth.munzee_logo}
-                            height={32}
-                            width={32}
-                            opacity={myth.captured ? 1 : 0.25}
-                            scale={myth.captured ? 1 : 0.8}
-                          />
-                        </YStack>
-                      </Popover.Trigger>
-                      <Popover.Content>
-                        <YStack>
-                          <Text
-                            tag="a"
-                            className="external-link"
-                            href={myth.code}
-                            fontFamily="$body"
-                            fontWeight="bold"
-                          >
-                            {myth.friendly_name}
-                          </Text>
-                          <Text fontFamily="$body">by {myth.creator}</Text>
-                        </YStack>
-                      </Popover.Content>
-                    </Popover>
-                  );
-                })}
-              </XStack>
-            ))}
-          </YStack>
-        )}
+              )}
+              {[...types].map(type => {
+                const myth = creatorTypeMap.get(`${creator}-${type}`);
+                if (!myth) {
+                  return <YStack key={type} w={32} h={32} />;
+                }
+                return (
+                  <Popover key={type} placement="bottom-start">
+                    <Popover.Trigger>
+                      <YStack bc={myth.captured ? "#00ff0022" : "#ff000022"}>
+                        <Image
+                          src={myth.munzee_logo}
+                          height={32}
+                          width={32}
+                          opacity={myth.captured ? 1 : 0.25}
+                          scale={myth.captured ? 1 : 0.8}
+                        />
+                      </YStack>
+                    </Popover.Trigger>
+                    <Popover.Content
+                      enterStyle={{ x: 0, y: -10, o: 0 }}
+                      exitStyle={{ x: 0, y: -10, o: 0 }}
+                      x={0}
+                      y={0}
+                      o={1}
+                      animation="bouncy"
+                      elevate>
+                      <YStack>
+                        <Text
+                          tag="a"
+                          className="external-link"
+                          href={myth.code}
+                          fontFamily="$body"
+                          fontWeight="bold"
+                        >
+                          {myth.friendly_name}
+                        </Text>
+                        <Text fontFamily="$body">by {myth.creator}</Text>
+                      </YStack>
+                    </Popover.Content>
+                  </Popover>
+                );
+              })}
+            </Stack>
+          ))}
+        </Stack>
       </ScrollView>
+      <SettingPanels settings={[captureGridSettings.groupBy, captureGridSettings.layout]} />
     </YStack>
   );
 }

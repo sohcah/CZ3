@@ -8,7 +8,8 @@
     "app/*",
     "sites/*",
     "config/*",
-    "packages/*"
+    "packages/*",
+    "tasks/*"
   ],
   "scripts": {
     "lint": "turbo run lint",
@@ -22,9 +23,13 @@
     "bot:build": "turbo run build --filter=bot",
     "bot:docker": "docker build . -t cz3bot -f Dockerfile.bot",
     "bot:test": "turbo run test --filter=bot",
+    "task:bouncers:dev": "turbo run dev --filter=bouncers-task",
+    "task:bouncers:build": "turbo run build --filter=bouncers-task",
+    "task:bouncers:docker": "docker build . -t cz3bouncers -f Dockerfile.bouncers",
+    "task:bouncers:test": "turbo run test --filter=bouncers-task",
     "app:web": "turbo run web",
     "app:ios": "turbo run ios",
-    "app:android": "turbo run android",
+    "app:android": "tursbo run android",
     "app:desktop": "turbo run desktop",
     "app:docker": "docker build . -t cz3app -f Dockerfile.app",
     "app:next-build": "turbo run build --filter=@cz3/app_next",
@@ -42,5 +47,5 @@
     "npm": ">=7.0.0",
     "node": ">=16.0.0"
   },
-  "packageManager": "pnpm@6.28.0"
+  "packageManager": "yarn@3.2.1"
 }

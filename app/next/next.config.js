@@ -4,6 +4,7 @@ const { withTamagui } = require("@tamagui/next-plugin");
 // const { withExpo } = require('@expo/next-adapter')
 const withTM = require("next-transpile-modules");
 const path = require("path");
+const withFonts = require("next-fonts");
 
 process.env.IGNORE_TS_CONFIG_PATHS = "true";
 process.env.TAMAGUI_TARGET = "web";
@@ -14,6 +15,7 @@ if (disableExtraction) {
 }
 
 const transform = withPlugins([
+  withFonts(),
   withTM([
     "solito",
     "react-native-web",
@@ -22,7 +24,9 @@ const transform = withPlugins([
     "expo-constants",
     "expo-modules-core",
     "@cz3/app",
+    "@cz3/app_ui",
     "react-native-reanimated",
+    "@expo/vector-icons",
   ]),
   withTamagui({
     config: "./tamagui.config.ts",

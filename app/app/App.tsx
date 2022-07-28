@@ -14,13 +14,14 @@ import "dayjs/locale/en-gb";
 
 import Tamagui from "./tamagui.config";
 import { Navigation } from "./navigation";
-import { YStack } from "@cz3/app_ui";
+import { Theme, YStack } from "@cz3/app_ui";
 import { ReactNode, useState } from "react";
 import { mmkv } from "./common/storage/mmkv";
 import { useAtomValue } from "jotai";
 import { themeAtom } from "./common/storage/atoms";
 import { trpc } from "./common/trpc/trpc";
 import superjson from "superjson";
+import { CMDK } from "@cz3/app/cmdk/cmdk";
 
 LogBox.ignoreLogs(["PropType will be removed from React Native"]);
 
@@ -60,10 +61,18 @@ function ThemeProvider({ children }: { children: ReactNode }) {
   const colorScheme = useColorScheme() ?? "light";
   const theme = selectedTheme === "system" ? colorScheme : selectedTheme;
   return (
-    <Tamagui.Provider disableRootThemeClass defaultTheme={theme}>
-      <YStack width={Platform.OS === "web" ? "100vw" : "100%"} overflow="hidden" minHeight={Platform.OS === "web" ? "100vh" : "100%"} flex={1} theme="green">
-        {children}
-      </YStack>
+    <Tamagui.Provider>
+      <Theme name={theme}>
+        <YStack
+          bc="$background"
+          width={Platform.OS === "web" ? "100vw" : "100%"}
+          overflow="hidden"
+          minHeight={Platform.OS === "web" ? "100vh" : "100%"}
+          flex={1}
+        >
+          <Theme name="green">{children}</Theme>
+        </YStack>
+      </Theme>
     </Tamagui.Provider>
   );
 }
@@ -97,7 +106,13 @@ export default function App() {
                 }`}
                   </style>
                 )}
-                {typeof window === "undefined" ? null : <Navigation />}
+                {typeof window === "undefined" ? null : (
+                  <>
+                    <Navigation />
+
+                    <CMDK />
+                  </>
+                )}
               </ThemeProvider>
             </Router>
           </QueryClientProvider>

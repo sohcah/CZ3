@@ -4,6 +4,8 @@ import { BackHandler } from "react-native";
 import { H1 } from "@cz3/app_ui";
 import { PlayerScreen } from "../features/player";
 import { PlayerAlternamythsScreen } from "@cz3/app/features/player/alternamyths";
+import { SettingsWrapper } from "../features/settings/wrapper";
+import { SettingsEditor } from "@cz3/app/features/settings/editor";
 
 export function Navigation() {
   const navigate = useNavigate();
@@ -20,7 +22,9 @@ export function Navigation() {
 
   return (
     <Routes>
-      <Route path="/settings" element={<H1>Hello/Hello</H1>} />
+      <Route path="/settings" element={<SettingsWrapper />}>
+        <Route path=":section" element={<SettingsEditor />} />
+      </Route>
       <Route
         path="/player/:player"
         element={
@@ -28,6 +32,7 @@ export function Navigation() {
         }
       >
         <Route path="alternamyths" element={<PlayerAlternamythsScreen />} />
+        {/*<Route path="uniqcorns" element={<PlayerUniqCornsScreen />} />*/}
       </Route>
       <Route path="*" element={<Navigate to="/settings" replace />} />
     </Routes>

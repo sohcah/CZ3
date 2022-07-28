@@ -3,7 +3,6 @@
 FROM --platform=linux/amd64 node:16-alpine AS base
 WORKDIR /czapp
 RUN apk add git
-RUN npm i -g pnpm
 
 
 #BUILDER
@@ -13,7 +12,8 @@ RUN apk add --no-cache libc6-compat
 COPY .pnpmfile.cjs ./.pnpmfile.cjs
 COPY .npmrc ./.npmrc
 COPY *.json ./
-COPY pnpm-*.yaml ./
+COPY .yarnrc ./
+COPY yarn.lock ./
 COPY api/*.json ./api/
 COPY config/eslint/*.json ./config/eslint/
 COPY packages/prisma ./packages/prisma
@@ -23,13 +23,13 @@ COPY app/next/*.json ./app/next/
 COPY app/app/*.json ./app/app/
 COPY app/ui/*.json ./app/ui/
 
-RUN pnpm install
+RUN yarn install
 
 COPY . .
 
-RUN pnpm app:next-build
+RUN yarn app:next-build
 
-# RUNNNER 
+# RUNNNER
 
 FROM base AS runner
 
@@ -51,4 +51,4 @@ EXPOSE 3000
 
 ENV PORT 3000
 
-CMD ["pnpm", "app:next-start"]
+CMD ["yarn", "app:next-start"]
