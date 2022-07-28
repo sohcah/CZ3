@@ -60,6 +60,14 @@ export function getLegacyPlayerActivity(
 
   const legacyItemsWithParents = [];
 
+  function resolveTopParent(key: string): string {
+    const item = activity.find(a => a.key === key);
+    if (item?.parent) {
+      return resolveTopParent(item.parent);
+    }
+    return key;
+  }
+
   for (const item of activity) {
     const legacyItem: LegacyPlayerActivityItem = {
       capper: "capper_username" in item ? item.capper_username : undefined,
@@ -87,7 +95,7 @@ export function getLegacyPlayerActivity(
       legacyItems.push(legacyItem);
     } else {
       legacyItemsWithParents.push({
-        parent: item.parent,
+        parent: resolveTopParent(item.parent),
         legacyItem,
       });
     }

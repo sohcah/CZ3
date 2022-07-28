@@ -7,6 +7,7 @@ import PlayerZeeQRew from "./qrew.js";
 import PlayerUndeployed from "./undeployed.js";
 import PlayerNomads from "./nomads.js";
 import PlayerRooms from "./rooms.js";
+import PlayerCaptures from "./captures.js";
 
 export default [
   PlayerActivity,
@@ -18,4 +19,5 @@ export default [
   PlayerUndeployed,
   PlayerNomads,
   PlayerRooms,
+  PlayerCaptures,
 ];

@@ -16,6 +16,7 @@ COPY api/*.json ./api/
 COPY config/eslint/*.json ./config/eslint/
 COPY packages/prisma ./packages/prisma
 COPY packages/meta ./packages/meta
+COPY packages/api-types ./packages/api-types
 
 RUN pnpm install
 
@@ -38,6 +39,8 @@ COPY --from=builder /czapi/package.json ./package.json
 COPY --from=builder /czapi/packages/prisma ./packages/prisma
 # META
 COPY --from=builder /czapi/packages/meta ./packages/meta
+# API TYPES
+COPY --from=builder /czapi/packages/api-types ./packages/api-types
 # API
 COPY --from=builder /czapi/api/package.json ./api/package.json
 COPY --from=builder /czapi/api/node_modules ./api/node_modules

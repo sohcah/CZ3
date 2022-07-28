@@ -206,6 +206,20 @@ export class MetaClient {
     }
   }
 
+  public getIconId(id: string): string {
+    let icon = this.get(id)?.icon;
+    if (icon) return icon;
+    icon = id;
+    if (icon.startsWith("https://munzee.global.ssl.fastly.net/images/")) {
+      if (icon.startsWith("https://munzee.global.ssl.fastly.net/images/v4pins/")) {
+        icon = icon.slice(51, -4);
+      } else {
+        icon = icon.slice(49, -4);
+      }
+    }
+    return icon;
+  }
+
   public getIcon(id: string): string {
     let icon = this.get(id)?.icon;
     if (icon) return `https://images.cuppazee.app/types/64/${icon}.png`;

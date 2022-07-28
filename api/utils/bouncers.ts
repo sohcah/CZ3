@@ -7,6 +7,7 @@ import { MunzeeBouncer } from "@cz3/api-types/munzee/bouncers.js";
 import { Response } from "@cz3/api-types/common.js";
 import { munzeeFetch } from "./munzee.js";
 import { knownMissing } from "./knownMissing.js";
+import { meta } from "./meta.js";
 const b64e = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".split("");
 
 function generateBouncerHash(id: number, timestamp: number) {
@@ -23,6 +24,7 @@ export const cache: {
   bouncers: ((MunzeeSpecial | MunzeeBouncer) & {
     hash: string;
     group: "regular" | "mythological" | "pouch_creature" | "flat" | "temp" | "retired" | "tob";
+    iconId: string;
   })[];
   bouncers_updated: number;
   loading: Promise<unknown> | null;
@@ -60,6 +62,7 @@ async function loadBouncers() {
   let body: ((MunzeeSpecial | MunzeeBouncer) & {
     hash: string;
     group: "regular" | "mythological" | "pouch_creature" | "flat" | "temp" | "retired" | "tob";
+    iconId: string;
   })[] = [];
   let n = 0;
   for (const endpointData of data) {
@@ -81,6 +84,7 @@ async function loadBouncers() {
             i.special_good_until
           ),
           group: groups[n][2],
+          iconId: meta.getIconId(icon),
         };
       })
     );
