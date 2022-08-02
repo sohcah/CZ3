@@ -10,13 +10,15 @@ FROM base AS builder
 
 COPY .git ./.git
 COPY *.json ./
-COPY .yarnrc ./
+COPY .yarn/releases ./.yarn/releases
+COPY .yarnrc.yml ./
 COPY yarn.lock ./
 COPY api/*.json ./api/
 COPY bot/*.json ./bot/
 COPY config/eslint/*.json ./config/eslint/
 COPY packages/prisma ./packages/prisma
 COPY packages/meta ./packages/meta
+COPY packages/api-types ./packages/api-types
 
 RUN yarn install
 
@@ -39,6 +41,8 @@ COPY --from=builder /czbot/package.json ./package.json
 COPY --from=builder /czbot/packages/prisma ./packages/prisma
 # META
 COPY --from=builder /czbot/packages/meta ./packages/meta
+# API TYPES
+COPY --from=builder /czbot/packages/api-types ./packages/api-types
 # BOT
 COPY --from=builder /czbot/bot/package.json ./bot/package.json
 COPY --from=builder /czbot/bot/node_modules ./bot/node_modules

@@ -10,8 +10,9 @@ FROM base AS builder
 
 COPY .git ./.git
 COPY *.json ./
-COPY .yarnrc ./
-COPY yarn.lock ./s
+COPY .yarn/releases ./.yarn/releases
+COPY .yarnrc.yml ./
+COPY yarn.lock ./
 COPY api/*.json ./api/
 COPY config/eslint/*.json ./config/eslint/
 COPY packages/prisma ./packages/prisma

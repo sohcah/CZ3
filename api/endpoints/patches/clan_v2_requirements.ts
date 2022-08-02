@@ -228,6 +228,7 @@ export default function clan_v2_requirements(fastify: FastifyInstance) {
 
     if (result.data?.data?.levels) {
       if (!Array.isArray(result.data.data.levels)) {
+        let prevLevel = null;
         for (const level of Object.keys(result.data.data.levels).sort()) {
           const levelData = result.data.data.levels[level];
           if (levelData?.individual) {
@@ -241,6 +242,15 @@ export default function clan_v2_requirements(fastify: FastifyInstance) {
               }
               return i;
             });
+            // Ensure that no lower requirements on higher levels
+            for (const prevReq of prevLevel?.individual ?? []) {
+              const currReq = levelData.individual.find(i => i.task_id === prevReq.task_id);
+              if (!currReq) {
+                levelData.individual.push(prevReq);
+              } else {
+                currReq.amount = Math.max(prevReq.amount, currReq.amount);
+              }
+            }
           }
           if (levelData?.group) {
             levelData.group = levelData.group.map(i => {
@@ -253,7 +263,17 @@ export default function clan_v2_requirements(fastify: FastifyInstance) {
               }
               return i;
             });
+            // Ensure that no lower requirements on higher levels
+            for (const prevReq of prevLevel?.group ?? []) {
+              const currReq = levelData.group.find(i => i.task_id === prevReq.task_id);
+              if (!currReq) {
+                levelData.group.push(prevReq);
+              } else {
+                currReq.amount = Math.max(prevReq.amount, currReq.amount);
+              }
+            }
           }
+          prevLevel = levelData;
         }
       }
     }
