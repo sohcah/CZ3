@@ -18,4 +18,4 @@ export function atomWithMMKV<T>(key: string, initialValue?: T) {
   return atomWithStorage<T>(`@cz3/${key}`, initialValue!, createMMKVStorage<T>());
 }
 
-export const themeAtom = atomWithMMKV<string>("theme", "system");
+export const themeAtom = atomWithMMKV<"light" | "dark" | "system">("theme", "system");

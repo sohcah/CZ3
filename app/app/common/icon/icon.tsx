@@ -1,22 +1,24 @@
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import type {ViewProps} from "react-native";
-import { useTheme } from "tamagui";
-import { unwrapColor, unwrapFontSize } from "@cz3/app_ui";
+import { getConfig, useTheme } from "tamagui";
+import FeatherIcons from "@tamagui/feather-icons";
 
-export type IconProps = ViewProps & {
+export const Icon = function ({
+  icon: As,
+  size,
+  color = "$color",
+}: {
+  size: string;
   color?: string;
-  size: string | number;
-  icon: keyof typeof MaterialCommunityIcons.glyphMap;
-};
-
-export function Icon({ color = "$color", size, ...props }: IconProps) {
+  icon: typeof FeatherIcons[keyof typeof FeatherIcons];
+}) {
   const theme = useTheme();
+  const sizeValue = getConfig().fontsParsed?.$body?.size?.[size];
+  const tc = theme[color];
   return (
-    <MaterialCommunityIcons
-      {...props}
-      name={props.icon}
-      size={unwrapFontSize(theme, size)}
-      color={unwrapColor(theme, color)}
+    <As
+      size={typeof sizeValue === "number" ? sizeValue : sizeValue?.val}
+      height={typeof sizeValue === "number" ? sizeValue : sizeValue?.val}
+      width={typeof sizeValue === "number" ? sizeValue : sizeValue?.val}
+      color={typeof tc === "number" ? tc.toString() : typeof tc === "object" ? tc.val : tc}
     />
   );
-}
+};

@@ -1,19 +1,15 @@
 import { H2, Text, XStack } from "@cz3/app_ui";
-import { Outlet, useMatch } from "react-router";
+import { Outlet } from "react-router";
 import { ScrollView } from "react-native";
 import { PageWithSidebar } from "@cz3/app/components/PageWithSidebar";
 
-export function PlayerScreen() {
-  const { params: { player = null } = {} } = useMatch("/player/:player/*") ?? {};
-  if (!player) {
-    return <H2>No player found</H2>;
-  }
+export function TourismScreen() {
   return (
     <PageWithSidebar
       sidebar={
         <>
           <XStack ai="center">
-            <H2>{player}</H2>
+            <H2>Tourism</H2>
           </XStack>
           <Text fontFamily="$body">
             This is a sidebar. I might put some things here eventually.
@@ -21,7 +17,7 @@ export function PlayerScreen() {
         </>
       }
     >
-      <ScrollView style={{ flex: 1 }}>
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1 }}>
         <Outlet />
       </ScrollView>
     </PageWithSidebar>

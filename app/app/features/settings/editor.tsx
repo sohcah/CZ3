@@ -1,19 +1,16 @@
-import {
-  Setting,
-  SettingsSectionWithAtoms,
-  SettingType,
-  SettingWithAtom,
-} from "@cz3/app/settings/common";
+import { Setting, SettingType, SettingWithAtom } from "@cz3/app/settings/common";
 import { useAtom } from "jotai";
-import { XStack, YStack, Text, Group, Button, Switch } from "@cz3/app_ui";
+import { XStack, YStack, Text, XGroup, Button } from "@cz3/app_ui";
 import { useMatch } from "react-router";
 import { settingsSections } from "@cz3/app/settings/all";
 import { ReactNode } from "react";
 import { Icon } from "@cz3/app/common/icon/icon";
+import { Check } from "@tamagui/feather-icons";
 
 function SettingSegmentSelectEditor({
   setting,
 }: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setting: SettingWithAtom<Setting<SettingType.SegmentSelect, any>, any>;
 }) {
   const [atomValue, setValue] = useAtom(setting.atom);
@@ -27,12 +24,12 @@ function SettingSegmentSelectEditor({
         borderColor={atomValue === null ? "$borderColor" : "#fff0"}
         onPress={() => setValue(null)}
       >
-        {atomValue === null && <Icon icon="check" size="$3" />} Default (
+        {atomValue === null && <Icon icon={Check} size="$4" />} Default (
         {(typeof defaultOption === "object" ? defaultOption.label : defaultOption) ??
           setting.defaultValue}
         )
       </Button>
-      <Group>
+      <XGroup>
         {setting.options.map(i => {
           const label = typeof i === "object" ? i.label : i;
           const value = typeof i === "object" ? i.value : i;
@@ -41,12 +38,12 @@ function SettingSegmentSelectEditor({
               bc={atomValue === value ? "$backgroundStrong" : undefined}
               onPress={() => setValue(value)}
             >
-              {atomValue === value && <Icon icon="check" size="$3" />}
+              {atomValue === value && <Icon icon={Check} size="$4" />}
               {label}
             </Button>
           );
         })}
-      </Group>
+      </XGroup>
     </XStack>
   );
 }
@@ -64,28 +61,28 @@ function SettingBooleanEditor({
         borderColor={atomValue === null ? "$borderColor" : "#fff0"}
         onPress={() => setValue(null)}
       >
-        {atomValue === null && <Icon icon="check" size="$3" />} Default (
+        {atomValue === null && <Icon icon={Check} size="$4" />} Default (
         {setting.defaultValue
           ? setting.options?.onLabel ?? "On"
           : setting.options?.offLabel ?? "Off"}
         )
       </Button>
-      <Group>
+      <XGroup>
         <Button
           bc={atomValue === false ? "$backgroundStrong" : undefined}
           onPress={() => setValue(false)}
         >
-          {atomValue === false && <Icon icon="check" size="$3" />}
+          {atomValue === false && <Icon icon={Check} size="$4" />}
           {setting.options?.offLabel ?? "Off"}
         </Button>
         <Button
           bc={atomValue === true ? "$backgroundStrong" : undefined}
           onPress={() => setValue(true)}
         >
-          {atomValue === true && <Icon icon="check" size="$3" />}
+          {atomValue === true && <Icon icon={Check} size="$4" />}
           {setting.options?.onLabel ?? "On"}
         </Button>
-      </Group>
+      </XGroup>
     </XStack>
   );
 }
@@ -124,8 +121,6 @@ function SettingBooleanEditor({
 // }
 
 export function SettingPanel({ setting }: { setting: SettingWithAtom<any, any> }) {
-  const [value] = useAtom(setting.atom);
-
   let editor: ReactNode = null;
   switch (setting.type) {
     case SettingType.SegmentSelect:
@@ -148,8 +143,9 @@ export function SettingPanel({ setting }: { setting: SettingWithAtom<any, any> }
       bc="$backgroundSoft"
       borderColor="$borderColor"
       borderWidth={2}
+      ai="center"
     >
-      <YStack flex={1}>
+      <YStack jc="center" flex={1}>
         <Text fontSize="$5" fontFamily="$body" fontWeight="bold">
           {setting.name}
         </Text>

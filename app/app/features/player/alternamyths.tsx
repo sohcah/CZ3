@@ -1,7 +1,6 @@
 import { H2, Text, YStack, XStack, Popover, Stack, Image } from "@cz3/app_ui";
 import { trpc } from "@cz3/app/common/trpc/trpc";
 import { useMatch } from "react-router";
-import { useState } from "react";
 import { ScrollView } from "react-native";
 import { captureGridSettings } from "@cz3/app/settings/captureGrids";
 import { SettingPanels } from "@cz3/app/features/settings/editor";
@@ -84,6 +83,7 @@ export function PlayerAlternamythsScreen() {
                               borderRadius={16}
                               opacity={myth.captured ? 1 : 0.25}
                               scale={myth.captured ? 1 : 0.8}
+                              overflow="hidden"
                             />
                           </YStack>
                         </Popover.Trigger>
@@ -131,6 +131,7 @@ export function PlayerAlternamythsScreen() {
                     height={32}
                     width={32}
                     borderRadius={16}
+                    overflow="hidden"
                   />
                   <Text fontFamily="$body" fontWeight="bold">
                     {creator}
@@ -206,6 +207,7 @@ export function PlayerAlternamythsScreen() {
                   height={32}
                   width={32}
                   borderRadius={16}
+                  overflow="hidden"
                 />
               </YStack>
               {groupBy === "player" && (
@@ -247,7 +249,8 @@ export function PlayerAlternamythsScreen() {
                       y={0}
                       o={1}
                       animation="bouncy"
-                      elevate>
+                      elevate
+                    >
                       <YStack>
                         <Text
                           tag="a"
