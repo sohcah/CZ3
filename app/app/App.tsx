@@ -12,9 +12,9 @@ import localizedFormat from "dayjs/plugin/localizedFormat";
 import dayjs from "dayjs";
 import "dayjs/locale/en-gb";
 
-import Tamagui from "./tamagui.config";
+import config from "./tamagui.config";
 import { Navigation } from "./navigation";
-import { Theme, YStack } from "@cz3/app_ui";
+import { TamaguiProvider, Theme, YStack } from "@cz3/app_ui";
 import { ReactNode, useState } from "react";
 import { mmkv } from "./common/storage/mmkv";
 import { useAtomValue } from "jotai";
@@ -61,7 +61,7 @@ function ThemeProvider({ children }: { children: ReactNode }) {
   const colorScheme = useColorScheme() ?? "light";
   const theme = selectedTheme === "system" ? colorScheme : selectedTheme;
   return (
-    <Tamagui.Provider>
+    <TamaguiProvider config={config}>
       <Theme name={theme}>
         <YStack
           bc="$background"
@@ -73,7 +73,7 @@ function ThemeProvider({ children }: { children: ReactNode }) {
           <Theme name="green">{children}</Theme>
         </YStack>
       </Theme>
-    </Tamagui.Provider>
+    </TamaguiProvider>
   );
 }
 

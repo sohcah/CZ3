@@ -3,10 +3,10 @@
   "name": "@cz3/app_config",
   "main": "tamagui.config.ts",
   "dependencies": {
-    "@tamagui/animations-reanimated": "1.0.1-beta.135",
-    "@tamagui/font-inter": "1.0.1-beta.135",
-    "@tamagui/shorthands": "1.0.1-beta.135",
-    "@tamagui/theme-base": "1.0.1-beta.135"
+    "@tamagui/animations-reanimated": "1.0.1-beta.141",
+    "@tamagui/font-inter": "1.0.1-beta.141",
+    "@tamagui/shorthands": "1.0.1-beta.141",
+    "@tamagui/theme-base": "1.0.1-beta.141"
   },
   "sideEffects": false
 }

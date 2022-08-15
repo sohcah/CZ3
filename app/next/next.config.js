@@ -25,6 +25,7 @@ const transform = withPlugins([
     "expo-modules-core",
     "@cz3/app",
     "@cz3/app_ui",
+    "@cz3/app_config",
     "react-native-reanimated",
     "@expo/vector-icons",
   ]),
