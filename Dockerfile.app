@@ -23,6 +23,7 @@ COPY app/expo/*.json ./app/expo/
 COPY app/next/*.json ./app/next/
 COPY app/app/*.json ./app/app/
 COPY app/ui/*.json ./app/ui/
+COPY app/config/*.json ./app/config/
 
 RUN yarn install
 
