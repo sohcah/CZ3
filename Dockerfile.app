@@ -29,6 +29,7 @@ RUN yarn install
 
 COPY . .
 
+RUN yarn app:next-build-prep
 RUN yarn app:next-build
 
 # RUNNNER
