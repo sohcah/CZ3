@@ -36,6 +36,7 @@ const transform = withPlugins([
     logTimings: true,
     disableExtraction,
     shouldExtract: path => {
+      if (path.includes("mapbox")) return false;
       if (path.includes("app")) {
         return true;
       }
