@@ -160,6 +160,7 @@ function SignUp() {
                     [3, "#fcd302"],
                     [4, "#bfe913"],
                     [5, "#55f40b"],
+                    [6, "#0cf4af"],
                   ].map(level => (
                     <Field
                       key={level[0]}
