@@ -58,7 +58,7 @@ export async function loginWithAuthorizationCode(
     if (human) {
       return reply.type("html").send(unableToReadPage);
     }
-    throw APIError.Authentication();
+    throw APIError.Authentication("No access token found in response");
   }
 
   const userRequest = await munzeeFetch({
@@ -417,6 +417,9 @@ export async function authenticateWithUserID(
       api: apiApplication?.id,
       user_id: Number(user_id),
     },
+    orderBy: {
+      refresh_token_expires: "desc",
+    }
   });
 
   if (!authDocument) {
@@ -451,7 +454,7 @@ export async function authenticateWithUserID(
   const responseData = (await response.json()) as any;
 
   if (!responseData.data?.token) {
-    throw APIError.Authentication();
+    throw APIError.Authentication("No token in response.");
   }
 
   await prisma.player_auth.update({
