@@ -12,15 +12,31 @@ import { api } from "../trpc/api.js";
 
 async function handler(
   interaction: CommandInteraction | UserContextMenuInteraction,
-  playerOption: string | null
+  playerOption: string | User | GuildMember | null
 ) {
   if (!playerOption) {
     return await interaction.reply(`You need to select a Player`);
   }
+  let usernameOrId: number | string | null;
+  if (typeof playerOption === "string") {
+    usernameOrId = playerOption;
+  } else {
+    usernameOrId =
+      (await api.query("discord:user", {
+        snowflake: playerOption.id,
+      })) ?? ("displayName" in playerOption ? playerOption.displayName : playerOption.username);
+  }
 
-  const player = await api.query("player:profile", {
-    username: playerOption,
-  });
+  const player = await api.query(
+    "player:profile",
+    typeof usernameOrId === "number"
+      ? {
+          userId: usernameOrId,
+        }
+      : {
+          username: usernameOrId,
+        }
+  );
   if (!player) {
     return await interaction.reply(`Could not find player: ${playerOption}`);
   }
@@ -52,6 +68,7 @@ export class PlayerChatInputAction extends ChatInputAction {
       required: true,
     },
   ];
+
   async handler(interaction: CommandInteraction) {
     const playerOption = interaction.options.getString("player");
     return await handler(interaction, playerOption);
@@ -61,14 +78,15 @@ export class PlayerChatInputAction extends ChatInputAction {
 export class PlayerUserAction extends UserAction {
   name = "Player Details";
   description = "Get details on a Munzee player";
+
   async handler(interaction: UserContextMenuInteraction) {
     const playerOption = interaction.options.getMember("user");
     if (playerOption instanceof GuildMember) {
-      return await handler(interaction, playerOption.displayName);
+      return await handler(interaction, playerOption.user);
     }
     const userOption = interaction.options.getUser("user");
     if (userOption instanceof User) {
-      return await handler(interaction, userOption.username);
+      return await handler(interaction, userOption);
     }
     return await handler(interaction, null);
   }
