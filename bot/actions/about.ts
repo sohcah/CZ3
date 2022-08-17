@@ -12,7 +12,7 @@ export class AboutChatInputAction extends ChatInputAction {
       // .setURL(`https://cuppazee.app/rover`)
       .setThumbnail(interaction.client.user?.displayAvatarURL() ?? "")
       .setDescription(
-        `Rover is a Discord bot developed by CuppaZee to allow for verification of Munzee accounts in the Munzee Discord server, as well as to provide access to Munzee data.\nThe bot is open-sourced under the Mozilla Public License 2.0, with source code available [on GitHub](https://github.com/CuppaZee/CZ3/tree/main/bot).`
+        `Rover is a Discord bot developed by [CuppaZee](https://cuppazee.app) to allow for verification of Munzee accounts in the Munzee Discord server, as well as to provide access to Munzee data.\n\nThe bot is open-sourced under the Mozilla Public License 2.0, with source code available [on GitHub](https://github.com/CuppaZee/CZ3/tree/main/bot).`
       );
     await interaction.reply({
       embeds: [embed],
