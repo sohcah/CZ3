@@ -10,35 +10,41 @@ import { ChatInputAction, ChatInputOptions } from "../action_types/chatinput.js"
 import { UserAction } from "../action_types/user.js";
 import { api } from "../trpc/api.js";
 
+type PlayerIdentifier =
+  | {
+      username: string;
+    }
+  | {
+      userId: number;
+    };
+
+async function getPlayerIdForUser(user: User | GuildMember): Promise<PlayerIdentifier> {
+  const userResult = await api.query("discord:user", {
+    snowflake: user.id,
+  });
+  if (!userResult) {
+    return {
+      username: "displayName" in user ? user.displayName : user.username,
+    };
+  }
+  return {
+    userId: userResult,
+  };
+}
+
 async function handler(
   interaction: CommandInteraction | UserContextMenuInteraction,
-  playerOption: string | User | GuildMember | null
+  playerId: PlayerIdentifier | null
 ) {
-  if (!playerOption) {
+  if (!playerId) {
     return await interaction.reply(`You need to select a Player`);
   }
-  let usernameOrId: number | string | null;
-  if (typeof playerOption === "string") {
-    usernameOrId = playerOption;
-  } else {
-    usernameOrId =
-      (await api.query("discord:user", {
-        snowflake: playerOption.id,
-      })) ?? ("displayName" in playerOption ? playerOption.displayName : playerOption.username);
-  }
 
-  const player = await api.query(
-    "player:profile",
-    typeof usernameOrId === "number"
-      ? {
-          userId: usernameOrId,
-        }
-      : {
-          username: usernameOrId,
-        }
-  );
+  const player = await api.query("player:profile", playerId);
   if (!player) {
-    return await interaction.reply(`Could not find player: ${playerOption}`);
+    return await interaction.reply(
+      `Could not find player: ${"userId" in playerId ? playerId.userId : playerId.username}`
+    );
   }
   const embed = new MessageEmbed()
     .setTitle(
@@ -71,7 +77,7 @@ export class PlayerChatInputAction extends ChatInputAction {
 
   async handler(interaction: CommandInteraction) {
     const playerOption = interaction.options.getString("player");
-    return await handler(interaction, playerOption);
+    return await handler(interaction, playerOption ? {username: playerOption} : null);
   }
 }
 
@@ -82,12 +88,11 @@ export class PlayerUserAction extends UserAction {
   async handler(interaction: UserContextMenuInteraction) {
     const playerOption = interaction.options.getMember("user");
     if (playerOption instanceof GuildMember) {
-      return await handler(interaction, playerOption.user);
+      const playerId = await getPlayerIdForUser(playerOption);
+      return await handler(interaction, playerId);
     }
     const userOption = interaction.options.getUser("user");
-    if (userOption instanceof User) {
-      return await handler(interaction, userOption);
-    }
-    return await handler(interaction, null);
+    const playerId = userOption ? await getPlayerIdForUser(userOption) : null;
+    return await handler(interaction, playerId);
   }
 }
