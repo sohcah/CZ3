@@ -2,7 +2,7 @@ import { CommandInteraction, MessageEmbed } from "discord.js";
 import { ChatInputAction } from "../action_types/chatinput.js";
 
 export class AboutChatInputAction extends ChatInputAction {
-  name = "abuot";
+  name = "about";
   description = "Learn more about Rover";
 
   async handler(interaction: CommandInteraction) {
