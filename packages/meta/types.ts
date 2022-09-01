@@ -79,6 +79,7 @@ export enum TypeTags {
   BouncerMythOriginal = 0x27,
   BouncerMythClassical = 0x28,
   BouncerMythMirror = 0x29,
+  BouncerHostMythStoryland = 0x7f,
   BouncerMythModern = 0x2a,
   BouncerMythAlterna = 0x2b,
   BouncerMythVariant = 0x2c,
@@ -141,6 +142,8 @@ export enum TypeTags {
   Card2021BCCC = 0x77,
   Card2022 = 0x7a,
   Card2022VMailbox = 0x7b,
+  Card2022UnBirthdayMailbox = 0x7c,
+  Card2022AZWMailbox = 0x80,
 
   // Evolution
   Evolution = 0x60,
@@ -168,6 +171,7 @@ export enum TypeTags {
   DestinationRoom = 0x74,
   DestinationBouncer = 0x75,
   DestinationTemporary = 0x76,
+  DestinationBouncerTemporary = 0x7d,
 
   // Other Tags
   Credit = 0x6f,
@@ -178,7 +182,7 @@ export enum TypeTags {
   FunctionSwap = 0x71,
   FunctionBlast = 0x72,
 }
-// Latest: Card2022VMailbox = 0x7b,
+// Latest: Card2022AZWMailbox = 0x80,
 
 export interface TypeVirtualMeta {
   captureRadius?: number;
