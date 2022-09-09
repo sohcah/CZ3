@@ -37,14 +37,20 @@ async function handler(
   playerId: PlayerIdentifier | null
 ) {
   if (!playerId) {
-    return await interaction.reply(`You need to select a Player`);
+    return await interaction.reply({
+      ephemeral: true,
+      content: `You need to select a Player`
+    });
   }
 
   const player = await api.query("player:profile", playerId);
   if (!player) {
-    return await interaction.reply(
-      `Could not find player: ${"userId" in playerId ? playerId.userId : playerId.username}`
-    );
+    return await interaction.reply({
+      ephemeral: true,
+      content: `Could not find player: ${
+        "userId" in playerId ? playerId.userId : playerId.username
+      }`,
+    });
   }
   const embed = new MessageEmbed()
     .setTitle(
@@ -59,6 +65,7 @@ async function handler(
   }
 
   return interaction.reply({
+    ephemeral: true,
     embeds: [embed],
   });
 }
@@ -77,7 +84,7 @@ export class PlayerChatInputAction extends ChatInputAction {
 
   async handler(interaction: CommandInteraction) {
     const playerOption = interaction.options.getString("player");
-    return await handler(interaction, playerOption ? {username: playerOption} : null);
+    return await handler(interaction, playerOption ? { username: playerOption } : null);
   }
 }
 
