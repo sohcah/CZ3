@@ -25,6 +25,7 @@
     "expo-font": "~10.2.0",
     "expo-linear-gradient": "~11.4.0",
     "expo-splash-screen": "~0.16.1",
+    "expo-web-browser": "~11.0.0",
     "i18next": "^21.8.10",
     "jotai": "^1.8.3",
     "mapbox-gl": "^2.10.0",
