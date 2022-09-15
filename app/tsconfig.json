@@ -1,10 +1,9 @@
 {
   "compilerOptions": {
-    "strictNullChecks": true,
-    "noUncheckedIndexedAccess": true,
+    "baseUrl": "./",
     "paths": {
-      "@cz3/app/*": ["./app/*"]
+      "@/*": ["src/*", "src/*/index"]
     }
   },
-  "extends": "./tsconfig.base"
+  "extends": "expo/tsconfig.base",
 }

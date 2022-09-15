@@ -5,7 +5,7 @@
   "workspaces": [
     "api",
     "bot",
-    "app/*",
+    "app",
     "sites/*",
     "config/*",
     "packages/*",
@@ -47,6 +47,16 @@
   "engines": {
     "npm": ">=7.0.0",
     "node": ">=16.0.0"
+  },
+  "resolutions": {
+    "@types/react": "17.0.21",
+    "esbuild": "0.15.7",
+    "react-native": "0.69.5",
+    "react": "18.0.0",
+    "react-dom": "18.0.0",
+    "react-native-reanimated": "2.9.1",
+    "react-native-web": "0.18.7",
+    "@tamagui/core": "patch:@tamagui/core@npm:1.0.1-beta.163#.yarn/patches/@tamagui-core-npm-1.0.1-beta.163-0058dfc2f3.patch"
   },
   "packageManager": "yarn@3.2.1"
 }
