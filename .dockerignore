@@ -33,3 +33,7 @@
 **/.turbo
 
 **/Dockerfile.*
+
+**/.yarn/cache
+**/.yarn/unplugged
+**/.yarn/install-state.gz
