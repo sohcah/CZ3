@@ -3,7 +3,9 @@ WORKDIR /cz3
 COPY .yarn ./
 COPY package.json ./
 COPY **/package.json ./
-COPY yarn.lock yarn.lock
+COPY yarn.lock ./
+COPY .yarnrc.yml ./
+COPY .npmrc ./
 RUN corepack enable
 RUN yarn install
 COPY . .
