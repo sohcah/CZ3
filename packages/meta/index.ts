@@ -109,6 +109,14 @@ export class Type {
   get properties(): TypeProperties {
     return new TypeProperties(this);
   }
+
+  get apiOverview() {
+    return {
+      name: this.name,
+      id: this.humanId,
+      icon: this._client.getIcon(this.icon),
+    }
+  }
 }
 
 export class Group {
