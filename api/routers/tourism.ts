@@ -312,6 +312,62 @@ const sections: TourismSection[] = [
       return await loadFromDeploysMap(209401, deploy => deploy.i.includes("roadwarriors2022"));
     }, 14400000),
   },
+  {
+    name: "Milestone Munzees",
+    id: "milestones",
+    items: new Cacher(
+      () => [
+        {
+          id: 3450079,
+          name: "Paverick 1.000.000",
+          icon: "https://munzee.global.ssl.fastly.net/images/pins/onemillionth.png",
+          latitude: 51.220892,
+          longitude: 4.398916,
+          url: "https://www.munzee.com/m/Paverick/9114/",
+        },
+        {
+          id: 17562827,
+          name: "2 millionth deploy! Virtual Ice",
+          icon: "https://munzee.global.ssl.fastly.net/images/pins/ice_bucket.png",
+          latitude: 36.1593253606424,
+          longitude: -115.09178638458201,
+          url: "https://www.munzee.com/m/patnanz/1846/",
+        },
+        {
+          id: 30708698,
+          name: "Wezep Keizersweg 6 Millionth Munzee",
+          icon: "https://munzee.global.ssl.fastly.net/images/pins/6millionthmunzee.png",
+          latitude: 52.4598719,
+          longitude: 6.0067738,
+          url: "https://www.munzee.com/m/zoekix/2575/",
+        },
+        {
+          id: 65493292,
+          name: "Munzee nro 8 888 888",
+          icon: "https://munzee.global.ssl.fastly.net/images/pins/magic8ball.png",
+          latitude: 64.217098680441,
+          longitude: 23.785783430454,
+          url: "https://www.munzee.com/m/Tomppa71/2520/",
+        },
+        {
+          id: 103929175,
+          name: "Huikies op vakantie",
+          icon: "https://munzee.global.ssl.fastly.net/images/pins/10millionthmunzee.png",
+          latitude: 50.7179801,
+          longitude: 4.5836843,
+          url: "https://www.munzee.com/m/Martijnhuik/328/",
+        },
+      ],
+      Infinity
+    ),
+  },
+  {
+    name: "All Tourism Munzees",
+    id: "all",
+    items: new Cacher(async () => {
+      return (await Promise.all(sections.filter(i => i.id !== "all").map(i => i.items.get()))).flat()
+    }, 0),
+  },
 ];
 
 export const tourismRouter = createRouter()
