@@ -7,15 +7,19 @@ module.exports = function (api) {
     plugins: [
       "@babel/plugin-proposal-logical-assignment-operators",
       "@babel/plugin-proposal-nullish-coalescing-operator",
-      [
-        "@tamagui/babel-plugin",
-        {
-          components: ["tamagui"],
-          config: "./src/tamagui.config.ts",
-          logTimings: true,
-          disableExtraction: process.env.NODE_ENV === "development",
-        },
-      ],
+      ...(process.env.TAMAGUI_TARGET === "web"
+        ? []
+        : [
+            [
+              "@tamagui/babel-plugin",
+              {
+                components: ["tamagui"],
+                config: "./src/tamagui.config.ts",
+                logTimings: true,
+                disableExtraction: process.env.NODE_ENV === "development",
+              },
+            ],
+          ]),
       [
         "transform-inline-environment-variables",
         {
@@ -26,11 +30,11 @@ module.exports = function (api) {
         "module-resolver",
         {
           root: ["./"],
-          extensions: ['.ts', '.tsx', '.js', '.ios.js', '.android.js'],
+          extensions: [".ts", ".tsx", ".js", ".ios.js", ".android.js"],
           alias: {
-            '@': './src'
-          }
-        }
+            "@": "./src",
+          },
+        },
       ],
       "react-native-reanimated/plugin",
     ],

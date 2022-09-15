@@ -8,6 +8,7 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "TAMAGUI_TARGET=web expo start --web",
+    "web-build": "TAMAGUI_TARGET=web expo export:web",
     "eject": "expo eject",
     "upgrade:tamagui": "manypkg upgrade tamagui && manypkg upgrade @tamagui && manypkg upgrade tamagui-loader"
   },
