@@ -50,19 +50,12 @@ export default function PlayerRooms(fastify: FastifyInstance) {
           ...i,
           expires_at: dayjs
             .mhqParse({
-              // @ts-expect-error Missing type info for objectSupport
               year: deployed_at.year(),
-              // @ts-expect-error Missing type info for objectSupport
               month: deployed_at.month(),
-              // @ts-expect-error Missing type info for objectSupport
               date: deployed_at.date() + 30,
-              // @ts-expect-error Missing type info for objectSupport
               hour: deployed_at.hour(),
-              // @ts-expect-error Missing type info for objectSupport
               minute: deployed_at.minute(),
-              // @ts-expect-error Missing type info for objectSupport
               second: deployed_at.second(),
-              // @ts-expect-error Missing type info for objectSupport
               millisecond: deployed_at.millisecond(),
             })
             .format(),
