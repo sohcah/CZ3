@@ -1,6 +1,6 @@
 FROM node:16-alpine AS builder
 WORKDIR /cz3
-COPY .yarn ./
+COPY .yarn/** .yarn/
 COPY package.json ./
 COPY **/package.json ./
 COPY yarn.lock ./
