@@ -25,6 +25,7 @@ jobs:
           context: .
           push: false
           load: true
+          file: Dockerfile.app
           tags: registry.sohcah.dev/cuppazee/cz3-web:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
