@@ -3,6 +3,7 @@ WORKDIR /cz3
 COPY package.json ./
 COPY **/package.json ./
 COPY yarn.lock yarn.lock
+RUN corepack enable
 RUN yarn install
 COPY . .
 RUN yarn app:build
