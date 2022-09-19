@@ -20,6 +20,16 @@ export const typeRouter = createRouter()
       }));
     },
   })
+  .query("names", {
+    input: z.object({
+      urls: z.string().array(),
+    }),
+    async resolve({ input: { urls } }) {
+      return {
+        names: Object.fromEntries(urls.map(i => [i, meta.get(i)?.name ?? meta.getIconId(i)])),
+      };
+    },
+  })
   .query("group", {
     input: z.object({
       id: z.string(),
