@@ -10,7 +10,7 @@
   "keyContext_male": "the male variant",
   "keyContext_female": "the female variant",
   "keyWithArrayValue": [
-    "multipe",
+    "multiple",
     "things"
   ],
   "keyWithObjectValue": {
