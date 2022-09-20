@@ -3,6 +3,7 @@ files: [
  {
   "source" : "/i18n/base.json",
   "translation" : "/i18n/lang/%locale_with_underscore%.json",
-  "type": "i18next_json"
+  "type": "i18next_json",
+  "skip_untranslated_strings": true
  }
 ]
