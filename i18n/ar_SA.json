@@ -1,0 +1,32 @@
+{
+  "key": "value",
+  "keyDeep": {
+    "inner": "value"
+  },
+  "keyNesting": "reuse $t(keyDeep.inner)",
+  "keyInterpolate": "replace this {{value}}",
+  "keyInterpolateUnescaped": "replace this {{- value}}",
+  "keyInterpolateWithFormatting": "replace this {{value, format}}",
+  "keyContext_male": "the male variant",
+  "keyContext_female": "the female variant",
+  "keyWithArrayValue": [
+    "multipe",
+    "things"
+  ],
+  "keyWithObjectValue": {
+    "valueA": "return this with valueB",
+    "valueB": "more text"
+  },
+  "keyPluralSimple_zero": "the plural",
+  "keyPluralSimple_one": "the singular",
+  "keyPluralSimple_two": "the plural",
+  "keyPluralSimple_few": "the plural",
+  "keyPluralSimple_many": "the plural",
+  "keyPluralSimple_other": "the plural",
+  "keyPluralMultipleEgArabic_zero": "the plural form many",
+  "keyPluralMultipleEgArabic_one": "the plural form one",
+  "keyPluralMultipleEgArabic_two": "the plural form many",
+  "keyPluralMultipleEgArabic_few": "the plural form many",
+  "keyPluralMultipleEgArabic_many": "the plural form many",
+  "keyPluralMultipleEgArabic_other": "the plural form many"
+}
