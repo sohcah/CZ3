@@ -15,13 +15,13 @@ async function loadBouncersRadius(parameters: {
   if (!latitude || !longitude || !radius) {
     return { error: "Missing latitude, longitude or radius" };
   }
-  const pt = point([latitude, longitude]);
+  const pt = point([longitude, latitude]);
   const bouncers = await getBouncers(parameters.force === "TRUE");
   return bouncers
     .map(i => {
       return {
         ...i,
-        distance: distance(point([Number(i.latitude), Number(i.longitude)]), pt, {
+        distance: distance(point([Number(i.longitude), Number(i.latitude)]), pt, {
           units: "meters",
         }),
       };

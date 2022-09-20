@@ -22,11 +22,11 @@ export const typeRouter = createRouter()
   })
   .query("names", {
     input: z.object({
-      urls: z.string().array(),
+      icons: z.string().array(),
     }),
-    async resolve({ input: { urls } }) {
+    async resolve({ input: { icons } }) {
       return {
-        names: Object.fromEntries(urls.map(i => [i, meta.get(i)?.name ?? meta.getIconId(i)])),
+        names: Object.fromEntries(icons.map(i => [i, meta.get(i)?.name ?? meta.getIconId(i)])),
       };
     },
   })
