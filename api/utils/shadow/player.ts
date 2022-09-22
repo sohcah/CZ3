@@ -9,7 +9,7 @@ import { ActivityData, addActivityItemExtras } from "./tasks.js";
 import { prisma } from "../prisma.js";
 import { shadow_player, shadow_player_task, shadow_player_task_day } from "@cz3/prisma";
 import { rollbar } from "../../extra/rollbar.js";
-import { Cacher } from "../cacher";
+import { Cacher } from "../cacher.js";
 
 export interface ShadowPlayerReference {
   user_id: number;
