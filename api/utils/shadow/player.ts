@@ -98,11 +98,12 @@ export async function getShadowPlayerStats(player: ShadowPlayerReference) {
     });
   }
 
-  const gameIdTasks = await tasksByGameId.get(player.game_id);
+  let gameIdTasks = await tasksByGameId.get(player.game_id);
 
   if (!gameIdTasks) {
     console.error(`[IMPORTANT] No tasks for game ${player.game_id}`);
     rollbar?.error(`[IMPORTANT] No tasks for game ${player.game_id}`);
+    gameIdTasks = [];
   }
 
   const activityLoader = new ShadowPlayerActivityLoader(player.user_id);
