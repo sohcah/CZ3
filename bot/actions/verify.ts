@@ -1,12 +1,12 @@
 import {
   ButtonInteraction,
-  CommandInteraction,
   GuildMember,
   ActionRowBuilder,
   ButtonBuilder,
   EmbedBuilder,
   ButtonStyle,
   ApplicationCommandOptionType,
+  ChatInputCommandInteraction,
 } from "discord.js";
 import { ButtonAction } from "../action_types/button.js";
 import { api } from "../trpc/api.js";
@@ -15,7 +15,7 @@ import Jwt from "jsonwebtoken";
 import { config } from "../utils/config.js";
 import { syncMember } from "../utils/syncMember.js";
 
-async function handle(interaction: CommandInteraction | ButtonInteraction) {
+async function handle(interaction: ChatInputCommandInteraction | ButtonInteraction) {
   const token = Jwt.sign(
     {
       user_id: interaction.user.id,
@@ -84,7 +84,7 @@ export class VerifyChatInputAction extends ChatInputAction {
   name = "verify";
   description = "Verify your account";
 
-  async handler(interaction: CommandInteraction) {
+  async handler(interaction: ChatInputCommandInteraction) {
     await handle(interaction);
   }
 }
@@ -108,7 +108,7 @@ export class ForceVerifyChatInputAction extends ChatInputAction {
     } as const,
   ];
 
-  async handler(interaction: CommandInteraction) {
+  async handler(interaction: ChatInputCommandInteraction) {
     if (interaction.guild?.id !== config.mainGuild) {
       await interaction.reply("This command is only available in the main server.");
       return;

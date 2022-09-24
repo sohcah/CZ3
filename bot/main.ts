@@ -115,7 +115,7 @@ async function load() {
   });
 
   client.on("interactionCreate", async interaction => {
-    if (interaction.isCommand()) {
+    if (interaction.isChatInputCommand()) {
       const commandName = interaction.commandName.startsWith("dev__")
         ? interaction.commandName.slice(5)
         : interaction.commandName;

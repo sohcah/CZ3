@@ -1,7 +1,6 @@
 import {
   AutocompleteInteraction,
   CacheType,
-  CommandInteraction,
   GuildMember,
   ActionRowBuilder,
   ButtonBuilder,
@@ -10,13 +9,14 @@ import {
   Colors,
   ButtonStyle,
   ApplicationCommandOptionType,
+  ChatInputCommandInteraction,
 } from "discord.js";
 import { ChatInputAction, ChatInputOptions } from "../action_types/chatinput.js";
 import { SelectMenuAction } from "../action_types/select.js";
 import { api } from "../trpc/api.js";
 
 async function handler(
-  interaction: CommandInteraction | SelectMenuInteraction,
+  interaction: ChatInputCommandInteraction | SelectMenuInteraction,
   typeOption: string | null
 ) {
   if (!typeOption) {
@@ -73,7 +73,7 @@ export class TypeChatInputAction extends ChatInputAction {
     },
   ];
 
-  async handler(interaction: CommandInteraction) {
+  async handler(interaction: ChatInputCommandInteraction) {
     const typeOption = interaction.options.get("type")?.value as string | undefined;
     await handler(interaction, typeOption ?? null);
   }

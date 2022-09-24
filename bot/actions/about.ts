@@ -1,11 +1,11 @@
-import { CommandInteraction, EmbedBuilder, Colors } from "discord.js";
+import { EmbedBuilder, Colors, ChatInputCommandInteraction } from "discord.js";
 import { ChatInputAction } from "../action_types/chatinput.js";
 
 export class AboutChatInputAction extends ChatInputAction {
   name = "about";
   description = "Learn more about Rover";
 
-  async handler(interaction: CommandInteraction) {
+  async handler(interaction: ChatInputCommandInteraction) {
     const embed = new EmbedBuilder()
       .setTitle(`Rover`)
       .setColor(Colors.Green)

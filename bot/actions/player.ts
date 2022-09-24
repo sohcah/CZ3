@@ -1,11 +1,11 @@
 import {
-  CommandInteraction,
   GuildMember,
   EmbedBuilder,
   User,
   UserContextMenuCommandInteraction,
   Colors,
   ApplicationCommandOptionType,
+  ChatInputCommandInteraction,
 } from "discord.js";
 import dayjs from "dayjs";
 import { ChatInputAction, ChatInputOptions } from "../action_types/chatinput.js";
@@ -35,7 +35,7 @@ async function getPlayerIdForUser(user: User | GuildMember): Promise<PlayerIdent
 }
 
 async function handler(
-  interaction: CommandInteraction | UserContextMenuCommandInteraction,
+  interaction: ChatInputCommandInteraction | UserContextMenuCommandInteraction,
   playerId: PlayerIdentifier | null
 ) {
   if (!playerId) {
@@ -87,7 +87,7 @@ export class PlayerChatInputAction extends ChatInputAction {
     },
   ];
 
-  async handler(interaction: CommandInteraction) {
+  async handler(interaction: ChatInputCommandInteraction) {
     const playerOption = interaction.options.get("player")?.value as string | undefined;
     await handler(interaction, playerOption ? { username: playerOption } : null);
   }

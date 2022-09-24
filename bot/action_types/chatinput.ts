@@ -2,13 +2,13 @@ import {
   ApplicationCommandOptionData,
   ApplicationCommandType,
   AutocompleteInteraction,
-  CommandInteraction,
+  ChatInputCommandInteraction,
 } from "discord.js";
 import { CommandAction } from "./action.js";
 
 export type ChatInputOptions = ApplicationCommandOptionData[];
 
-export abstract class ChatInputAction extends CommandAction<CommandInteraction> {
+export abstract class ChatInputAction extends CommandAction<ChatInputCommandInteraction> {
   public abstract description: string;
   options?: ChatInputOptions;
   defaultPermission?: boolean;
