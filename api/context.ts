@@ -1,5 +1,5 @@
 import { inferAsyncReturnType } from "@trpc/server";
-import { CreateFastifyContextOptions } from "@trpc/server/adapters/fastify/dist/trpc-server-adapters-fastify.cjs.js";
+import { CreateFastifyContextOptions } from "@trpc/server/adapters/fastify";
 
 export enum CuppaZeeApplication {
   AppV3 = "AppV3",

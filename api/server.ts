@@ -10,10 +10,7 @@ import {
   AuthenticateHeadersOptions,
   AuthHeaders,
 } from "./utils/auth/index.js";
-import {
-  fastifyTRPCPlugin,
-  fastifyRequestHandler,
-} from "@trpc/server/adapters/fastify/dist/trpc-server-adapters-fastify.cjs.js";
+import { fastifyTRPCPlugin } from "@trpc/server/adapters/fastify";
 import { createContext } from "./context.js";
 import { appRouter } from "./router.js";
 
@@ -33,6 +30,7 @@ fastify.register(fastifyMultipart, {
 import dayjs from "dayjs";
 import objectSupport from "dayjs/plugin/objectSupport.js";
 import { dayjsMHQPlugin } from "@cuppazee/utils/lib/dayjsmhq.js";
+
 dayjs.extend(objectSupport);
 dayjs.extend(dayjsMHQPlugin);
 
@@ -45,16 +43,23 @@ declare module "fastify" {
   interface FastifyRequest {
     _cuppazeeIsDeprecated: boolean;
     cuppazeeProperties: CuppaZeeProperties;
+
     authenticateHeaders(
       options?: AuthenticateHeadersOptions
     ): ReturnType<typeof authenticateHeaders>;
+
     authenticatedUser(): Promise<number>;
+
     getUsername(): Promise<string>;
+
     getUserID(): Promise<number>;
+
     deprecated(): void;
   }
+
   interface FastifyReply {
     success<T>(data: T): void;
+
     error(error: APIError): void;
   }
 }
@@ -206,34 +211,6 @@ fastify.setErrorHandler(async function (error, request, reply) {
 
 const trpcOptions = { router: appRouter, createContext };
 
-fastify.all<{
-  Params: {
-    path: string;
-  };
-}>(`/api/:path`, async (req, res) => {
-  const path = req.params.path;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const input = (req.query as any).input;
-  await fastifyRequestHandler({
-    ...trpcOptions,
-    req: {
-      ...req,
-      method: req.method,
-      headers: req.headers,
-      body: req.body,
-      query:
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        Object.keys(req.query as any).length > 0
-          ? {
-              input: input ? JSON.stringify(input) : JSON.stringify(req.query),
-            }
-          : {},
-    },
-    res,
-    path,
-  });
-});
-
 fastify.register(fastifyTRPCPlugin, {
   prefix: "/trpc",
   trpcOptions,
@@ -248,7 +225,10 @@ endpoints.forEach(f => f(fastify));
 
 const start = async () => {
   try {
-    await fastify.listen(80, "0.0.0.0");
+    await fastify.listen({
+      port: 80,
+      host: "0.0.0.0",
+    });
   } catch (err) {
     fastify.log.error(err);
     process.exit(1);

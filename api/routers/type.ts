@@ -1,16 +1,18 @@
 import { z } from "zod";
 import { meta } from "../utils/meta.js";
-import { createRouter } from "./index.js";
 import Fuse from "fuse.js";
 import { authenticateAnonymous } from "../utils/auth/index.js";
 import { munzeeFetch } from "../utils/munzee.js";
+import { t } from "../trpc.js";
 
-export const typeRouter = createRouter()
-  .query("suggest", {
-    input: z.object({
-      input: z.string(),
-    }),
-    async resolve({ input: { input } }) {
+export const typeRouter = t.router({
+  suggest: t.procedure
+    .input(
+      z.object({
+        input: z.string(),
+      })
+    )
+    .query(async ({ input: { input } }) => {
       const fuse = new Fuse(meta.types, {
         keys: ["name", "id"],
       });
@@ -18,23 +20,25 @@ export const typeRouter = createRouter()
         name: i.item.name,
         value: i.item.humanId,
       }));
-    },
-  })
-  .query("names", {
-    input: z.object({
-      icons: z.string().array(),
     }),
-    async resolve({ input: { icons } }) {
+  names: t.procedure
+    .input(
+      z.object({
+        icons: z.string().array(),
+      })
+    )
+    .query(async ({ input: { icons } }) => {
       return {
         names: Object.fromEntries(icons.map(i => [i, meta.get(i)?.name ?? meta.getIconId(i)])),
       };
-    },
-  })
-  .query("group", {
-    input: z.object({
-      id: z.string(),
     }),
-    async resolve({ input: { id } }) {
+  group: t.procedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .query(async ({ input: { id } }) => {
       const group = meta.getGroup(id);
       if (!group) {
         return null;
@@ -49,14 +53,15 @@ export const typeRouter = createRouter()
         })),
         icon: `https://images.cuppazee.app/types/64/${group.icon}.png`,
       };
-    },
-  })
-  .query("details", {
-    input: z.object({
-      id: z.string(),
-      username: z.string().optional(),
     }),
-    async resolve({ input: { id, username } }) {
+  details: t.procedure
+    .input(
+      z.object({
+        id: z.string(),
+        username: z.string().optional(),
+      })
+    )
+    .query(async ({ input: { id, username } }) => {
       const type = meta.get(id);
       if (!type) {
         return null;
@@ -97,5 +102,5 @@ export const typeRouter = createRouter()
         captures,
         username: userUsername,
       };
-    },
-  });
+    }),
+});

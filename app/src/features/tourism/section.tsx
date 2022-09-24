@@ -25,20 +25,15 @@ export function Icons(props: { icons: string[] }) {
 
 export function TourismSectionScreen() {
   const { params: { section = null } = {} } = useMatch("/tourism/:section") ?? {};
-  const data = trpc.useQuery(
-    [
-      "tourism:section",
-      {
-        section: section!,
-      },
-    ],
+  const data = trpc.tourism.section.useQuery(
+    {
+      section: section!,
+    },
     {
       enabled: section != null,
     }
   );
-  const [selected, setSelected] = useState<number | null>(
-    null
-  );
+  const [selected, setSelected] = useState<number | null>(null);
 
   return (
     <Page>
@@ -47,7 +42,7 @@ export function TourismSectionScreen() {
         onClick={ev => {
           const properties = ev.features?.[0]?.properties;
           if (properties) {
-            setSelected(c => c===properties.id?null:properties.id);
+            setSelected(c => (c === properties.id ? null : properties.id));
           }
         }}
       >
@@ -57,14 +52,15 @@ export function TourismSectionScreen() {
           type="geojson"
           data={{
             type: "FeatureCollection",
-            features: data.data?.items.map(f => ({
-              type: "Feature",
-              geometry: {
-                type: "Point",
-                coordinates: [f.longitude, f.latitude],
-              },
-              properties: f,
-            })) ?? [],
+            features:
+              data.data?.items.map(f => ({
+                type: "Feature",
+                geometry: {
+                  type: "Point",
+                  coordinates: [f.longitude, f.latitude],
+                },
+                properties: f,
+              })) ?? [],
           }}
         >
           <Layer

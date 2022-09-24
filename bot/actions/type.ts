@@ -3,12 +3,14 @@ import {
   CacheType,
   CommandInteraction,
   GuildMember,
-  MessageActionRow,
-  MessageButton,
-  MessageEmbed,
+  ActionRowBuilder,
+  ButtonBuilder,
+  EmbedBuilder,
   SelectMenuInteraction,
+  Colors,
+  ButtonStyle,
+  ApplicationCommandOptionType,
 } from "discord.js";
-import { MessageButtonStyles } from "discord.js/typings/enums";
 import { ChatInputAction, ChatInputOptions } from "../action_types/chatinput.js";
 import { SelectMenuAction } from "../action_types/select.js";
 import { api } from "../trpc/api.js";
@@ -18,33 +20,38 @@ async function handler(
   typeOption: string | null
 ) {
   if (!typeOption) {
-    return interaction.reply(`Could not find type: ${typeOption}`);
+    await interaction.reply(`Could not find type: ${typeOption}`);
+    return;
   }
-  const typeDetails = await api.query("type:details", {
+  const typeDetails = await api.type.details.query({
     id: typeOption,
     username: (interaction.member as GuildMember).displayName ?? interaction.user.username,
   });
   if (!typeDetails) {
-    return interaction.reply(`Could not find type: ${typeOption}`);
+    await interaction.reply(`Could not find type: ${typeOption}`);
+    return;
   }
-  const embed = new MessageEmbed()
+  const embed = new EmbedBuilder()
     .setTitle(typeDetails.name)
-    .setColor("GREEN")
+    .setColor(Colors.Green)
     .setURL(`https://max.cuppazee.app/db/type/${typeDetails.id}`)
-    .addField("Groups", typeDetails.groups.map(i => i.name).join(", "))
+    .addFields({ name: "Groups", value: typeDetails.groups.map(i => i.name).join(", ") })
     .setThumbnail(typeDetails.icon);
   if (typeDetails.captures !== null) {
-    embed.addField(`Captures - ${typeDetails.username}`, typeDetails.captures.toString());
+    embed.addFields({
+      name: `Captures - ${typeDetails.username}`,
+      value: typeDetails.captures.toString(),
+    });
   }
-  interaction.reply({
+  await interaction.reply({
     embeds: [embed],
     components: [
-      new MessageActionRow().addComponents(
+      new ActionRowBuilder<ButtonBuilder>().addComponents(
         ...typeDetails.groups
           .slice(0, 5)
           .map(i =>
-            new MessageButton()
-              .setStyle(MessageButtonStyles.PRIMARY)
+            new ButtonBuilder()
+              .setStyle(ButtonStyle.Primary)
               .setLabel(`View All ${i.name}`)
               .setCustomId(`group__${i.id}__0`)
           )
@@ -58,7 +65,7 @@ export class TypeChatInputAction extends ChatInputAction {
   description = "Get details on a Munzee Type";
   options: ChatInputOptions = [
     {
-      type: "STRING",
+      type: ApplicationCommandOptionType.String,
       name: "type",
       description: "Type",
       autocomplete: true,
@@ -67,8 +74,8 @@ export class TypeChatInputAction extends ChatInputAction {
   ];
 
   async handler(interaction: CommandInteraction) {
-    const typeOption = interaction.options.getString("type");
-    return await handler(interaction, typeOption);
+    const typeOption = interaction.options.get("type")?.value as string | undefined;
+    await handler(interaction, typeOption ?? null);
   }
 
   async autocompleteHandler(interaction: AutocompleteInteraction<CacheType>) {
@@ -76,10 +83,10 @@ export class TypeChatInputAction extends ChatInputAction {
     if (!currentInput) {
       return await interaction.respond([]);
     }
-    const suggestions = await api.query("type:suggest", {
+    const suggestions = await api.type.suggest.query({
       input: currentInput.toString(),
     });
-    interaction.respond(suggestions.slice(0, 25));
+    await interaction.respond(suggestions.slice(0, 25));
   }
 }
 

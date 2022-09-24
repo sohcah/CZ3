@@ -7,13 +7,10 @@ import { SettingPanels } from "@/features/settings/editor";
 
 export function PlayerAlternamythsScreen() {
   const { params: { player = null } = {} } = useMatch("/player/:player/*") ?? {};
-  const query = trpc.useQuery(
-    [
-      "player:alternamyth",
-      {
-        username: player!,
-      },
-    ],
+  const query = trpc.player.alternamyth.captures.useQuery(
+    {
+      username: player!,
+    },
     {
       enabled: player !== null,
     }

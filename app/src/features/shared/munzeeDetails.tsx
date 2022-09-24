@@ -1,19 +1,24 @@
 import { trpc } from "@/common/trpc/trpc";
-import { H2, H3, YStack, Button } from "tamagui";
+import { H3, YStack, Button, Spinner, H4 } from "tamagui";
 import { openBrowserAsync } from "expo-web-browser";
 
 export function MunzeeDetailsPanel({ munzeeId }: { munzeeId: number }) {
-  const data = trpc.useQuery(["munzee:details", { munzeeId }]);
-  if (!data.data) return null;
+  const data = trpc.munzee.details.useQuery({ munzeeId });
+  if (!data.data) {
+    return (
+      <YStack alignItems="center" p="$4">
+        <Spinner size="large" />
+      </YStack>
+    );
+  }
   return (
     <YStack>
-      <H2>{data.data.name}</H2>
-      <H3>By {data.data.creator.username}</H3>
+      <H3>{data.data.name}</H3>
+      <H4>By {data.data.creator.username}</H4>
       <Button
         href={data.data.url}
         onPress={() => {
-          console.log(data.data.url);
-          openBrowserAsync(data.data.url);
+          if (data.data) openBrowserAsync(data.data.url);
         }}
       >
         Open on Munzee.com

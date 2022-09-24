@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { authenticateAnonymous, authenticateWithUserID } from "../../utils/auth/index.js";
 import { munzeeFetch } from "../../utils/munzee.js";
-import { createRouter } from "../index.js";
+import { t } from "../../trpc.js";
 
 const alternaMyths = [
   {
@@ -2282,39 +2282,42 @@ const alternaMyths = [
 ];
 alternaMyths.sort((a, b) => a.munzee_id - b.munzee_id);
 
-export const alternamythRouter = createRouter().query("alternamyth", {
-  input: z.object({
-    username: z.string(),
-  }),
-  async resolve({ input: { username } }) {
-    const anonToken = await authenticateAnonymous();
-    const { data: user } = await munzeeFetch({
-      endpoint: "user",
-      params: {
-        username,
-      },
-      token: anonToken,
-    }).then(i => i.getMunzeeData());
+export const alternamythRouter = t.router({
+  captures: t.procedure
+    .input(
+      z.object({
+        username: z.string(),
+      })
+    )
+    .query(async ({ input: { username } }) => {
+      const anonToken = await authenticateAnonymous();
+      const { data: user } = await munzeeFetch({
+        endpoint: "user",
+        params: {
+          username,
+        },
+        token: anonToken,
+      }).then(i => i.getMunzeeData());
 
-    if (!user?.user_id) {
-      return null;
-    }
+      if (!user?.user_id) {
+        return null;
+      }
 
-    const userId = user.user_id;
+      const userId = user.user_id;
 
-    const token = await authenticateWithUserID(userId);
-    const response = await munzeeFetch({
-      endpoint: "munzee/hascaptured",
-      params: { munzee_ids: alternaMyths.map(i => i.munzee_id).join(",") },
-      token,
-    });
-    const data = await response.getMunzeeData();
+      const token = await authenticateWithUserID(userId);
+      const response = await munzeeFetch({
+        endpoint: "munzee/hascaptured",
+        params: { munzee_ids: alternaMyths.map(i => i.munzee_id).join(",") },
+        token,
+      });
+      const data = await response.getMunzeeData();
 
-    return {
-      alternaMyths: alternaMyths.map(i => ({
-        ...i,
-        captured: !!data.data?.[i.munzee_id],
-      })),
-    };
-  },
+      return {
+        alternaMyths: alternaMyths.map(i => ({
+          ...i,
+          captured: !!data.data?.[i.munzee_id],
+        })),
+      };
+    }),
 });

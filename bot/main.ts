@@ -7,10 +7,11 @@ import { ChatInputAction } from "./action_types/chatinput.js";
 
 import glob from "glob";
 import {
+  ActivityType,
   Client,
-  Intents,
-  MessageContextMenuInteraction,
-  UserContextMenuInteraction,
+  IntentsBitField,
+  MessageContextMenuCommandInteraction,
+  UserContextMenuCommandInteraction,
 } from "discord.js";
 import { config } from "./utils/config.js";
 import { Action, ActionProps } from "./action_types/action.js";
@@ -29,7 +30,11 @@ export const client = new Client({
     roles: [],
     repliedUser: false,
   },
-  intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MEMBERS],
+  intents: [
+    IntentsBitField.Flags.Guilds,
+    IntentsBitField.Flags.GuildMessageReactions,
+    IntentsBitField.Flags.GuildMembers,
+  ],
 });
 
 async function load() {
@@ -103,7 +108,7 @@ async function load() {
       activities: [
         {
           name: ` | Bot by CuppaZee`,
-          type: "WATCHING",
+          type: ActivityType.Watching,
         },
       ],
     });
@@ -123,7 +128,7 @@ async function load() {
         await Promise.resolve(command.handler(interaction));
       } catch (e) {
         console.error(e);
-        interaction.reply({
+        await interaction.reply({
           content: "⚠️ Oops! Something went wrong when running this command.",
           ephemeral: true,
         });
@@ -142,7 +147,7 @@ async function load() {
         await Promise.resolve(buttonAction.handler(interaction));
       } catch (e) {
         console.error(e);
-        interaction.reply({
+        await interaction.reply({
           content: "⚠️ Oops! Something went wrong when running this Button Action.",
           ephemeral: true,
         });
@@ -161,7 +166,7 @@ async function load() {
         await Promise.resolve(command.autocompleteHandler(interaction));
       } catch (e) {
         console.error(e);
-        interaction.respond([]);
+        await interaction.respond([]);
       }
     }
 
@@ -177,14 +182,14 @@ async function load() {
         await Promise.resolve(selectMenuAction.handler(interaction));
       } catch (e) {
         console.error(e);
-        interaction.reply({
+        await interaction.reply({
           content: "⚠️ Oops! Something went wrong when running this Select Menu Action.",
           ephemeral: true,
         });
       }
     }
 
-    if (interaction.isContextMenu() && interaction.targetType === "MESSAGE") {
+    if (interaction.isMessageContextMenuCommand()) {
       const commandName = interaction.commandName.startsWith("DEV - ")
         ? interaction.commandName.slice(6)
         : interaction.commandName;
@@ -194,17 +199,19 @@ async function load() {
         return;
       }
       try {
-        await Promise.resolve(messageAction.handler(interaction as MessageContextMenuInteraction));
+        await Promise.resolve(
+          messageAction.handler(interaction as MessageContextMenuCommandInteraction)
+        );
       } catch (e) {
         console.error(e);
-        interaction.reply({
+        await interaction.reply({
           content: "⚠️ Oops! Something went wrong when running this Message Action.",
           ephemeral: true,
         });
       }
     }
 
-    if (interaction.isContextMenu() && interaction.targetType === "USER") {
+    if (interaction.isUserContextMenuCommand()) {
       const commandName = interaction.commandName.startsWith("DEV - ")
         ? interaction.commandName.slice(6)
         : interaction.commandName;
@@ -214,10 +221,10 @@ async function load() {
         return;
       }
       try {
-        await Promise.resolve(userAction.handler(interaction as UserContextMenuInteraction));
+        await Promise.resolve(userAction.handler(interaction as UserContextMenuCommandInteraction));
       } catch (e) {
         console.error(e);
-        interaction.reply({
+        await interaction.reply({
           content: "⚠️ Oops! Something went wrong when running this User Action.",
           ephemeral: true,
         });
@@ -229,7 +236,7 @@ async function load() {
     await syncMember(member);
   });
 
-  client.login(config.token);
+  await client.login(config.token);
 }
 
 load();

@@ -1,12 +1,11 @@
-import { createRouter } from "./index.js";
 import { getBouncers } from "../utils/bouncers.js";
+import { t } from "../trpc.js";
 
-export const bouncerRouter = createRouter()
-  .query("list", {
-    async resolve() {
-      const bouncers = await getBouncers();
-      return {
-        bouncers
-      };
-    },
-  });
+export const bouncerRouter = t.router({
+  list: t.procedure.query(async () => {
+    const bouncers = await getBouncers();
+    return {
+      bouncers,
+    };
+  }),
+});

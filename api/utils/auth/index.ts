@@ -419,7 +419,7 @@ export async function authenticateWithUserID(
     },
     orderBy: {
       refresh_token_expires: "desc",
-    }
+    },
   });
 
   if (!authDocument) {

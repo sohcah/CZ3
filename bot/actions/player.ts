@@ -1,9 +1,11 @@
 import {
   CommandInteraction,
   GuildMember,
-  MessageEmbed,
+  EmbedBuilder,
   User,
-  UserContextMenuInteraction,
+  UserContextMenuCommandInteraction,
+  Colors,
+  ApplicationCommandOptionType,
 } from "discord.js";
 import dayjs from "dayjs";
 import { ChatInputAction, ChatInputOptions } from "../action_types/chatinput.js";
@@ -19,7 +21,7 @@ type PlayerIdentifier =
     };
 
 async function getPlayerIdForUser(user: User | GuildMember): Promise<PlayerIdentifier> {
-  const userResult = await api.query("discord:user", {
+  const userResult = await api.discord.user.query({
     snowflake: user.id,
   });
   if (!userResult) {
@@ -33,17 +35,17 @@ async function getPlayerIdForUser(user: User | GuildMember): Promise<PlayerIdent
 }
 
 async function handler(
-  interaction: CommandInteraction | UserContextMenuInteraction,
+  interaction: CommandInteraction | UserContextMenuCommandInteraction,
   playerId: PlayerIdentifier | null
 ) {
   if (!playerId) {
     return await interaction.reply({
       ephemeral: true,
-      content: `You need to select a Player`
+      content: `You need to select a Player`,
     });
   }
 
-  const player = await api.query("player:profile", playerId);
+  const player = await api.player.profile.query(playerId);
   if (!player) {
     return await interaction.reply({
       ephemeral: true,
@@ -52,16 +54,19 @@ async function handler(
       }`,
     });
   }
-  const embed = new MessageEmbed()
+  const embed = new EmbedBuilder()
     .setTitle(
       `${player.username}${player.titles.length > 0 ? ` - ` : ""}${player.titles.join(", ")}`
     )
-    .setColor("GREEN")
+    .setColor(Colors.Green)
     .setURL(`https://www.munzee.com/m/${player.username}`)
     .setThumbnail(player.avatar)
-    .addField("Start Date", dayjs(player.start).format("DD/MM/YYYY HH:mm:ss"));
+    .addFields({ name: "Start Date", value: dayjs(player.start).format("DD/MM/YYYY HH:mm:ss") });
   if (player.clan) {
-    embed.addField("Clan", `[${player.clan.name}](https://cuppazee.app/clan/${player.clan.id})`);
+    embed.addFields({
+      name: "Clan",
+      value: `[${player.clan.name}](https://cuppazee.app/clan/${player.clan.id})`,
+    });
   }
 
   return interaction.reply({
@@ -75,7 +80,7 @@ export class PlayerChatInputAction extends ChatInputAction {
   description = "Get details on a Munzee player";
   options: ChatInputOptions = [
     {
-      type: "STRING",
+      type: ApplicationCommandOptionType.String,
       name: "player",
       description: "Player",
       required: true,
@@ -83,8 +88,8 @@ export class PlayerChatInputAction extends ChatInputAction {
   ];
 
   async handler(interaction: CommandInteraction) {
-    const playerOption = interaction.options.getString("player");
-    return await handler(interaction, playerOption ? { username: playerOption } : null);
+    const playerOption = interaction.options.get("player")?.value as string | undefined;
+    await handler(interaction, playerOption ? { username: playerOption } : null);
   }
 }
 
@@ -92,14 +97,15 @@ export class PlayerUserAction extends UserAction {
   name = "Player Details";
   description = "Get details on a Munzee player";
 
-  async handler(interaction: UserContextMenuInteraction) {
+  async handler(interaction: UserContextMenuCommandInteraction) {
     const playerOption = interaction.options.getMember("user");
     if (playerOption instanceof GuildMember) {
       const playerId = await getPlayerIdForUser(playerOption);
-      return await handler(interaction, playerId);
+      await handler(interaction, playerId);
+      return;
     }
     const userOption = interaction.options.getUser("user");
     const playerId = userOption ? await getPlayerIdForUser(userOption) : null;
-    return await handler(interaction, playerId);
+    await handler(interaction, playerId);
   }
 }

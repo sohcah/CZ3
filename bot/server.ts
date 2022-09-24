@@ -32,11 +32,11 @@ fastify.get<{
     .resolve(config.mainGuild)!
     .members.fetch(discordToken.user_id))!;
 
-  const user = await api.query("player:profile", {
+  const user = await api.player.profile.query({
     cuppazeeToken: code,
   });
 
-  await api.mutation("discord:link", {
+  await api.discord.link.mutate({
     cuppazeeToken: code,
     snowflake: discordMember.id,
   });
@@ -72,7 +72,7 @@ fastify.get<{
 
 const start = async () => {
   try {
-    await fastify.listen(81, "0.0.0.0");
+    await fastify.listen({ port: 81, host: "0.0.0.0" });
   } catch (err) {
     fastify.log.error(err);
     process.exit(1);

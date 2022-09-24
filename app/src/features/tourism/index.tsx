@@ -5,7 +5,7 @@ import { trpc } from "@/common/trpc/trpc";
 import { Button } from "tamagui";
 
 export function TourismScreen() {
-  const query = trpc.useQuery(["tourism:overview"]);
+  const query = trpc.tourism.overview.useQuery();
   const navigate = useNavigate();
   return (
     <Page>
@@ -16,7 +16,7 @@ export function TourismScreen() {
             <H2>Tourism</H2>
           </XStack>
           {query.data?.sections.map(i => (
-            <Button onPress={() => navigate(`/tourism/${i.id}`)}>{i.name}</Button>
+            <Button key={i.id} onPress={() => navigate(`/tourism/${i.id}`)}>{i.name}</Button>
           ))}
         </YStack>
       </Page.LeftPanel>

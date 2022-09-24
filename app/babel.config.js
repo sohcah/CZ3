@@ -7,6 +7,7 @@ module.exports = function (api) {
     plugins: [
       "@babel/plugin-proposal-logical-assignment-operators",
       "@babel/plugin-proposal-nullish-coalescing-operator",
+      "@babel/plugin-proposal-optional-chaining",
       ...(process.env.TAMAGUI_TARGET === "web"
         ? []
         : [
@@ -33,6 +34,7 @@ module.exports = function (api) {
           extensions: [".ts", ".tsx", ".js", ".ios.js", ".android.js"],
           alias: {
             "@": "./src",
+            "@trpc/client": "@trpc/client/dist/index.js",
           },
         },
       ],

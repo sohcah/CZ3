@@ -35,7 +35,7 @@ export function Navigation() {
           <Route path="alternamyths" element={<PlayerAlternamythsScreen />} />
           {/*<Route path="uniqcorns" element={<PlayerUniqCornsScreen />} />*/}
         </Route>
-        <Route path="*" element={<Navigate to="/settings" replace />} />
+        <Route path="*" element={<Navigate to="/tourism/golden_tickets" replace />} />
       </Routes>
     </PageHandler>
   );

@@ -1,11 +1,10 @@
-import { UserContextMenuInteraction } from "discord.js";
-import { ApplicationCommandTypes } from "discord.js/typings/enums.d.js";
+import { ApplicationCommandType, UserContextMenuCommandInteraction } from "discord.js";
 import { CommandAction } from "./action.js";
 
-export abstract class UserAction extends CommandAction<UserContextMenuInteraction> {
+export abstract class UserAction extends CommandAction<UserContextMenuCommandInteraction> {
   getCommandConfig() {
     return {
-      type: ApplicationCommandTypes.USER,
+      type: ApplicationCommandType.User,
       name: this.name,
     } as const;
   }

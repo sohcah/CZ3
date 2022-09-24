@@ -1,10 +1,10 @@
 import { z } from "zod";
-import { createRouter } from "./index.js";
 import { meta } from "../utils/meta.js";
 import { Cacher } from "../utils/cacher.js";
 import { authenticateAnonymous } from "../utils/auth/index.js";
 import { munzeeFetch } from "../utils/munzee.js";
 import { UserDeploys, UserDeploysMap } from "@cz3/api-types/user/deploys";
+import { t } from "../trpc.js";
 
 export interface TourismItem {
   id: number;
@@ -39,7 +39,7 @@ async function loadFromDeploys(
     });
     const data = await response.getMunzeeData();
     munzees.push(...(data.data?.munzees ?? []));
-    if(!data.data?.has_more) break;
+    if (!data.data?.has_more) break;
   }
   return (
     munzees.filter(filter).map<TourismItem>(deploy => ({
@@ -301,7 +301,9 @@ const sections: TourismSection[] = [
     items: new Cacher(async () => {
       return (await loadFromDeploys(412770)).map(i => ({
         ...i,
-        icon: i.icon.includes("/munzee.png") ? `https://munzee.global.ssl.fastly.net/images/pins/internationelles.png` : i.icon,
+        icon: i.icon.includes("/munzee.png")
+          ? `https://munzee.global.ssl.fastly.net/images/pins/internationelles.png`
+          : i.icon,
       }));
     }, Infinity),
   },
@@ -365,27 +367,29 @@ const sections: TourismSection[] = [
     name: "All Tourism Munzees",
     id: "all",
     items: new Cacher(async () => {
-      return (await Promise.all(sections.filter(i => i.id !== "all").map(i => i.items.get()))).flat()
+      return (
+        await Promise.all(sections.filter(i => i.id !== "all").map(i => i.items.get()))
+      ).flat();
     }, 0),
   },
 ];
 
-export const tourismRouter = createRouter()
-  .query("overview", {
-    async resolve() {
-      return {
-        sections: sections.map(i => ({
-          name: i.name,
-          id: i.id,
-        })),
-      };
-    },
-  })
-  .query("section", {
-    input: z.object({
-      section: z.string(),
-    }),
-    async resolve({ input }) {
+export const tourismRouter = t.router({
+  overview: t.procedure.query(async () => {
+    return {
+      sections: sections.map(i => ({
+        name: i.name,
+        id: i.id,
+      })),
+    };
+  }),
+  section: t.procedure
+    .input(
+      z.object({
+        section: z.string(),
+      })
+    )
+    .query(async ({ input }) => {
       const section = sections.find(i => i.id === input.section);
       if (!section) {
         throw new Error("Invalid section");
@@ -400,5 +404,5 @@ export const tourismRouter = createRouter()
           icon: meta.getIcon(i.icon),
         })),
       };
-    },
-  });
+    }),
+});

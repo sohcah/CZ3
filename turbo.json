@@ -30,6 +30,12 @@
       ],
       "cache": false
     },
+    "run": {
+      "dependsOn": [
+        "^build"
+      ],
+      "cache": false
+    },
 
     "api:dev": {
       "dependsOn": [

@@ -6,6 +6,7 @@
     "api",
     "bot",
     "app",
+    "plugins",
     "sites/*",
     "config/*",
     "packages/*",
@@ -35,6 +36,7 @@
     "app:web-build": "turbo run web-build",
     "shadow:dev": "turbo run dev --filter=shadow",
     "shadow:build": "turbo run build --filter=shadow",
+    "plugins:build": "turbo run build --filter=plugins",
     "components:build": "turbo run build --filter=components"
   },
   "devDependencies": {

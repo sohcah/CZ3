@@ -3,10 +3,10 @@ import "./translations";
 
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
-import { QueryClient, QueryClientProvider } from "react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-import { persistQueryClient } from "react-query/persistQueryClient-experimental";
-import { createAsyncStoragePersistor } from "react-query/createAsyncStoragePersistor-experimental";
+import { persistQueryClient } from "@tanstack/react-query-persist-client";
+import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
 import { Router } from "./navigation/router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { LogBox, Platform, useColorScheme } from "react-native";
@@ -25,6 +25,7 @@ import { themeAtom } from "./common/storage/atoms";
 import { trpc } from "./common/trpc/trpc";
 import superjson from "superjson";
 import { CMDK } from "@/cmdk/cmdk";
+import { httpBatchLink } from "@trpc/client";
 
 LogBox.ignoreLogs(["PropType will be removed from React Native"]);
 
@@ -39,16 +40,16 @@ const queryClient = new QueryClient({
   },
 });
 
-const asyncStoragePersistor = createAsyncStoragePersistor({
+const syncStoragePersister = createSyncStoragePersister({
   storage: {
-    getItem: async key => {
+    getItem: key => {
       const value = mmkv.getString(key);
       return value ?? null;
     },
-    setItem: async (key, value) => {
+    setItem: (key, value) => {
       mmkv.set(key, value);
     },
-    removeItem: async key => {
+    removeItem: key => {
       mmkv.delete(key);
     },
   },
@@ -56,7 +57,7 @@ const asyncStoragePersistor = createAsyncStoragePersistor({
 
 persistQueryClient({
   queryClient,
-  persistor: asyncStoragePersistor,
+  persister: syncStoragePersister,
 });
 
 function ThemeProvider({ children }: { children: ReactNode }) {
@@ -83,14 +84,17 @@ function ThemeProvider({ children }: { children: ReactNode }) {
 export default function App() {
   const [trpcClient] = useState(() =>
     trpc.createClient({
-      url: "https://api.cuppazee.app/trpc",
-      // url: "http://localhost/trpc",
-      // optional
-      headers() {
-        return {
-          // authorization: getAuthCookie(),
-        };
-      },
+      links: [
+        httpBatchLink({
+          url: "https://api.cuppazee.app/trpc",
+          // url: "http://localhost/trpc",
+          headers() {
+            return {
+              // authorization: getAuthCookie(),
+            };
+          },
+        }),
+      ],
       transformer: superjson,
     })
   );

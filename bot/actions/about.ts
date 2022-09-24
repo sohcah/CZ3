@@ -1,4 +1,4 @@
-import { CommandInteraction, MessageEmbed } from "discord.js";
+import { CommandInteraction, EmbedBuilder, Colors } from "discord.js";
 import { ChatInputAction } from "../action_types/chatinput.js";
 
 export class AboutChatInputAction extends ChatInputAction {
@@ -6,9 +6,9 @@ export class AboutChatInputAction extends ChatInputAction {
   description = "Learn more about Rover";
 
   async handler(interaction: CommandInteraction) {
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setTitle(`Rover`)
-      .setColor("GREEN")
+      .setColor(Colors.Green)
       // .setURL(`https://cuppazee.app/rover`)
       .setThumbnail(interaction.client.user?.displayAvatarURL() ?? "")
       .setDescription(

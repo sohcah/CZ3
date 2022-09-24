@@ -3,11 +3,11 @@ import { api } from "../trpc/api.js";
 import { config } from "./config.js";
 
 export async function syncMember(member: GuildMember) {
-  const userId = await api.query("discord:user", {
+  const userId = await api.discord.user.query({
     snowflake: member.user.id,
   });
   const player = userId
-    ? await api.query("player:profile", {
+    ? await api.player.profile.query({
         userId,
       })
     : undefined;

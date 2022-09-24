@@ -8,16 +8,18 @@ import {
 } from "../utils/auth/index.js";
 import { getPlayerActivity, getPlayerActivityOverview } from "../utils/data/activity.js";
 import { munzeeFetch } from "../utils/munzee.js";
-import { createRouter } from "./index.js";
 import { alternamythRouter } from "./player/alternamyth.js";
+import { t } from "../trpc.js";
 
-export const playerRouter = createRouter()
-  .query("activity", {
-    input: z.object({
-      userId: z.number(),
-      date: z.string().optional(),
-    }),
-    async resolve({ input: { userId, date } }) {
+export const playerRouter = t.router({
+  activity: t.procedure
+    .input(
+      z.object({
+        userId: z.number(),
+        date: z.string().optional(),
+      })
+    )
+    .query(async ({ input: { userId, date } }) => {
       const token = await authenticateWithUserID(userId);
       const response = await munzeeFetch({
         endpoint: "statzee/player/day",
@@ -33,24 +35,25 @@ export const playerRouter = createRouter()
         activity,
         overview,
       };
-    },
-  })
-  .query("profile", {
-    input: z
-      .object({
-        username: z.string(),
-      })
-      .or(
-        z.object({
-          userId: z.number(),
+    }),
+  profile: t.procedure
+    .input(
+      z
+        .object({
+          username: z.string(),
         })
-      )
-      .or(
-        z.object({
-          cuppazeeToken: z.string(),
-        })
-      ),
-    async resolve({ ctx, input }) {
+        .or(
+          z.object({
+            userId: z.number(),
+          })
+        )
+        .or(
+          z.object({
+            cuppazeeToken: z.string(),
+          })
+        )
+    )
+    .query(async ({ ctx, input }) => {
       const token =
         "cuppazeeToken" in input
           ? await authenticateWithCuppaZeeToken(input.cuppazeeToken)
@@ -86,6 +89,6 @@ export const playerRouter = createRouter()
         mhq: data.data.titles.includes("MHQ"),
         id: data.data.user_id,
       };
-    },
-  })
-  .merge(alternamythRouter);
+    }),
+  alternamyth: alternamythRouter,
+});

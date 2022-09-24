@@ -1,5 +1,5 @@
 import { CuppaZeeApplication } from "../../context.js";
-import { createRouter } from "../index.js";
+import { t } from "../../trpc.js";
 
 export interface FlagCategory {
   title: string;
@@ -38,13 +38,19 @@ export interface Flag<
   default: keyof Options;
   group: Group;
   apps: Apps[];
+
   withTitle(title: string): this;
+
   withDescription(description: string): this;
+
   withOptions<NewOptions extends FlagOptions>(options: NewOptions): Flag<NewOptions, Group, Apps>;
+
   withDefault(defaultOption: keyof Options): this;
+
   withGroup<NewGroup extends keyof typeof categories>(
     group: NewGroup
   ): Flag<Options, NewGroup, Apps>;
+
   withApp<NewApp extends CuppaZeeApplication>(app: NewApp): Flag<Options, Group, Apps | NewApp>;
 }
 
@@ -122,8 +128,8 @@ function createFlags<T extends Record<string, Flag<any, any, any>>>(flags: T): T
   return flags;
 }
 
-export const flagsRouter = createRouter().query("list", {
-  async resolve({ ctx }) {
+export const flagsRouter = t.router({
+  list: t.procedure.query(async ({ ctx }) => {
     return { categories, flags: flagsByApplication.get(ctx.app)! };
-  },
+  }),
 });
