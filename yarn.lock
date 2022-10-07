@@ -1823,8 +1823,8 @@ __metadata:
   dependencies:
     "@cz3/api": "workspace:*"
     "@cz3/eslint-config": "workspace:*"
-    "@trpc/client": ^9.21.0
-    "@trpc/server": ^9.21.0
+    "@trpc/client": ^10.0.0-proxy-beta.10
+    "@trpc/server": ^10.0.0-proxy-beta.10
     "@types/latlon-geohash": ^2.0.0
     "@types/react": ^18.0.20
     "@types/react-dom": ^18.0.6
