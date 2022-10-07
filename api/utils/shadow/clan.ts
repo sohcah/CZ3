@@ -1,4 +1,4 @@
-import { prisma } from "../prisma.js";
+import { p } from "../prisma.js";
 import { getShadowPlayerStats } from "./player.js";
 
 export interface getShadowClanStatsOptions {
@@ -7,7 +7,7 @@ export interface getShadowClanStatsOptions {
 }
 
 export async function getShadowClanStats(options: getShadowClanStatsOptions) {
-  const players = await prisma.shadow_player.findMany({
+  const players = await p.shadow_player.findMany({
     where: {
       clan_id: options.clanId,
       game_id: options.gameId,

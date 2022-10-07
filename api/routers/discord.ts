@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { authenticatedUser, authenticateWithCuppaZeeToken } from "../utils/auth/index.js";
-import { prisma } from "../utils/prisma.js";
+import { p } from "../utils/prisma.js";
 import { config } from "../utils/config.js";
 import { t } from "../trpc.js";
 
@@ -43,7 +43,7 @@ export const discordRouter = t.router({
       } else {
         throw new Error("Invalid input");
       }
-      await prisma.player_discord.upsert({
+      await p.player_discord.upsert({
         where: {
           discord_snowflake: snowflake,
         },
@@ -63,7 +63,7 @@ export const discordRouter = t.router({
       })
     )
     .query(async ({ input: { snowflake } }) => {
-      const user = await prisma.player_discord.findUnique({
+      const user = await p.player_discord.findUnique({
         where: {
           discord_snowflake: snowflake,
         },

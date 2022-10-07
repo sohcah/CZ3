@@ -3,8 +3,9 @@ import { Map, MapProps, MapRef } from "react-map-gl";
 import { YStack, XGroup, Button, YGroup, XStack } from "tamagui";
 import { Globe, Map as MapIcon, Minus, Plus } from "@tamagui/feather-icons";
 import { mapSettings } from "@/settings/map";
-import { Platform } from "react-native";
+import { Platform, ScrollView } from "react-native";
 import config from "../tamagui.config";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export interface PageState {
   leftPanel: { children: ReactNode }[];
@@ -12,7 +13,8 @@ export interface PageState {
   map: (Omit<MapProps, "mapboxAccessToken" | "mapStyle" | "fog" | "light"> & {
     terrain?: NonNullable<MapProps["terrain"]> | undefined;
   })[];
-  content: { children: ReactNode }[];
+  content: { children: ReactNode; scrollable?: boolean }[];
+  meta: { title: string }[];
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -27,6 +29,7 @@ const defaultState = {
   rightPanel: [],
   map: [],
   content: [],
+  meta: [],
 };
 
 export function PageHandler({ children }: { children: ReactNode }) {
@@ -35,6 +38,7 @@ export function PageHandler({ children }: { children: ReactNode }) {
   const map = pageState.map[pageState.map.length - 1];
   const leftPanel = pageState.leftPanel[pageState.leftPanel.length - 1];
   const rightPanel = pageState.rightPanel[pageState.rightPanel.length - 1];
+  const content = pageState.content[pageState.content.length - 1];
   const id = useMemo(() => `${Math.floor(Math.random() * 100000)}`, []);
   const panelPadding = Number(config.tokensParsed.space["$2"]?.val ?? 0);
   const mapRef = useRef<MapRef>(null);
@@ -44,12 +48,14 @@ export function PageHandler({ children }: { children: ReactNode }) {
     left: leftPanel ? 300 + 2 * panelPadding : 0,
     right: rightPanel ? 300 + 2 * panelPadding : 0,
   };
+  console.log(pageState);
   useEffect(() => {
     mapRef.current?.easeTo({
       padding,
       duration: 500,
     });
   }, [map, padding.top, padding.bottom, padding.left, padding.right]);
+  const safeArea = useSafeAreaInsets();
   return (
     <PageContext.Provider value={setPageState}>
       {map && (
@@ -113,14 +119,14 @@ export function PageHandler({ children }: { children: ReactNode }) {
             </YGroup>
             <XGroup>
               <Button
-                theme={mapProjection === "globe" ? "alt3" : undefined}
+                theme={mapProjection === "globe" ? "active" : undefined}
                 onPress={() => setMapProjection("globe")}
                 size="$3"
               >
                 <Globe />
               </Button>
               <Button
-                theme={mapProjection === "mercator" ? "alt3" : undefined}
+                theme={mapProjection === "mercator" ? "active" : undefined}
                 onPress={() => setMapProjection("mercator")}
                 size="$3"
               >
@@ -130,48 +136,66 @@ export function PageHandler({ children }: { children: ReactNode }) {
           </YStack>
         </YStack>
       )}
-      {leftPanel && (
-        <YStack
-          display="none"
-          $gtMd={{
-            display: "flex",
-          }}
-          position="absolute"
-          top="$2"
-          bottom="$2"
-          left="$2"
-          borderRadius="$4"
-          bc="$backgroundSoft"
-          borderWidth={2}
-          borderColor="$borderColor"
-          p="$2"
-          elevation="$4"
-          w={300}
-        >
-          {leftPanel.children}
-        </YStack>
-      )}
-      <YStack
-        display="none"
-        $gtMd={{
-          display: "flex",
-        }}
+      <XStack
+        pointerEvents={Platform.OS === "web" ? "none" : "box-none"}
         position="absolute"
-        top="$2"
-        bottom="$2"
-        right={rightPanel ? "$2" : -400}
-        borderRadius="$4"
-        bc="$backgroundSoft"
-        borderWidth={2}
-        borderColor="$borderColor"
+        top={safeArea.top}
+        bottom={safeArea.bottom}
+        left={safeArea.left}
+        right={safeArea.right}
         p="$2"
-        elevation="$4"
-        // animation="quick"
-        // animation={[["transform"]]}
-        w={300}
+        space="$2"
       >
-        {rightPanel?.children}
-      </YStack>
+        {leftPanel && (
+          <YStack
+            pointerEvents="auto"
+            borderRadius="$4"
+            bc="$backgroundSoft"
+            borderWidth={2}
+            borderColor="$borderColor"
+            p="$2"
+            elevation="$4"
+            w={300}
+          >
+            {leftPanel.children}
+          </YStack>
+        )}
+        {content ? (
+          <YStack
+            pointerEvents="auto"
+            borderRadius="$4"
+            bc="$backgroundSoft"
+            borderWidth={2}
+            borderColor="$borderColor"
+            elevation="$4"
+            flex={1}
+          >
+            {content.scrollable ?? true ? (
+              <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1 }}>
+                {content.children}
+              </ScrollView>
+            ) : (
+              content.children
+            )}
+          </YStack>
+        ) : (
+          <YStack flex={1} pointerEvents="none"></YStack>
+        )}
+        {rightPanel && (
+          <YStack
+            pointerEvents="auto"
+            borderRadius="$4"
+            bc="$backgroundSoft"
+            borderWidth={2}
+            borderColor="$borderColor"
+            p="$2"
+            elevation="$4"
+            w={300}
+          >
+            {rightPanel.children}
+          </YStack>
+        )}
+      </XStack>
       {children}
     </PageContext.Provider>
   );

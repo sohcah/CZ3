@@ -1,6 +1,6 @@
 import { FastifyInstance } from "fastify";
 import { APIError } from "../../../api.js";
-import { prisma } from "../../../utils/prisma.js";
+import { p } from "../../../utils/prisma.js";
 
 export default function ShadowAdminMove(fastify: FastifyInstance) {
   fastify.post<{
@@ -14,7 +14,7 @@ export default function ShadowAdminMove(fastify: FastifyInstance) {
     };
   }>("/shadow/admin/:group/:game_id/move", async request => {
     const authenticatedUser = await request.authenticatedUser();
-    const group = await prisma.shadow_clan_group.findFirst({
+    const group = await p.shadow_clan_group.findFirst({
       where: {
         group_text_id: request.params.group,
         shadow_clan_group_admin: {
@@ -38,7 +38,7 @@ export default function ShadowAdminMove(fastify: FastifyInstance) {
         "You are not an admin of this group, or this clan is not in this group."
       );
     }
-    await prisma.shadow_player.update({
+    await p.shadow_player.update({
       where: {
         user_id_game_id: {
           game_id: Number(request.params.game_id),

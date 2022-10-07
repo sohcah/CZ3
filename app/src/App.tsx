@@ -65,7 +65,7 @@ function ThemeProvider({ children }: { children: ReactNode }) {
   const colorScheme = useColorScheme() ?? "light";
   const theme = selectedTheme === "system" ? colorScheme : selectedTheme;
   return (
-    <TamaguiProvider config={config}>
+    <TamaguiProvider themeClassNameOnRoot config={config}>
       <Theme name={theme}>
         <YStack
           bc="$background"

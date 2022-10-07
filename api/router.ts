@@ -6,6 +6,7 @@ import { bouncerRouter } from "./routers/bouncer.js";
 import { tourismRouter } from "./routers/tourism.js";
 import { munzeeRouter } from "./routers/munzee.js";
 import { t } from "./trpc.js";
+import { internalRouter } from "./routers/internal.js";
 
 export const appRouter = t.router({
   flags: flagsRouter,
@@ -15,6 +16,7 @@ export const appRouter = t.router({
   bouncer: bouncerRouter,
   tourism: tourismRouter,
   munzee: munzeeRouter,
+  internal: internalRouter,
 });
 
 // export type definition of API

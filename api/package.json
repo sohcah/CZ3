@@ -30,7 +30,7 @@
     "@fastify/formbody": "^7.3.0",
     "@fastify/multipart": "^7.2.0",
     "@fastify/static": "^6.5.0",
-    "@trpc/server": "^10.0.0-proxy-beta.5",
+    "@trpc/server": "^10.0.0-proxy-beta.10",
     "@turf/distance": "^6.5.0",
     "@turf/helpers": "^6.5.0",
     "@webkitty/geo-rev": "^1.1.1",

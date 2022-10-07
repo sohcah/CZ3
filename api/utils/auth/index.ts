@@ -4,7 +4,7 @@ import { APIError } from "../../api.js";
 import { config, APIApplication } from "../config.js";
 import { munzeeFetch } from "../munzee.js";
 import Jwt from "jsonwebtoken";
-import { prisma } from "../prisma.js";
+import { p } from "../prisma.js";
 import { FastifyReply } from "fastify";
 import { unableToReadPage } from "./unableToRead.js";
 import { invalidUsernamePage } from "./invalidUsername.js";
@@ -80,13 +80,13 @@ export async function loginWithAuthorizationCode(
     throw APIError.MunzeeInvalid();
   }
 
-  const playerDocument = await prisma.player.findFirst({
+  const playerDocument = await p.player.findFirst({
     where: { user_id: user_id },
   });
-  const authDocument = await prisma.player_auth.findFirst({
+  const authDocument = await p.player_auth.findFirst({
     where: { api: apiApplication.id, user_id: user_id },
   });
-  const appDocument = await prisma.player_app.findFirst({
+  const appDocument = await p.player_app.findFirst({
     where: { app: device.app, user_id: user_id },
   });
 
@@ -97,10 +97,10 @@ export async function loginWithAuthorizationCode(
   let apiUserCount = 0;
   let appUserCount = 0;
 
-  await prisma.$transaction(async () => {
+  await p.$transaction(async () => {
     userCount =
       (
-        await prisma.player.aggregate({
+        await p.player.aggregate({
           _max: {
             user_number: true,
           },
@@ -108,7 +108,7 @@ export async function loginWithAuthorizationCode(
       )._max.user_number ?? 0;
     apiUserCount =
       (
-        await prisma.player_auth.aggregate({
+        await p.player_auth.aggregate({
           _max: {
             user_number: true,
           },
@@ -119,7 +119,7 @@ export async function loginWithAuthorizationCode(
       )._max.user_number ?? 0;
     appUserCount =
       (
-        await prisma.player_app.aggregate({
+        await p.player_app.aggregate({
           _max: {
             user_number: true,
           },
@@ -128,7 +128,7 @@ export async function loginWithAuthorizationCode(
           },
         })
       )._max.user_number ?? 0;
-    await prisma.player.upsert({
+    await p.player.upsert({
       where: {
         user_id: user_id,
       },
@@ -141,7 +141,7 @@ export async function loginWithAuthorizationCode(
         username: username,
       },
     });
-    await prisma.player_auth.upsert({
+    await p.player_auth.upsert({
       where: {
         user_id_api_api_variant: {
           api: apiApplication.id,
@@ -166,7 +166,7 @@ export async function loginWithAuthorizationCode(
         user_number: apiUserCount + 1,
       },
     });
-    await prisma.player_app.upsert({
+    await p.player_app.upsert({
       where: {
         user_id_app: {
           app: device.app,
@@ -181,7 +181,7 @@ export async function loginWithAuthorizationCode(
       },
     });
     if (teaken) {
-      await prisma.player_teaken.create({
+      await p.player_teaken.create({
         data: {
           user_id: user_id!,
           teaken,
@@ -412,7 +412,7 @@ export async function authenticateWithUserID(
   user_id: string | number,
   apiApplication?: APIApplication
 ): Promise<AuthenticationResult> {
-  const authDocument = await prisma.player_auth.findFirst({
+  const authDocument = await p.player_auth.findFirst({
     where: {
       api: apiApplication?.id,
       user_id: Number(user_id),
@@ -457,7 +457,7 @@ export async function authenticateWithUserID(
     throw APIError.Authentication("No token in response.");
   }
 
-  await prisma.player_auth.update({
+  await p.player_auth.update({
     where: {
       user_id_api_api_variant: {
         api: apiApp.id,

@@ -6,7 +6,7 @@ import {
 import { munzeeFetch } from "../munzee.js";
 import { getShadowPlayerTask } from "./task.js";
 import { ActivityData, addActivityItemExtras } from "./tasks.js";
-import { prisma } from "../prisma.js";
+import { p } from "../prisma.js";
 import { shadow_player, shadow_player_task, shadow_player_task_day } from "@cz3/prisma";
 import { rollbar } from "../../extra/rollbar.js";
 import { Cacher } from "../cacher.js";
@@ -72,7 +72,7 @@ export async function getShadowPlayerStats(player: ShadowPlayerReference) {
   const shadowPlayer =
     player.shadowPlayer ??
     (await (() => {
-      return prisma.shadow_player.findUnique({
+      return p.shadow_player.findUnique({
         where: {
           user_id_game_id: {
             user_id: player.user_id,
@@ -90,7 +90,7 @@ export async function getShadowPlayerStats(player: ShadowPlayerReference) {
     })());
 
   if (!shadowPlayer) {
-    await prisma.shadow_player.create({
+    await p.shadow_player.create({
       data: {
         user_id: player.user_id,
         game_id: player.game_id,
