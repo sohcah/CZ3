@@ -1,0 +1,22 @@
+{
+  "name": "CuppaZee Browse",
+  "description": "Enhancing your Munzee Experience, One Plugin at a Time",
+  "version": "0.1.0",
+  "manifest_version": 3,
+  "permissions": ["scripting", "webNavigation"],
+  "host_permissions": ["https://*.munzee.com/*"],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*.munzee.com/*"
+      ],
+      "js": [
+        "before-load.js"
+      ],
+      "run_at": "document_start"
+    }
+  ],
+  "background": {
+    "service_worker": "service-worker.js"
+  }
+}

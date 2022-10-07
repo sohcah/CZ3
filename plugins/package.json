@@ -1,0 +1,43 @@
+{
+  "name": "@cz3/plugins",
+  "version": "0.0.1",
+  "main": "lib/index.js",
+  "license": "MPL-2.0",
+  "type": "module",
+  "keywords": [
+    "munzee",
+    "cuppazee"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CuppaZee/CZ3.git"
+  },
+  "author": "CuppaZee",
+  "scripts": {
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
+    "build": "tsc && node lib/builder/index.js"
+  },
+  "dependencies": {
+    "@trpc/client": "^10.0.0-proxy-beta.10",
+    "@trpc/server": "^10.0.0-proxy-beta.10",
+    "dayjs": "^1.11.5",
+    "esbuild": "^0.15.8",
+    "fastify": "^4.6.0",
+    "latlon-geohash": "^2.0.0",
+    "nanoid": "^4.0.0",
+    "node-fetch": "^3.2.10",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "superjson": "^1.8.1",
+    "tslib": "^2.3.1"
+  },
+  "devDependencies": {
+    "@cz3/api": "workspace:*",
+    "@cz3/eslint-config": "workspace:*",
+    "@types/latlon-geohash": "^2.0.0",
+    "@types/react": "^18.0.20",
+    "@types/react-dom": "^18.0.6",
+    "typescript": "next"
+  }
+}
