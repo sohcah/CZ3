@@ -2,7 +2,7 @@ import { TypeTags } from "@cz3/meta-client";
 import fetch from "node-fetch";
 import { config } from "./config.js";
 import { meta } from "./meta.js";
-import { prisma } from "./prisma.js";
+import { p } from "./prisma.js";
 
 class KnownMissing {
   private types = new Set<string>();
@@ -24,14 +24,14 @@ class KnownMissing {
     if (this.missingType(icon, capture_type_id)) {
       if (!this.types.has(`${icon}-${capture_type_id}`)) {
         this.types.add(`${icon}-${capture_type_id}`);
-        const existing = await prisma.missing_types.findFirst({
+        const existing = await p.missing_types.findFirst({
           where: {
             icon: icon,
             capture_type_id: capture_type_id === null ? undefined : Number(capture_type_id),
           },
         });
         if (!existing) {
-          await prisma.missing_types.upsert({
+          await p.missing_types.upsert({
             where: {
               icon: icon,
             },

@@ -37,3 +37,14 @@ Page.RightPanel = function (props: PageState["rightPanel"][0]) {
   });
   return null;
 };
+
+Page.Content = function (props: PageState["content"][0]) {
+  const context = usePageContext();
+  useEffect(() => {
+    context(state => ({ ...state, content: [...state.content, props] }));
+    return () => {
+      context(state => ({ ...state, content: state.content.filter(c => c !== props) }));
+    };
+  });
+  return null;
+}

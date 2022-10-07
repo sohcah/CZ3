@@ -56,8 +56,7 @@
     "react": "18.0.0",
     "react-dom": "18.0.0",
     "react-native-reanimated": "2.9.1",
-    "react-native-web": "0.18.7",
-    "@tamagui/core": "patch:@tamagui/core@npm:1.0.1-beta.163#.yarn/patches/@tamagui-core-npm-1.0.1-beta.163-0058dfc2f3.patch"
+    "react-native-web": "0.18.7"
   },
   "packageManager": "yarn@3.2.1"
 }

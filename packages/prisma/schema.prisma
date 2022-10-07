@@ -16,7 +16,6 @@ model player {
   user_number              Int                        @unique(map: "player_user_number_uindex")
   player_app               player_app[]
   player_auth              player_auth[]
-  player_discord           player_discord[]
   player_teaken            player_teaken[]
   shadow_clan_group_admin  shadow_clan_group_admin[]
   shadow_player            shadow_player[]
@@ -161,7 +160,6 @@ model missing_types {
 model player_discord {
   user_id           Int
   discord_snowflake String @unique(map: "player_discord_discord_snowflake_uindex")
-  player            player @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "player_discord_player_user_id_fk")
 }
 
 model uniques {
@@ -169,4 +167,12 @@ model uniques {
   url       String   @unique(map: "uniques_url_uindex")
   type      String
   added_at  DateTime @db.Timestamp(6)
+}
+
+model clan {
+  clan_id     Int    @id(map: "clan_pk")
+  name        String
+  tagline     String
+  simple_name String
+  members     Int
 }

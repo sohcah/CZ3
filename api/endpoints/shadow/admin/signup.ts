@@ -1,6 +1,6 @@
 import { FastifyInstance } from "fastify";
 import { APIError } from "../../../api.js";
-import { prisma } from "../../../utils/prisma.js";
+import { p } from "../../../utils/prisma.js";
 
 export default function ShadowAdminList(fastify: FastifyInstance) {
   fastify.post<{
@@ -15,7 +15,7 @@ export default function ShadowAdminList(fastify: FastifyInstance) {
       properties: any;
     };
   }>("/shadow/admin/:group/:game_id/signup", async request => {
-    const player = await prisma.player.findFirst({
+    const player = await p.player.findFirst({
       where: {
         username: {
           equals: request.body.username.replace(/\s/g, ""),
@@ -29,7 +29,7 @@ export default function ShadowAdminList(fastify: FastifyInstance) {
       );
     }
     const { group_id } =
-      (await prisma.shadow_clan_group.findUnique({
+      (await p.shadow_clan_group.findUnique({
         where: {
           group_text_id: request.params.group,
         },
@@ -40,7 +40,7 @@ export default function ShadowAdminList(fastify: FastifyInstance) {
     if (group_id === undefined) {
       throw APIError.InvalidRequest("Invalid group");
     }
-    await prisma.shadow_player.upsert({
+    await p.shadow_player.upsert({
       where: {
         user_id_game_id: {
           game_id: Number(request.params.game_id),
@@ -57,7 +57,7 @@ export default function ShadowAdminList(fastify: FastifyInstance) {
         clan_id: null,
       },
     });
-    await prisma.shadow_player_properties.upsert({
+    await p.shadow_player_properties.upsert({
       where: {
         user_id_group_id_game_id: {
           user_id: player.user_id,

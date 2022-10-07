@@ -1,7 +1,7 @@
 import { useAtom, useAtomValue, WritableAtom } from "jotai";
 import { atomWithMMKV } from "@/common/storage/atoms";
 import { SetAtom } from "jotai/core/atom";
-import { nanoid } from "nanoid";
+import { nanoid } from "nanoid/non-secure";
 import { mmkv } from "@/common/storage/mmkv";
 import seedrandom from "seedrandom";
 

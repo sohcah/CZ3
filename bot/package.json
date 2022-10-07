@@ -23,8 +23,8 @@
   "dependencies": {
     "@cz3/api": "workspace:*",
     "@cz3/meta-client": "workspace:*",
-    "@trpc/client": "^10.0.0-proxy-beta.5",
-    "@trpc/server": "^10.0.0-proxy-beta.5",
+    "@trpc/client": "^10.0.0-proxy-beta.10",
+    "@trpc/server": "^10.0.0-proxy-beta.10",
     "chalk": "^3.0.0",
     "dayjs": "^1.10.7",
     "discord.js": "^14.4.0",

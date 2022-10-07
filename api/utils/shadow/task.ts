@@ -1,4 +1,4 @@
-import { prisma } from "../prisma.js";
+import { p } from "../prisma.js";
 import { ShadowPlayerActivityLoader, ShadowPlayerReference } from "./player.js";
 import dayjs, { Dayjs } from "dayjs";
 import { shadow_player_task, shadow_player_task_day } from "@cz3/prisma";
@@ -39,7 +39,7 @@ export async function getShadowPlayerTask(
   const task = ref.task;
 
   if (!task) {
-    await prisma.shadow_player_task.create({
+    await p.shadow_player_task.create({
       data: {
         user_id: ref.user_id,
         game_id: ref.game_id,
@@ -112,7 +112,7 @@ export async function getShadowPlayerTask(
     await Promise.all(
       taskDays.map(async taskDay => {
         if (taskDay[1] && (taskDay[0].finalised === true || taskDay[0].value !== null)) {
-          await prisma.shadow_player_task_day.upsert({
+          await p.shadow_player_task_day.upsert({
             where: {
               user_id_game_id_task_id_date: {
                 user_id: ref.user_id,

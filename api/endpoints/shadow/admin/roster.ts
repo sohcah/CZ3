@@ -1,5 +1,5 @@
 import { FastifyInstance } from "fastify";
-import { prisma } from "../../../utils/prisma.js";
+import { p } from "../../../utils/prisma.js";
 
 export default function ShadowAdminRoster(fastify: FastifyInstance) {
   fastify.get<{
@@ -8,13 +8,13 @@ export default function ShadowAdminRoster(fastify: FastifyInstance) {
       game_id: string;
     };
   }>("/shadow/admin/:group/:game_id/roster", async request => {
-    const group = await prisma.shadow_clan_group.findUnique({
+    const group = await p.shadow_clan_group.findUnique({
       where: {
         group_text_id: request.params.group,
       },
     });
 
-    const clans = await prisma.shadow_clan.findMany({
+    const clans = await p.shadow_clan.findMany({
       where: {
         game_id: Number(request.params.game_id),
         shadow_clan_group: {
@@ -23,7 +23,7 @@ export default function ShadowAdminRoster(fastify: FastifyInstance) {
       },
     });
 
-    const players = await prisma.shadow_player.findMany({
+    const players = await p.shadow_player.findMany({
       where: {
         OR: [
           {
@@ -59,7 +59,7 @@ export default function ShadowAdminRoster(fastify: FastifyInstance) {
     try {
       const authenticatedUser = await request.authenticatedUser();
       console.info(authenticatedUser);
-      const adminGroup = await prisma.shadow_clan_group.findFirst({
+      const adminGroup = await p.shadow_clan_group.findFirst({
         where: {
           group_text_id: request.params.group,
           shadow_clan_group_admin: {

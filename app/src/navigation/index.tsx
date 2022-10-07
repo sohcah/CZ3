@@ -8,6 +8,7 @@ import { SettingsEditor } from "@/features/settings/editor";
 import { TourismSectionScreen } from "@/features/tourism/section";
 import { TourismScreen } from "@/features/tourism";
 import { PageHandler } from "@/page/handler";
+import { InternalMissingScreen } from "@/features/internal/missing";
 
 export function Navigation() {
   const navigate = useNavigate();
@@ -28,14 +29,18 @@ export function Navigation() {
         <Route path="/settings" element={<SettingsWrapper />}>
           <Route path=":section" element={<SettingsEditor />} />
         </Route>
-        <Route path="/tourism/" element={<TourismScreen />}>
+        <Route path="/tourism" element={<TourismScreen />}>
           <Route path=":tourism" element={<TourismSectionScreen />} />
+        </Route>
+        <Route path="/internal">
+          <Route path="missing" element={<InternalMissingScreen />} />
         </Route>
         <Route path="/player/:player" element={<PlayerScreen />}>
           <Route path="alternamyths" element={<PlayerAlternamythsScreen />} />
           {/*<Route path="uniqcorns" element={<PlayerUniqCornsScreen />} />*/}
         </Route>
-        <Route path="*" element={<Navigate to="/tourism/golden_tickets" replace />} />
+        <Route path="*" element={<Navigate to="/player/lynnslilypad/alternamyths" replace />} />
+        {/*<Route path="*" element={<Navigate to="/tourism/golden_tickets" replace />} />*/}
       </Routes>
     </PageHandler>
   );

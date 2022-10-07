@@ -12,13 +12,13 @@ export const Icon = function ({
 }) {
   const theme = useTheme();
   const sizeValue = getConfig().fontsParsed?.$body?.size?.[size];
-  const tc = theme[color];
+  const tc = theme[color as keyof typeof theme];
   return (
     <As
       size={Number(typeof sizeValue === "number" ? sizeValue : sizeValue?.val)}
       height={typeof sizeValue === "number" ? sizeValue : sizeValue?.val}
       width={typeof sizeValue === "number" ? sizeValue : sizeValue?.val}
-      color={typeof tc === "number" ? tc.toString() : typeof tc === "object" ? tc.val : tc}
+      color={typeof tc === "object" ? tc.val : tc}
     />
   );
 };

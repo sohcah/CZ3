@@ -1,9 +1,10 @@
-import { H2, Text, YStack, XStack, Popover, Stack, Image } from "tamagui";
+import { H2, Text, YStack, XStack, Popover, Image } from "tamagui";
 import { trpc } from "@/common/trpc/trpc";
 import { useMatch } from "react-router";
 import { ScrollView } from "react-native";
 import { captureGridSettings } from "@/settings/captureGrids";
 import { SettingPanels } from "@/features/settings/editor";
+import { Page } from "@/page/page";
 
 export function PlayerAlternamythsScreen() {
   const { params: { player = null } = {} } = useMatch("/player/:player/*") ?? {};
@@ -20,7 +21,11 @@ export function PlayerAlternamythsScreen() {
   const layout = captureGridSettings.useLayout();
 
   if (!query.data) {
-    return <H2>AlternaMyth Captures - Loading...</H2>;
+    return (
+      <Page.Content>
+        <H2>AlternaMyth Captures - Loading...</H2>
+      </Page.Content>
+    );
   }
 
   const creators = new Set(query.data.alternaMyths.map(i => i.creator));
@@ -33,7 +38,7 @@ export function PlayerAlternamythsScreen() {
 
   if (layout === "cards") {
     return (
-      <YStack>
+      <Page.Content>
         <H2>AlternaMyth Captures</H2>
         {groupBy === "type" ? (
           <XStack w="100%" flexWrap="wrap">
@@ -181,17 +186,20 @@ export function PlayerAlternamythsScreen() {
           </XStack>
         )}
         <SettingPanels settings={[captureGridSettings.groupBy, captureGridSettings.layout]} />
-      </YStack>
+      </Page.Content>
     );
   }
 
+  const MainStack = groupBy === "player" ? YStack : XStack;
+  const SecondaryStack = groupBy === "player" ? XStack : YStack;
+
   return (
-    <YStack>
+    <Page.Content>
       <H2>AlternaMyth Captures</H2>
       <ScrollView horizontal>
-        <Stack flexDirection={groupBy === "player" ? "column" : "row"}>
+        <MainStack>
           {[...creators].map(creator => (
-            <Stack flexDirection={groupBy === "player" ? "row" : "column"} key={creator}>
+            <SecondaryStack key={creator}>
               <YStack
                 animation="bouncy"
                 hoverStyle={{
@@ -212,7 +220,7 @@ export function PlayerAlternamythsScreen() {
                   px="$2"
                   alignSelf="center"
                   fontFamily="$body"
-                  fontSize="sm"
+                  fontSize="$3"
                   overflow="hidden"
                   textOverflow="ellipsis"
                   whiteSpace="nowrap"
@@ -264,11 +272,11 @@ export function PlayerAlternamythsScreen() {
                   </Popover>
                 );
               })}
-            </Stack>
+            </SecondaryStack>
           ))}
-        </Stack>
+        </MainStack>
       </ScrollView>
       <SettingPanels settings={[captureGridSettings.groupBy, captureGridSettings.layout]} />
-    </YStack>
+    </Page.Content>
   );
 }

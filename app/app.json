@@ -5,7 +5,7 @@
     "assetBundlePatterns": [
       "**/*"
     ],
-    "orientation": "portrait",
+    "orientation": "default",
     "userInterfaceStyle": "light",
     "jsEngine": "hermes",
     "splash": {
@@ -26,7 +26,15 @@
     },
     "plugins": [
       "expo-dev-client",
-      "expo-splash-screen"
+      "expo-splash-screen",
+      "expo-community-flipper",
+      [
+        "@rnmapbox/maps",
+        {
+          "RNMapboxMapsImpl": "mapbox-gl",
+          "RNMapboxMapsDownloadToken": "pk.eyJ1Ijoic29oY2FoIiwiYSI6ImNqeWVqcm8wdTAxc2MzaXFpa282Yzd2aHEifQ.afYbt2sVMZ-kbwdx5_PekQ"
+        }
+      ]
     ]
   }
 }

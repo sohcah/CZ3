@@ -37,8 +37,8 @@ const headingFont = createInterFont({
 const bodyFont = createInterFont(
   {},
   {
-    sizeSize: (size) => Math.round(size * 1.1),
-    sizeLineHeight: (size) => Math.round(size * 1.1 + (size > 20 ? 10 : 10)),
+    sizeSize: size => Math.round(size * 1.1),
+    sizeLineHeight: size => Math.round(size * 1.1 + (size > 20 ? 10 : 10)),
   }
 );
 
@@ -75,6 +75,7 @@ const config = createTamagui({
 export type Conf = typeof config;
 
 declare module "tamagui" {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
   interface TamaguiCustomConfig extends Conf {}
 }
 
