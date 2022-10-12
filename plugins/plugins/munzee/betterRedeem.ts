@@ -93,6 +93,8 @@ function injectStyles() {
       border-radius: 8px;
       box-shadow: 0px 10px 15px -3px rgba(0,0,0,0.1);
       flex-basis: 0;
+      position: relative;
+      overflow: hidden;
     }
     
     .section-wrapper table tbody tr.cz__redeemitem__premium {
@@ -107,6 +109,18 @@ function injectStyles() {
       border-top: none;
       background: none !important;
       padding: 0;
+    }
+    
+    .section-wrapper table tbody tr td.cz__redeemitem__limit {
+      position: absolute;
+      top: 0;
+      left: 0;
+      transform: translateX(-50%) translateY(-50%) rotate(-45deg) translateY(35px);
+      background-color: #ff5500 !important;
+      padding: 5px 50px;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
     }
 
     .section-wrapper table tbody tr td:last-child br {
@@ -129,6 +143,7 @@ function injectStyles() {
     .cz__redeemitem__notes {
       align-self: stretch;
       align-items: stretch !important;
+      text-align: center;
     }
 
     .cz__redeemitem__notes:empty {
@@ -281,13 +296,21 @@ export async function afterLoad() {
 
       notes.classList.add("cz__redeemitem__notes");
 
-      const notesText = notes.innerHTML.trim();
+      let notesText = notes.innerHTML.trim();
       if (
         section.name.match(/premium/i) ||
         notesText.includes("This option is for Premium Users only.")
       ) {
         row.classList.add("cz__redeemitem__premium");
         // notesText = notesText.replace(/This option is for Premium Users only\. */, "");
+      }
+      const limitRegex = /-?\s*limit\s*(\d+)/i;
+      if (notesText.match(limitRegex)) {
+        const limitText = document.createElement("td");
+        limitText.innerText = `Max ${notesText.match(limitRegex)?.[1] ?? "???"}`;
+        limitText.classList.add("cz__redeemitem__limit");
+        row.appendChild(limitText);
+        notesText = notesText.replace(limitRegex, "");
       }
       notes.innerHTML = notesText;
     }
