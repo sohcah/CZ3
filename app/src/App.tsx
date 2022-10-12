@@ -26,6 +26,7 @@ import { trpc } from "./common/trpc/trpc";
 import superjson from "superjson";
 import { CMDK } from "@/cmdk/cmdk";
 import { httpBatchLink } from "@trpc/client";
+import { useFonts } from "expo-font";
 
 LogBox.ignoreLogs(["PropType will be removed from React Native"]);
 
@@ -86,8 +87,8 @@ export default function App() {
     trpc.createClient({
       links: [
         httpBatchLink({
-          url: "https://api.cuppazee.app/trpc",
-          // url: "http://localhost/trpc",
+          // url: "https://api.cuppazee.app/trpc",
+          url: "http://mba.sh.2b.io/trpc",
           headers() {
             return {
               // authorization: getAuthCookie(),
@@ -98,6 +99,14 @@ export default function App() {
       transformer: superjson,
     })
   );
+
+  const [loaded] = useFonts({
+    Inter: require("@tamagui/font-inter/otf/Inter-Medium.otf"),
+  });
+
+  if (!loaded) {
+    return null;
+  }
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>

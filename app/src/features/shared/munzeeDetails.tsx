@@ -17,8 +17,8 @@ export function MunzeeDetailsPanel({ munzeeId }: { munzeeId: number }) {
       <H4>By {data.data.creator.username}</H4>
       <Button
         href={data.data.url}
-        onPress={() => {
-          if (data.data) openBrowserAsync(data.data.url);
+        onPress={async () => {
+          if (data.data) await openBrowserAsync(data.data.url);
         }}
       >
         Open on Munzee.com

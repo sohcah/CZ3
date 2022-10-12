@@ -1673,7 +1673,7 @@ __metadata:
     "@types/seedrandom": ^3.0.2
     babel-plugin-module-resolver: ^4.1.0
     babel-plugin-transform-inline-environment-variables: ^0.4.4
-    expo: ~46.0.9
+    expo: ~46.0.13
     expo-community-flipper: ^46.0.1
     expo-dev-client: ~1.2.1
     expo-font: ~10.2.0
@@ -1690,7 +1690,7 @@ __metadata:
     react-hotkeys-hook: ^3.4.7
     react-i18next: ^11.17.3
     react-map-gl: ^7.0.19
-    react-native: 0.69.5
+    react-native: 0.69.6
     react-native-flipper: ^0.156.0
     react-native-gesture-handler: ~2.5.0
     react-native-mmkv: ^2.4.3
@@ -2143,18 +2143,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@expo/cli@npm:0.2.11":
-  version: 0.2.11
-  resolution: "@expo/cli@npm:0.2.11"
+"@expo/cli@npm:0.3.1":
+  version: 0.3.1
+  resolution: "@expo/cli@npm:0.3.1"
   dependencies:
     "@babel/runtime": ^7.14.0
     "@expo/code-signing-certificates": ^0.0.2
     "@expo/config": ~7.0.1
     "@expo/config-plugins": ~5.0.1
-    "@expo/dev-server": ~0.1.119
+    "@expo/dev-server": ~0.1.120
     "@expo/devcert": ^1.0.0
     "@expo/json-file": ^8.2.35
-    "@expo/metro-config": ~0.3.18
+    "@expo/metro-config": ~0.4.0
     "@expo/osascript": ^2.0.31
     "@expo/package-manager": ~0.0.53
     "@expo/plist": ^0.0.18
@@ -2209,7 +2209,7 @@ __metadata:
     wrap-ansi: ^7.0.0
   bin:
     expo-internal: build/bin/cli
-  checksum: f5ac9815e98f5ad068f3b612ff8a117dd43d0432a209e0aa6f369de404e7698b22dd2f07ab16e67a5f87f95a60e76e02652d8d736dd358c2d6504281fa48666b
+  checksum: c2b75359bd0437992e4a0693ac1deff48e731acfdfc7ac9c70dbfe648f78baed763a9e7bf694a1027e302f4d969a43c82ef2bdd10e86262da17e686a465489a2
   languageName: node
   linkType: hard
 
@@ -2291,12 +2291,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@expo/dev-server@npm:~0.1.119":
-  version: 0.1.119
-  resolution: "@expo/dev-server@npm:0.1.119"
+"@expo/dev-server@npm:~0.1.120":
+  version: 0.1.120
+  resolution: "@expo/dev-server@npm:0.1.120"
   dependencies:
     "@expo/bunyan": 4.0.0
-    "@expo/metro-config": ~0.3.18
+    "@expo/metro-config": ~0.4.0
     "@expo/osascript": 2.0.33
     body-parser: 1.19.0
     chalk: ^4.0.0
@@ -2308,7 +2308,7 @@ __metadata:
     semver: 7.3.2
     serialize-error: 6.0.0
     temp-dir: ^2.0.0
-  checksum: 1b80fef6e36ca9aba7eb6c3443873de2a137ea9d4fac8475c940a6aa6e35380594484296d283f099a0d4c6bb0dc36b42c1edc2a47f4a258e1168afb9d9c30679
+  checksum: cc4e42203a4dfaf1d0d0b165ec147bd98840eaad697d8f97a41fed28c38459f8d3800475fbf7f0ef83af23ce050881c13817daba7ccea4f9d201f425607d6b5d
   languageName: node
   linkType: hard
 
@@ -2394,9 +2394,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@expo/metro-config@npm:~0.3.18":
-  version: 0.3.22
-  resolution: "@expo/metro-config@npm:0.3.22"
+"@expo/metro-config@npm:~0.4.0":
+  version: 0.4.0
+  resolution: "@expo/metro-config@npm:0.4.0"
   dependencies:
     "@expo/config": 7.0.1
     "@expo/json-file": 8.2.36
@@ -2406,7 +2406,7 @@ __metadata:
     getenv: ^1.0.0
     resolve-from: ^5.0.0
     sucrase: ^3.20.0
-  checksum: f0084def2a88fde7aba6044e1680af5e4dfd0f5d201cc2f6402f1febfc2e2f5c489f43fa98792993622e045c2a503a694115c7d469b91bc985126253962ca6ba
+  checksum: 8f571dd36c9eafed15ff709183eaa18bd5b92c1f9a5f367e245913c862d1fd6084812351d34260ed293c967a83bc230774d6e148f1947c495a0fd5b815e75aba
   languageName: node
   linkType: hard
 
@@ -10321,6 +10321,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"expo-font@npm:~10.2.1":
+  version: 10.2.1
+  resolution: "expo-font@npm:10.2.1"
+  dependencies:
+    fontfaceobserver: ^2.1.0
+  peerDependencies:
+    expo: "*"
+  checksum: fa82616614b393ecb8e7dce91de8043c0e7b5ebc2145ec816b37179bef5ac2b81fdf3ea750b93d47e3702978f08f6b40373c91844098cc62ed43b42d7d73ed63
+  languageName: node
+  linkType: hard
+
 "expo-json-utils@npm:~0.3.0":
   version: 0.3.0
   resolution: "expo-json-utils@npm:0.3.0"
@@ -10370,13 +10381,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-modules-core@npm:0.11.5":
-  version: 0.11.5
-  resolution: "expo-modules-core@npm:0.11.5"
+"expo-modules-core@npm:0.11.7":
+  version: 0.11.7
+  resolution: "expo-modules-core@npm:0.11.7"
   dependencies:
     compare-versions: ^3.4.0
     invariant: ^2.2.4
-  checksum: 304e60c5f8b6b9c8f13f13fffa111bb9819b15bc06c6ff173d70857da6d25dc3039325c1b27c013c9646a7158c61298972a97a6db3fe0c6399bef70b7410337a
+  checksum: 2d1896af256579fdab0d5721ce1c437206ac5c8702b978899b3d4f303f2f31c053cc65469a21db421bfd31adaea1f6dff9ffdd447c01c82057a764209d9c8dc8
   languageName: node
   linkType: hard
 
@@ -10446,12 +10457,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo@npm:~46.0.9":
-  version: 46.0.10
-  resolution: "expo@npm:46.0.10"
+"expo@npm:~46.0.13":
+  version: 46.0.15
+  resolution: "expo@npm:46.0.15"
   dependencies:
     "@babel/runtime": ^7.14.0
-    "@expo/cli": 0.2.11
+    "@expo/cli": 0.3.1
     "@expo/vector-icons": ^13.0.0
     babel-preset-expo: ~9.2.0
     cross-spawn: ^6.0.5
@@ -10460,10 +10471,10 @@ __metadata:
     expo-constants: ~13.2.4
     expo-error-recovery: ~3.2.0
     expo-file-system: ~14.1.0
-    expo-font: ~10.2.0
+    expo-font: ~10.2.1
     expo-keep-awake: ~10.2.0
     expo-modules-autolinking: 0.10.3
-    expo-modules-core: 0.11.5
+    expo-modules-core: 0.11.7
     fbemitter: ^3.0.0
     getenv: ^1.0.0
     invariant: ^2.2.4
@@ -10476,7 +10487,7 @@ __metadata:
       optional: true
   bin:
     expo: bin/cli.js
-  checksum: ea3e6c39e5d0e4efa3df2c54235cfffe382487bb5b49ed82b0fdc0c1b7bc7b75a3da408120cb52591728e8110bab3793bb7b3eb03f8894765cc507a02f9b8d88
+  checksum: 89088fd1d031fe08d16161dc44ecee1b748cf0145dd78304f743f1c360a5199d9dcf6a45719d9d79ed86733b0d25ddf59ff96d205866f883242f674206ca2a22
   languageName: node
   linkType: hard
 
@@ -20975,7 +20986,7 @@ __metadata:
 
 "typescript@patch:typescript@^4.4.4#~builtin<compat/typescript>, typescript@patch:typescript@^4.6.3#~builtin<compat/typescript>":
   version: 4.8.2
-  resolution: "typescript@patch:typescript@npm%3A4.8.2#~builtin<compat/typescript>::version=4.8.2&hash=7ad353"
+  resolution: "typescript@patch:typescript@npm%3A4.8.2#~builtin<compat/typescript>::version=4.8.2&hash=bda367"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
@@ -20985,7 +20996,7 @@ __metadata:
 
 "typescript@patch:typescript@^4.7.4#~builtin<compat/typescript>":
   version: 4.8.3
-  resolution: "typescript@patch:typescript@npm%3A4.8.3#~builtin<compat/typescript>::version=4.8.3&hash=7ad353"
+  resolution: "typescript@patch:typescript@npm%3A4.8.3#~builtin<compat/typescript>::version=4.8.3&hash=bda367"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
@@ -20995,7 +21006,7 @@ __metadata:
 
 "typescript@patch:typescript@next#~builtin<compat/typescript>":
   version: 4.9.0-dev.20220905
-  resolution: "typescript@patch:typescript@npm%3A4.9.0-dev.20220905#~builtin<compat/typescript>::version=4.9.0-dev.20220905&hash=7ad353"
+  resolution: "typescript@patch:typescript@npm%3A4.9.0-dev.20220905#~builtin<compat/typescript>::version=4.9.0-dev.20220905&hash=bda367"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver

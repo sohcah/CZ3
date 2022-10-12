@@ -144,8 +144,9 @@ export function SettingPanel({ setting }: { setting: SettingWithAtom<any, any> }
       borderColor="$borderColor"
       borderWidth={2}
       ai="center"
+      flexWrap="wrap"
     >
-      <YStack jc="center" flex={1}>
+      <YStack jc="center" flexGrow={1} maxWidth="100%">
         <Text fontSize="$5" fontFamily="$body" fontWeight="bold">
           {setting.name}
         </Text>

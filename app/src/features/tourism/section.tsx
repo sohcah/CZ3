@@ -1,9 +1,7 @@
-import { H2, XStack, Text } from "tamagui";
 import { trpc } from "@/common/trpc/trpc";
 import { useMatch } from "react-router";
 import { useState, useEffect } from "react";
 import { Layer, Source, useMap } from "react-map-gl";
-import "mapbox-gl/dist/mapbox-gl.css";
 import { Page } from "@/page/page";
 import { MunzeeDetailsPanel } from "../shared/munzeeDetails";
 
